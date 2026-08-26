@@ -9,6 +9,7 @@
   import LockedDetail from "./LockedDetail.svelte";
   import ProfileSkeleton from "./ProfileSkeleton.svelte";
   import CommentTrigger from "$lib/comment/CommentTrigger.svelte";
+  import { formatDate } from "$lib/search/format";
 
   let {
     profile = $bindable(null),
@@ -53,7 +54,7 @@
 
 {#if !loading}
   {#if lockDetail.locked}
-    <LockedDetail {lockDetail}></LockedDetail>
+    <LockedDetail {lockDetail} {profile}></LockedDetail>
   {:else if profile}
     <CommentTrigger
       oid={profile.studentOid}
@@ -100,6 +101,9 @@
                 {profile.name}
                 <AuthRankDisplay rank={profile.identityAuthRank}
                 ></AuthRankDisplay>
+                <div class="ml-4 text-sm text-text-secondary">
+                  最后登录{new Date(profile.lastLoginAt).toLocaleString()}
+                </div>
               </h1>
               <p class="text-xs text-text-primary mt-1">
                 CCW ID：{profile.studentNumber}

@@ -1,4 +1,4 @@
-import { error } from "@sveltejs/kit";
+import { error, text } from "@sveltejs/kit";
 import type { RequestHandler } from "./$types";
 
 export interface LocateRes {
@@ -31,5 +31,7 @@ export const POST: RequestHandler = async ({ request }) => {
   const controller = new AbortController();
   const signal = controller.signal;
   setTimeout(() => controller.abort("timeout"), 3000);
-  return await fetch(`https://ip9.com.cn/get?ip=${ip}`, { signal });
+  return await fetch(`https://ip9.com.cn/get?ip=${ip}`, { signal })
+    .then(async (res) => text(await res.text()))
+    .catch((e) => error(e));
 };

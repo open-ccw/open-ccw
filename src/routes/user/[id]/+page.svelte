@@ -99,10 +99,7 @@
   {#if profile?.avatar}
     <meta name="og:image" content={profile.avatar} />
   {/if}
-  <meta
-    name="og:url"
-    content={`https://ccw.kivotos.qzz.io/user/${params.id}`}
-  />
+  <meta name="og:url" content="https://ccw.kivotos.qzz.io/user/{params.id}" />
   <meta name="twitter:card" content="summary" />
   <meta
     name="twitter:title"
@@ -115,7 +112,7 @@
   {#if profile?.avatar}
     <meta name="twitter:image" content={profile.avatar} />
   {/if}
-  <link rel="canonical" href={`https://ccw.kivotos.qzz.io/user/${params.id}`} />
+  <link rel="canonical" href="https://ccw.kivotos.qzz.io/user/{params.id}" />
 </svelte:head>
 <PageHeader></PageHeader>
 <Profile {profile} {stats} {error} {loading} {lockDetail}></Profile>

@@ -31,6 +31,7 @@ declare type UserProfile = {
   studentNumber: string;
   virtualValue: string;
   identityAuthRank: string;
+  lastLoginAt: number;
   statistics: {
     homeworkCount: number;
     likeHomeworkCount: number;

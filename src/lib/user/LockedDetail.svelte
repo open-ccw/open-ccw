@@ -1,8 +1,10 @@
 <script lang="ts">
   let {
     lockDetail = { locked: false, createdAt: 0, unlocksAt: 0 },
+    profile,
   }: {
     lockDetail: { locked: boolean; createdAt: number; unlocksAt: number };
+    profile: UserProfile | null;
   } = $props();
 
   // 封禁时间格式化
@@ -39,12 +41,20 @@
     <div class="mt-5 space-y-2 text-sm">
       <div class="flex items-center justify-between gap-2">
         <span class="text-text-placeholder">封禁时间</span>
-        <span class="text-text-primary">{formatLockTime(lockDetail.createdAt)}</span
+        <span class="text-text-primary"
+          >{formatLockTime(lockDetail.createdAt)}</span
         >
       </div>
       <div class="flex items-center justify-between gap-2">
         <span class="text-text-placeholder">解封时间</span>
-        <span class="text-text-primary">{formatLockTime(lockDetail.unlocksAt)}</span
+        <span class="text-text-primary"
+          >{formatLockTime(lockDetail.unlocksAt)}</span
+        >
+      </div>
+      <div class="flex items-center justify-between gap-2">
+        <span class="text-text-placeholder">最后登录</span>
+        <span class="text-text-primary"
+          >{formatLockTime(profile?.lastLoginAt ?? -1)}</span
         >
       </div>
     </div>
