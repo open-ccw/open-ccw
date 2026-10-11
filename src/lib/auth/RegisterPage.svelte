@@ -5,6 +5,7 @@
     listAccounts,
     localAccountName,
     saveAccount,
+    setAccountRefresh,
     updateAccountToken,
   } from "$lib/auth/tokenStore";
 
@@ -48,6 +49,7 @@
     try {
       const t = token.trim();
       const { uid, avatar, name: displayName } = await getStudentProfile(t);
+      let savedName: string;
       if (cloudSave) {
         await registerAccount(uid, t, password);
         if (listAccounts().some((a) => a.name === uid)) {
@@ -56,6 +58,7 @@
           await saveAccount(uid, t, password, avatar, displayName);
         }
         registeredMode = "cloud";
+        savedName = uid;
         toast.success("注册成功");
       } else {
         const localName = localAccountName(uid);
@@ -65,8 +68,10 @@
           await saveAccount(localName, t, password, avatar, displayName);
         }
         registeredMode = "local";
+        savedName = localName;
         toast.success("账号已保存到本地");
       }
+      persistOAuthRefresh(savedName);
       registeredName = uid;
       success = true;
     } catch (e) {
@@ -74,6 +79,24 @@
     } finally {
       submitting = false;
     }
+  }
+
+  /** 将 OAuth 回调暂存的 refresh token 绑定到已保存账号 */
+  function persistOAuthRefresh(name: string) {
+    const raw = sessionStorage.getItem("oc_oauth_refresh");
+    if (!raw) {
+      return;
+    }
+    sessionStorage.removeItem("oc_oauth_refresh");
+    try {
+      const { refreshToken, expiresAt } = JSON.parse(raw) as {
+        refreshToken: string;
+        expiresAt: number;
+      };
+      if (refreshToken && Number.isFinite(expiresAt)) {
+        setAccountRefresh(name, refreshToken, expiresAt);
+      }
+    } catch {}
   }
 </script>
 

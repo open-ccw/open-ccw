@@ -7,15 +7,14 @@
   import { fade, scale } from "svelte/transition";
   import AvatarImage from "$lib/user/AvatarImage.svelte";
   import { updateToken, user } from "$lib/user/userStore";
+  import { freshTokenFor } from "$lib/oauth/refresh";
   import {
     disableQuickLogin,
     displayAccountName,
     enableQuickLogin,
     listAccounts,
-    listQuickAccounts,
     loadAccount,
     loadQuickToken,
-    localAccountName,
     LOCAL_ACCOUNT_SUFFIX,
     removeAccount,
     saveAccount,
@@ -26,12 +25,9 @@
   } from "./tokenStore";
 
   let dialog = $state<HTMLDialogElement>();
-  let uid = $state("");
   let passkey = $state("");
   let submitting = $state(false);
-  let mode = $state<"passkey" | "quick">("passkey");
   let accounts = $state<Account[]>([]);
-  let quickLoggingIn = $state(false);
   let menuAccount = $state<string | null>(null);
   let selectedAccount = $state<Account | null>(null);
   let trustDevice = $state(false);
@@ -40,59 +36,68 @@
   const { onclose }: Props = $props();
 
   onMount(() => {
-    accounts = listQuickAccounts();
+    accounts = listAccounts();
     selectedAccount = null;
     dialog?.showModal();
   });
 
+  /** 登录后更新 token 与账号信息（token 过期时先刷新再拉取用户信息） */
+  async function applyLogin(name: string, tok: string) {
+    setActiveAccount(name);
+    const finalTok = await freshTokenFor(name, tok);
+    await updateToken(finalTok);
+    const currentUser = get(user);
+    if (currentUser.loggedIn) {
+      updateAccountInfo(name, {
+        avatar: currentUser.avatar,
+        displayName: currentUser.name,
+      });
+    }
+  }
+
+  function finish() {
+    onclose();
+    dialog?.close();
+  }
+
   async function handleLogin(e: SubmitEvent) {
     e.preventDefault();
-    if (mode === "quick") {
-      if (!selectedAccount) {
-        toast.warning("请先选择要登录的账号");
-        return;
-      }
-      await handleQuickLogin(selectedAccount);
+    if (!selectedAccount) {
+      toast.warning("请先选择要登录的账号");
       return;
     }
-    if (!uid.trim()) {
-      toast.warning("请输入uid");
-      return;
-    }
-    if (!passkey) {
-      toast.warning("密钥不能为空");
-      return;
-    }
+    const name = selectedAccount.name;
     submitting = true;
     try {
-      const name = uid.trim();
+      if (!passkey) {
+        // 未填密钥时尝试快捷登录
+        const tok = await loadQuickToken(name);
+        if (!tok) {
+          toast.warning("该账号未启用快捷登录，请输入密钥");
+          return;
+        }
+        await applyLogin(name, tok);
+        finish();
+        return;
+      }
       const localOnly = name.endsWith(LOCAL_ACCOUNT_SUFFIX);
-      const localName = localOnly ? name : localAccountName(name);
-      const localTok = await loadAccount(localName, passkey);
+      const localTok = await loadAccount(name, passkey);
       if (localTok) {
         if (trustDevice) {
-          await enableQuickLogin(localName, localTok);
+          await enableQuickLogin(name, localTok);
         } else {
-          disableQuickLogin(localName);
+          disableQuickLogin(name);
         }
-        await updateToken(localTok);
-        const currentUser = get(user);
-        if (currentUser.loggedIn) {
-          updateAccountInfo(localName, {
-            avatar: currentUser.avatar,
-            displayName: currentUser.name,
-          });
-        }
-        onclose();
-        dialog?.close();
+        await applyLogin(name, localTok);
+        finish();
         return;
       }
       if (localOnly) {
-        toast.error("本地账号不存在或密钥错误");
+        toast.error("密钥错误");
         return;
       }
+      // 本地解密失败，尝试云端登录并更新本地数据
       const tok = await loginAccount(name, passkey);
-      await updateToken(tok);
       const currentUser = get(user);
       const avatar = currentUser.loggedIn ? currentUser.avatar : "";
       const displayName = currentUser.loggedIn ? currentUser.name : "";
@@ -106,9 +111,8 @@
       } else {
         disableQuickLogin(name);
       }
-      await loadAccount(name, passkey);
-      onclose();
-      dialog?.close();
+      await applyLogin(name, tok);
+      finish();
     } catch (e) {
       toast.error(e instanceof Error ? e.message : String(e));
     } finally {
@@ -120,7 +124,13 @@
     if (menuAccount) {
       menuAccount = null;
     }
-    selectedAccount = selectedAccount?.name === account.name ? null : account;
+    if (selectedAccount?.name === account.name) {
+      selectedAccount = null;
+      passkey = "";
+      return;
+    }
+    selectedAccount = account;
+    passkey = "";
   }
 
   function handleRemoveAccount(account: Account) {
@@ -128,36 +138,10 @@
     menuAccount = null;
     if (selectedAccount?.name === account.name) {
       selectedAccount = null;
+      passkey = "";
     }
-    accounts = listQuickAccounts();
+    accounts = listAccounts();
     toast.success(`已删除账号 ${displayAccountName(account.name)} 的本地数据`);
-  }
-
-  async function handleQuickLogin(account: Account) {
-    const tok = await loadQuickToken(account.name);
-    if (!tok) {
-      toast.warning("该账号未启用快捷登录，请使用账号密钥登录");
-      mode = "passkey";
-      return;
-    }
-    quickLoggingIn = true;
-    try {
-      await updateToken(tok);
-      const currentUser = get(user);
-      if (currentUser.loggedIn) {
-        updateAccountInfo(account.name, {
-          avatar: currentUser.avatar,
-          displayName: currentUser.name,
-        });
-      }
-      setActiveAccount(account.name);
-      onclose();
-      dialog?.close();
-    } catch (e) {
-      toast.error(e instanceof Error ? e.message : String(e));
-    } finally {
-      quickLoggingIn = false;
-    }
   }
 
   function handleClose() {
@@ -200,101 +184,87 @@
       </div>
 
       <form onsubmit={handleLogin} class="space-y-4">
-        {#if mode === "quick"}
-          <div>
-            {#if accounts.length === 0}
-              <p class="py-8 text-center text-sm text-text-secondary">
-                本地暂无账号
-              </p>
-            {:else}
-              <div class="grid grid-cols-3 gap-3 py-2 max-h-60 overflow-y-auto">
-                {#each accounts as account (account.name)}
-                  <div
-                    class="relative flex flex-col items-center gap-2 p-2 rounded-lg transition-colors cursor-pointer select-none {selectedAccount?.name ===
-                    account.name
-                      ? 'bg-primary/10 ring-2 ring-primary ring-inset'
-                      : 'hover:bg-white/5'}"
-                    data-account-card
-                    role="button"
-                    tabindex="0"
-                    onclick={() => handleAccountClick(account)}
-                    onkeydown={(e) => {
-                      if (e.key === "Enter" || e.key === " ") {
-                        e.preventDefault();
-                        handleAccountClick(account);
-                      }
-                    }}
-                    oncontextmenu={(e) => {
-                      e.preventDefault();
-                      menuAccount = account.name;
-                    }}
-                  >
-                    <div class="w-14 h-14">
-                      <AvatarImage
-                        url={account.avatar || undefined}
-                        alt={displayAccountName(account.name)}
-                      />
-                    </div>
-                    {#if account.displayName}
-                      <span
-                        class="text-xs font-medium text-text-primary truncate w-full text-center"
-                        >{account.displayName}</span
-                      >
-                    {/if}
-                    <span
-                      class="text-xs text-text-secondary truncate w-full text-center {account.displayName
-                        ? '-mt-1.5'
-                        : ''}">{displayAccountName(account.name)}</span
-                    >
-                    {#if menuAccount === account.name}
-                      <button
-                        type="button"
-                        onclick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveAccount(account);
-                        }}
-                        aria-label={`删除账号 ${displayAccountName(account.name)}`}
-                        title="删除账号"
-                        in:scale={{ duration: 120, start: 0.7 }}
-                        out:fade={{ duration: 120 }}
-                        class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-bg/90 border border-border-strong text-text-secondary shadow-md flex items-center justify-center hover:bg-error hover:text-white hover:border-error transition-colors cursor-pointer z-10"
-                      >
-                        <svg
-                          width="10"
-                          height="10"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="3"
-                          stroke-linecap="round"
-                        >
-                          <path d="M18 6 6 18M6 6l12 12" />
-                        </svg>
-                      </button>
-                    {/if}
-                  </div>
-                {/each}
-              </div>
-            {/if}
-          </div>
+        {#if accounts.length === 0}
+          <p class="py-8 text-center text-sm text-text-secondary">
+            本地暂无账号，请先注册
+          </p>
         {:else}
-          <div>
-            <label for="uid" class="block text-sm text-text-primary mb-2"
-              >账号uid</label
-            >
-            <input
-              id="uid"
-              type="text"
-              bind:value={uid}
-              autocomplete="username"
-              placeholder="请输入uid"
-              class="p-3 w-full rounded-lg bg-bg border border-border-strong text-text-primary focus:border-primary focus:outline-none transition-colors"
-            />
+          <div class="grid grid-cols-3 gap-3 py-2 max-h-60 overflow-y-auto">
+            {#each accounts as account (account.name)}
+              <div
+                class="relative flex flex-col items-center gap-2 p-2 rounded-lg transition-colors cursor-pointer select-none {selectedAccount?.name ===
+                account.name
+                  ? 'bg-primary/10 ring-2 ring-primary ring-inset'
+                  : 'hover:bg-white/5'}"
+                data-account-card
+                role="button"
+                tabindex="0"
+                onclick={() => handleAccountClick(account)}
+                onkeydown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    handleAccountClick(account);
+                  }
+                }}
+                oncontextmenu={(e) => {
+                  e.preventDefault();
+                  menuAccount = account.name;
+                }}
+              >
+                <div class="w-14 h-14">
+                  <AvatarImage
+                    url={account.avatar || undefined}
+                    alt={displayAccountName(account.name)}
+                  />
+                </div>
+                {#if account.displayName}
+                  <span
+                    class="text-xs font-medium text-text-primary truncate w-full text-center"
+                    >{account.displayName}</span
+                  >
+                {/if}
+                <span
+                  class="text-xs text-text-secondary truncate w-full text-center {account.displayName
+                    ? '-mt-1.5'
+                    : ''}">{displayAccountName(account.name)}</span
+                >
+                {#if menuAccount === account.name}
+                  <button
+                    type="button"
+                    onclick={(e) => {
+                      e.stopPropagation();
+                      handleRemoveAccount(account);
+                    }}
+                    aria-label={`删除账号 ${displayAccountName(account.name)}`}
+                    title="删除账号"
+                    in:scale={{ duration: 120, start: 0.7 }}
+                    out:fade={{ duration: 120 }}
+                    class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-bg/90 border border-border-strong text-text-secondary shadow-md flex items-center justify-center hover:bg-error hover:text-white hover:border-error transition-colors cursor-pointer z-10"
+                  >
+                    <svg
+                      width="10"
+                      height="10"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                    >
+                      <path d="M18 6 6 18M6 6l12 12" />
+                    </svg>
+                  </button>
+                {/if}
+              </div>
+            {/each}
           </div>
+        {/if}
 
+        {#if selectedAccount}
           <div>
             <label for="password" class="block text-sm text-text-primary mb-2"
-              >密钥</label
+              >密钥<span class="text-text-secondary text-xs ml-1"
+                >（已启用快捷登录的账号可留空）</span
+              ></label
             >
             <input
               id="password"
@@ -325,50 +295,14 @@
 
         <button
           type="submit"
-          disabled={submitting || quickLoggingIn}
+          disabled={submitting || accounts.length === 0}
           class="w-full rounded-lg bg-bg border-2 border-primary text-text-primary font-semibold p-3 hover:bg-success/10 active:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
         >
           {submitting ? "登录中..." : "登录"}
         </button>
       </form>
 
-      <div
-        class="flex gap-1 p-1 rounded-lg bg-bg/60 border border-white/10 mt-5"
-        role="tablist"
-      >
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "passkey"}
-          onclick={() => {
-            selectedAccount = null;
-            mode = "passkey";
-          }}
-          class="flex-1 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer {mode ===
-          'passkey'
-            ? 'bg-primary text-white shadow'
-            : 'text-text-secondary hover:text-text-primary'}"
-        >
-          账号密钥登录
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={mode === "quick"}
-          onclick={() => {
-            selectedAccount = null;
-            mode = "quick";
-          }}
-          class="flex-1 py-2 rounded-md text-sm font-medium transition-colors cursor-pointer {mode ===
-          'quick'
-            ? 'bg-primary text-white shadow'
-            : 'text-text-secondary hover:text-text-primary'}"
-        >
-          快捷登录
-        </button>
-      </div>
-
-      <div class="flex items-center justify-center gap-1 mt-2.5 text-sm">
+      <div class="flex items-center justify-center gap-1 mt-5 text-sm">
         <span class="text-text-secondary">还没有账号？</span>
         <a
           href="/register"

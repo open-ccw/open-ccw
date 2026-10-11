@@ -295,6 +295,45 @@ export function setActiveAccount(name: string): void {
   localStorage.setItem(ACTIVE_KEY, name);
 }
 
+const REFRESH_PREFIX = "oc_oauth_refresh_";
+
+/** 账号 OAuth refresh token 与过期时间 */
+export interface AccountTokenRefresh {
+  refreshToken: string;
+  /** 过期时间戳（毫秒） */
+  expiresAt: number;
+}
+
+/** 保存账号的 OAuth refresh token（明文存储，仅本机） */
+export function setAccountRefresh(
+  name: string,
+  refreshToken: string,
+  expiresAt: number,
+): void {
+  localStorage.setItem(
+    REFRESH_PREFIX + name,
+    JSON.stringify({ refreshToken, expiresAt } satisfies AccountTokenRefresh),
+  );
+}
+
+/** 读取账号的 OAuth refresh token */
+export function getAccountRefresh(name: string): AccountTokenRefresh | null {
+  const raw = localStorage.getItem(REFRESH_PREFIX + name);
+  if (!raw) {
+    return null;
+  }
+  try {
+    return JSON.parse(raw) as AccountTokenRefresh;
+  } catch {
+    return null;
+  }
+}
+
+/** 删除账号的 OAuth refresh token */
+export function clearAccountRefresh(name: string): void {
+  localStorage.removeItem(REFRESH_PREFIX + name);
+}
+
 export async function loadAccount(
   id: string,
   pin: string,
@@ -328,6 +367,7 @@ export function removeAccount(name: string): void {
   saveAccounts(accounts);
   localStorage.removeItem(TOKEN_PREFIX + name);
   localStorage.removeItem(QUICK_TOKEN_PREFIX + name);
+  clearAccountRefresh(name);
 
   if (getActiveAccount() === name) {
     clearToken();

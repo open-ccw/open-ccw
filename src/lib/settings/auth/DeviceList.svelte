@@ -1,13 +1,24 @@
 <script lang="ts">
+  import { goto } from "$app/navigation";
+  import { browser } from "$app/environment";
   import { communityWeb, sso } from "$lib/api";
   import DeviceTableRow from "./DeviceTableRow.svelte";
   import type { Session } from "./types";
   import Error from "$lib/utils/Error.svelte";
+  import { toast } from "$lib";
   import { user } from "$lib/user/userStore";
+  import {
+    clearAccountRefresh,
+    getAccountRefresh,
+    getActiveAccount,
+    logout,
+  } from "$lib/auth/tokenStore";
+  import { revokeOauthToken } from "$lib/oauth/client";
 
   let sessions = $state<Session[]>([]);
   let loading = $state(true);
   let loggingOutAll = $state(false);
+  let loggingOutOauth = $state(false);
   let error = $state("");
   let selected: Record<string, boolean> = $state({});
 
@@ -19,6 +30,13 @@
     sessions.filter((s) => selected[s.id] && !s.currentDevice),
   );
   const selectedCount = $derived(selectedSessions.length);
+  const hasOauthRefresh = $derived.by(() => {
+    if (!browser) {
+      return false;
+    }
+    const name = getActiveAccount();
+    return Boolean(name && getAccountRefresh(name)?.refreshToken);
+  });
 
   $effect(() => {
     if ($user.loggedIn) {
@@ -68,6 +86,35 @@
     await refreshSessions();
     loggingOutAll = false;
   }
+
+  /** 撤销当前账号的 OAuth refresh token 并退出登录 */
+  async function logoutOauth() {
+    const name = getActiveAccount();
+    const refreshToken = name ? getAccountRefresh(name)?.refreshToken : null;
+    if (!refreshToken) {
+      toast.warning("当前账号无 OAuth 登录信息");
+      return;
+    }
+    if (
+      !confirm(
+        "将撤销当前 OAuth 账号的 refresh token，退出后需重新授权登录。确定继续？",
+      )
+    ) {
+      return;
+    }
+    loggingOutOauth = true;
+    try {
+      await revokeOauthToken(refreshToken);
+      clearAccountRefresh(name!);
+      await logout();
+      toast.success("已退出 OAuth 账号");
+      goto("/");
+    } catch (e) {
+      toast.error(String(e));
+    } finally {
+      loggingOutOauth = false;
+    }
+  }
 </script>
 
 <h1 class="text-lg font-bold text-text-primary text-center w-full">
@@ -77,7 +124,7 @@
 {#if error}
   <Error {error}></Error>
 {:else}
-  <div class="flex items-center justify-between mb-4 px-1">
+  <div class="flex items-center justify-between mb-2 px-1">
     <div>
       <p class="text-sm text-text-secondary mt-0.5">
         {#if loading}
@@ -95,40 +142,57 @@
         {/if}
       </p>
     </div>
+  </div>
 
-    <div class="flex gap-2 flex-col">
+  <div class="flex flex-wrap items-center justify-end gap-2 mb-4 px-1">
+    {#if hasOauthRefresh}
+      {#if loggingOutOauth}
+        <span
+          class="rounded-lg bg-bg-secondary px-4 py-1 text-sm text-text-placeholder"
+        >
+          正在退出 OAuth 账号...
+        </span>
+      {:else}
+        <button
+          class="rounded-lg border border-error bg-error/10 px-4 py-1 text-sm font-medium text-error hover:bg-error/20 hover:border-error transition-colors cursor-pointer whitespace-nowrap"
+          onclick={logoutOauth}
+        >
+          退出当前 OAuth 账号
+        </button>
+      {/if}
+    {/if}
+
+    {#if loggingOutAll}
+      <span
+        class="rounded-lg bg-bg-secondary px-4 py-1 text-sm text-text-placeholder"
+      >
+        正在退出 {selectedCount} 台设备...
+      </span>
+    {:else}
+      <button
+        class="rounded-lg border border-warning bg-warning/10 px-4 py-1 text-sm font-medium text-warning hover:bg-warning/20 hover:border-warning transition-colors cursor-pointer whitespace-nowrap"
+        onclick={logoutSelected}
+      >
+        退出选中设备 ({selectedCount})
+      </button>
+    {/if}
+
+    {#if otherDeviceCount > 0}
       {#if loggingOutAll}
         <span
           class="rounded-lg bg-bg-secondary px-4 py-1 text-sm text-text-placeholder"
         >
-          正在退出 {selectedCount} 台设备...
+          正在退出全部设备...
         </span>
       {:else}
         <button
-          class="rounded-lg border border-warning bg-warning/10 px-4 py-1 text-sm font-medium text-warning hover:bg-warning/20 hover:border-warning transition-colors cursor-pointer whitespace-nowrap"
-          onclick={logoutSelected}
+          class="rounded-lg border border-error bg-error/10 px-4 py-1 text-sm text-error hover:bg-error/20 hover:border-error transition-colors cursor-pointer whitespace-nowrap"
+          onclick={logoutAll}
         >
-          退出选中设备 ({selectedCount})
+          退出全部设备
         </button>
       {/if}
-
-      {#if otherDeviceCount > 0}
-        {#if loggingOutAll}
-          <span
-            class="rounded-lg bg-bg-secondary px-4 py-1 text-sm text-text-placeholder"
-          >
-            正在退出全部设备...
-          </span>
-        {:else}
-          <button
-            class="rounded-lg border border-error bg-error/10 px-4 py-1 text-sm text-error hover:bg-error/20 hover:border-error transition-colors cursor-pointer whitespace-nowrap"
-            onclick={logoutAll}
-          >
-            退出全部设备
-          </button>
-        {/if}
-      {/if}
-    </div>
+    {/if}
   </div>
 
   <div class="w-full p-2">
