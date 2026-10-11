@@ -38,7 +38,7 @@
     "@types/ali-oss": "^6.23.3",
     "ali-oss": "^6.23.0",
     "crypto-js": "^4.2.0",
-    "dompurify": "^3.4.13",
+    "dompurify": "^3.4.16",
     "marked": "^18.0.9",
     "svelte-portal": "^2.2.1"
   }
