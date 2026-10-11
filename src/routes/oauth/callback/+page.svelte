@@ -1,12 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import bg from "$lib/assets/registerBG.webp";
-  import { exchangeAuthorizationCode } from "$lib/oauth/client";
-  import {
-    OAUTH_STATE_KEY,
-    OAUTH_VERIFIER_KEY,
-    oauthCallbackUrl,
-  } from "../oauthConfig";
+  import { completeOauthLogin } from "$lib/oauth/completeLogin";
+  import { buildAuthorizeUrl } from "$lib/oauth/client";
 
   let error = $state("");
   let loading = $state(true);
@@ -15,36 +11,16 @@
     const url = new URL(location.href);
     const code = url.searchParams.get("code");
     const state = url.searchParams.get("state");
-    const expectedState = sessionStorage.getItem(OAUTH_STATE_KEY);
-    const codeVerifier = sessionStorage.getItem(OAUTH_VERIFIER_KEY);
-
-    if (!code || !state || !expectedState || state !== expectedState) {
-      error = "安全校验未通过 (state 不匹配)，请返回重新登录";
-      loading = false;
-      return;
-    }
-    if (!codeVerifier) {
-      error = "缺少 PKCE 校验信息，请返回重新登录";
+    const errorParam = url.searchParams.get("error");
+    if (!code || !state) {
+      error = errorParam
+        ? `授权失败: ${errorParam}`
+        : "回调地址缺少授权参数，请返回重新登录";
       loading = false;
       return;
     }
     try {
-      const tokenSet = await exchangeAuthorizationCode(
-        code,
-        oauthCallbackUrl(),
-        codeVerifier,
-      );
-      sessionStorage.removeItem(OAUTH_STATE_KEY);
-      sessionStorage.removeItem(OAUTH_VERIFIER_KEY);
-      if (tokenSet.refreshToken) {
-        sessionStorage.setItem(
-          "oc_oauth_refresh",
-          JSON.stringify({
-            refreshToken: tokenSet.refreshToken,
-            expiresAt: tokenSet.expiresAt,
-          }),
-        );
-      }
+      const tokenSet = await completeOauthLogin(code, state);
       window.location.href = `/register?token=${encodeURIComponent(tokenSet.accessToken)}`;
     } catch (e) {
       error = String(e);
@@ -87,10 +63,6 @@
         ></div>
         <h2 class="text-2xl font-bold text-gray-800 mb-3">正在完成授权</h2>
         <p class="text-gray-500 text-sm">正在验证授权信息，请稍候...</p>
-      </div>
-    {:else}
-      <div class="text-center">
-        <h2 class="text-2xl font-bold text-gray-800">处理中...</h2>
       </div>
     {/if}
   </div>

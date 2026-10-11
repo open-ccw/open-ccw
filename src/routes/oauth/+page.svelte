@@ -6,13 +6,18 @@
     createPkcePair,
     pushAuthorizationRequest,
   } from "$lib/oauth/client";
+  import { completeOauthLogin } from "$lib/oauth/completeLogin";
   import {
-    OAUTH_STATE_KEY,
-    OAUTH_VERIFIER_KEY,
-    oauthCallbackUrl,
+    OAUTH_REDIRECT_URI,
+    setOauthPendingAuth,
   } from "./oauthConfig";
 
   let error = $state("");
+  let preparing = $state(true);
+  let authorizeUrl = $state("");
+  let pasted = $state("");
+  let pastedError = $state("");
+  let exchanging = $state(false);
 
   function randomState(): string {
     const bytes = crypto.getRandomValues(new Uint8Array(32));
@@ -28,18 +33,56 @@
     try {
       const state = randomState();
       const pkce = await createPkcePair();
-      sessionStorage.setItem(OAUTH_STATE_KEY, state);
-      sessionStorage.setItem(OAUTH_VERIFIER_KEY, pkce.codeVerifier);
+      setOauthPendingAuth(state, pkce.codeVerifier);
       const requestUri = await pushAuthorizationRequest(
-        oauthCallbackUrl(),
+        OAUTH_REDIRECT_URI,
         state,
         pkce,
       );
-      document.location.href = buildAuthorizeUrl(requestUri);
+      authorizeUrl = buildAuthorizeUrl(requestUri);
     } catch (e) {
       error = String(e);
+    } finally {
+      preparing = false;
     }
   });
+
+  function openAuthorize(): void {
+    window.open(authorizeUrl, "_blank", "noopener");
+  }
+
+  /** 解析用户粘贴的回调地址并完成登录 */
+  async function submitPasted(): Promise<void> {
+    pastedError = "";
+    let code: string | null = null;
+    let state: string | null = null;
+    try {
+      const url = new URL(pasted.trim());
+      code = url.searchParams.get("code");
+      state = url.searchParams.get("state");
+      const errorParam = url.searchParams.get("error");
+      if (errorParam) {
+        pastedError = `授权失败: ${errorParam}`;
+        return;
+      }
+    } catch {
+      pastedError = "请粘贴完整的回调地址";
+      return;
+    }
+    if (!code || !state) {
+      pastedError = "回调地址中缺少 code 或 state 参数";
+      return;
+    }
+    exchanging = true;
+    try {
+      const tokenSet = await completeOauthLogin(code, state);
+      window.location.href = `/register?token=${encodeURIComponent(tokenSet.accessToken)}`;
+    } catch (e) {
+      pastedError = String(e);
+    } finally {
+      exchanging = false;
+    }
+  }
 </script>
 
 <svelte:head>
@@ -72,14 +115,52 @@
           返回首页
         </a>
       </div>
-    {:else}
+    {:else if preparing}
       <div
         class="mx-auto mb-6 w-12 h-12 border-4 border-gray-200 border-t-green-400 rounded-full animate-spin"
       ></div>
-      <h2 class="text-2xl font-bold text-gray-800 mb-3">正在跳转到 CCW 登录</h2>
-      <p class="text-gray-500 text-sm">
-        即将重定向至 CCW OAuth 授权页面，请稍候...
-      </p>
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">正在准备登录</h2>
+      <p class="text-gray-500 text-sm">正在初始化 OAuth 授权请求...</p>
+    {:else}
+      <h2 class="text-2xl font-bold text-gray-800 mb-3">CCW 登录</h2>
+      <ol
+        class="text-left text-gray-500 text-sm leading-relaxed mb-6 space-y-1 list-decimal list-inside"
+      >
+        <li>点击下方按钮，在新标签页完成 CCW 授权登录</li>
+        <li>
+          授权后浏览器会跳转到一个
+          <code class="text-xs bg-gray-100 rounded px-1">127.0.0.1</code>
+          开头、打不开的页面，这是正常现象
+        </li>
+        <li>复制该页面地址栏的完整网址，粘贴到下方输入框</li>
+        <li>点击"完成登录"</li>
+      </ol>
+
+      <button
+        class="rounded-lg bg-green-500 text-white font-medium px-6 py-3 hover:bg-green-600 transition-colors cursor-pointer mb-6"
+        onclick={openAuthorize}
+      >
+        前往 CCW 登录
+      </button>
+
+      <div class="flex flex-col gap-3 text-left">
+        <textarea
+          class="w-full rounded-lg border border-gray-300 p-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-green-400 break-all"
+          rows="3"
+          placeholder="粘贴回调地址 (http://127.0.0.1:.../oauth/callback?code=...)"
+          bind:value={pasted}
+        ></textarea>
+        {#if pastedError}
+          <p class="text-red-500 text-sm break-all">{pastedError}</p>
+        {/if}
+        <button
+          class="rounded-lg bg-gray-800 text-white font-medium px-6 py-3 hover:bg-gray-900 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+          onclick={submitPasted}
+          disabled={exchanging || !pasted.trim()}
+        >
+          {exchanging ? "正在完成登录..." : "完成登录"}
+        </button>
+      </div>
     {/if}
   </div>
 </div>
