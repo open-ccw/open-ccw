@@ -19,7 +19,7 @@
     },
   },
   "build": {
-    "command": "npm run build  --userconfig=/opt/buildhome/repo/cf.npmrc",
+    "command": "npm run build",
   },
   "upload_source_maps": true,
   "cache": {
