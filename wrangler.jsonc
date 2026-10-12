@@ -18,6 +18,9 @@
       "invocation_logs": false,
     },
   },
+  "build": {
+    "command": "npm run build  --userconfig=/opt/buildhome/repo/cf.npmrc",
+  },
   "upload_source_maps": true,
   "cache": {
     "enabled": false,
