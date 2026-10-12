@@ -1,15 +1,15 @@
 <script lang="ts">
-  import PageHeader from "$lib/PageHeader.svelte";
+  import PageHeader from "#lib/PageHeader.svelte";
   import type { LayoutProps } from "./$types";
   import { onMount } from "svelte";
   import { noticeTypes } from "./noticeTypes";
-  import Error from "$lib/utils/Error.svelte";
+  import Error from "#lib/utils/Error.svelte";
   import { goto } from "$app/navigation";
-  import { token } from "$lib/auth/tokenStore";
+  import { token } from "#lib/auth/tokenStore";
   import {
     notificationStats,
     refreshNotificationStats,
-  } from "$lib/notify/notifyStatsStore";
+  } from "#lib/notify/notifyStatsStore";
 
   let { children }: LayoutProps = $props();
 

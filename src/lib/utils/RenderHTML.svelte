@@ -1,7 +1,7 @@
 <script lang="ts">
   import DOMPurify, { type Config } from "dompurify";
   import { marked } from "marked";
-  import { default_putify_config } from "$lib/utils/purifyConfig";
+  import { default_putify_config } from "#lib/utils/purifyConfig";
 
   const {
     text,

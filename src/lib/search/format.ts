@@ -1,4 +1,4 @@
-import type { Creation } from "$lib/api";
+import type { Creation } from "#lib/api";
 
 export function formatCount(n: number | undefined | null): string {
   const v = n ?? 0;

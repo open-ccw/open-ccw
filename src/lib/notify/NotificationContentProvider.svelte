@@ -31,8 +31,8 @@
     TEAM_COMMENTED,
   } from "@ccw-api/api";
   import LikeIcon from "./LikeIcon.svelte";
-  import RenderHTML from "$lib/utils/RenderHTML.svelte";
-  import { user } from "$lib/user/userStore";
+  import RenderHTML from "#lib/utils/RenderHTML.svelte";
+  import { user } from "#lib/user/userStore";
   import RenderComment from "../comment/RenderComment.svelte";
 
   const userLinkClass =

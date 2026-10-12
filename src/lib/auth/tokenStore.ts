@@ -3,9 +3,9 @@ import {
   decryptWithPassword,
   encryptWithPassword,
   isV2Encrypted,
-} from "$lib/utils/aes";
+} from "#lib/utils/aes";
 import { browser } from "$app/environment";
-import { clearTokenAndUser, updateToken } from "$lib/user/userStore";
+import { clearTokenAndUser, updateToken } from "#lib/user/userStore";
 
 const ACCOUNTS_KEY = "oc_accounts";
 const TOKEN_PREFIX = "oc_token_";

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { SearchResult } from "@ccw-api/api";
   import { formatCount, formatDate } from "./format";
-  import AvatarToProfile from "$lib/user/AvatarToProfile.svelte";
+  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
   import { goto } from "$app/navigation";
 
   let { item }: { item: SearchResult.SearchPost } = $props();

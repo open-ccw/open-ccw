@@ -1,17 +1,17 @@
 <script lang="ts">
-  import { toast } from "$lib";
-  import { getStudentProfile, registerAccount } from "$lib/auth/registerApi";
+  import { toast } from "#lib";
+  import { getStudentProfile, registerAccount } from "#lib/auth/registerApi";
   import {
     listAccounts,
     localAccountName,
     saveAccount,
     setAccountRefresh,
     updateAccountToken,
-  } from "$lib/auth/tokenStore";
+  } from "#lib/auth/tokenStore";
 
-  import ccwLogo from "$lib/assets/ccw-logo.webp";
-  import bg from "$lib/assets/registerBG.webp";
-  import successSvg from "$lib/assets/toast/success.svg";
+  import ccwLogo from "#lib/assets/ccw-logo.webp";
+  import bg from "#lib/assets/registerBG.webp";
+  import successSvg from "#lib/assets/toast/success.svg";
 
   let { token = "" } = $props();
 

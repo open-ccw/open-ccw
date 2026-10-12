@@ -1,11 +1,11 @@
 <script lang="ts">
-  import { communityWeb } from "$lib/api";
-  import Error from "$lib/utils/Error.svelte";
+  import { communityWeb } from "#lib/api";
+  import Error from "#lib/utils/Error.svelte";
   import { onMount } from "svelte";
-  import SearchBar from "$lib/search/SearchBar.svelte";
-  import SearchSkeleton from "$lib/search/SearchSkeleton.svelte";
-  import SearchEmpty from "$lib/search/SearchEmpty.svelte";
-  import SearchAllResultsPage from "$lib/search/SearchAllResultsPage.svelte";
+  import SearchBar from "#lib/search/SearchBar.svelte";
+  import SearchSkeleton from "#lib/search/SearchSkeleton.svelte";
+  import SearchEmpty from "#lib/search/SearchEmpty.svelte";
+  import SearchAllResultsPage from "#lib/search/SearchAllResultsPage.svelte";
   import type { SearchTypes } from "./searchTypes";
   import SearchTypeSwitch from "./SearchTypeSwitch.svelte";
 

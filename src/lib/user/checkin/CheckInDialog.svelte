@@ -1,10 +1,10 @@
 <script lang="ts">
-  import coinSvg from "$lib/assets/coin.svg";
+  import coinSvg from "#lib/assets/coin.svg";
   import { communityWeb } from "@ccw-api/api";
   import { onMount } from "svelte";
   import Coin from "./CoinImage.svelte";
-  import CancelButton from "$lib/CancelButton.svelte";
-  import Error from "$lib/utils/Error.svelte";
+  import CancelButton from "#lib/CancelButton.svelte";
+  import Error from "#lib/utils/Error.svelte";
   import { scale } from "svelte/transition";
 
   let { onclose, onChecked }: { onclose: () => void; onChecked: () => void } =

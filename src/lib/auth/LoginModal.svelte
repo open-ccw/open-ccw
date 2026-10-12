@@ -2,12 +2,12 @@
   import { onMount } from "svelte";
   import { get } from "svelte/store";
   import { loginAccount } from "./loginApi";
-  import { toast } from "$lib";
-  import CancelButton from "$lib/CancelButton.svelte";
+  import { toast } from "#lib";
+  import CancelButton from "#lib/CancelButton.svelte";
   import { fade, scale } from "svelte/transition";
-  import AvatarImage from "$lib/user/AvatarImage.svelte";
-  import { updateToken, user } from "$lib/user/userStore";
-  import { freshTokenFor } from "$lib/oauth/refresh";
+  import AvatarImage from "#lib/user/AvatarImage.svelte";
+  import { updateToken, user } from "#lib/user/userStore";
+  import { freshTokenFor } from "#lib/oauth/refresh";
   import {
     disableQuickLogin,
     displayAccountName,

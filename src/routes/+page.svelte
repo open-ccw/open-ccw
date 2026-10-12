@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Header from "$lib/PageHeader.svelte";
-  import logo from "$lib/assets/favicon.svg";
-  import coinSvg from "$lib/assets/coin.svg";
-  import noticeSvg from "$lib/assets/notice.svg";
-  import cogSvg from "$lib/assets/cog.svg";
+  import Header from "#lib/PageHeader.svelte";
+  import logo from "#lib/assets/favicon.svg";
+  import coinSvg from "#lib/assets/coin.svg";
+  import noticeSvg from "#lib/assets/notice.svg";
+  import cogSvg from "#lib/assets/cog.svg";
 
   const features = [
     {

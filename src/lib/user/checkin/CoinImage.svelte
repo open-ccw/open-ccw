@@ -1,6 +1,6 @@
 <script lang="ts">
-  import common from "$lib/assets/common-gold.svg";
-  import more from "$lib/assets/more-gold.svg";
+  import common from "#lib/assets/common-gold.svg";
+  import more from "#lib/assets/more-gold.svg";
   const { bucks = 0 } = $props();
   let src = $derived.by(() => {
     switch (bucks) {

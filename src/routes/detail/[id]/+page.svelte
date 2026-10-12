@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import type { PageProps } from "./$types";
-  import { communityWeb, type Creation } from "$lib/api";
-  import Error from "$lib/utils/Error.svelte";
+  import { communityWeb, type Creation } from "#lib/api";
+  import Error from "#lib/utils/Error.svelte";
   let { params }: PageProps = $props();
 
   let error = $state("");

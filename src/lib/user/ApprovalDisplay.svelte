@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { communityWeb } from "$lib/api";
+  import { communityWeb } from "#lib/api";
   import { onMount } from "svelte";
   import ApprovalTag from "./ApprovalTag.svelte";
   import type { ApprovalTagType } from "./approvalType";
-  import { user } from "$lib/user/userStore";
+  import { user } from "#lib/user/userStore";
   import { scale } from "svelte/transition";
   import DeveloperBadge from "./custom-badge/DeveloperBadge.svelte";
   import { developerBadges } from "./custom-badge/developerBadges";

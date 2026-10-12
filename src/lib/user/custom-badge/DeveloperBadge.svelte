@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getBadgeFiles, badgeInfo } from "$lib/assets/badge/badgeInfo";
+  import { getBadgeFiles, badgeInfo } from "#lib/assets/badge/badgeInfo";
 
   let { name, size = "h-6" }: { name: string; size?: string } = $props();
 
