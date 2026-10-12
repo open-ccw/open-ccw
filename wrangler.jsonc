@@ -21,6 +21,7 @@
   "build": {
     "command": "npm run build",
   },
+  "previews": {},
   "upload_source_maps": true,
   "cache": {
     "enabled": false,
