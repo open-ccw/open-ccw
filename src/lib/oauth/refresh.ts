@@ -5,9 +5,9 @@ import {
   getActiveAccount,
   setAccountRefresh,
   token,
-} from "$lib/auth/tokenStore";
-import { setToken } from "$lib/api";
-import { refreshUser } from "$lib/user/userStore";
+} from "#lib/auth/tokenStore";
+import { setToken } from "#lib/api";
+import { refreshUser } from "#lib/user/userStore";
 
 /** 提前 30 秒视为过期 */
 const EXPIRY_SKEW_MS = 30_000;

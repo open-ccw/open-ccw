@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Error from "$lib/utils/Error.svelte";
+  import Error from "#lib/utils/Error.svelte";
   import AvatarImage from "./AvatarImage.svelte";
   import ProfileBG from "./ProfileBG.svelte";
   import ProfileDataView from "./ProfileDataView.svelte";
   import AuthRankDisplay from "./AuthRankDisplay.svelte";
-  import RenderHTML from "$lib/utils/RenderHTML.svelte";
+  import RenderHTML from "#lib/utils/RenderHTML.svelte";
   import ApprovalDisplay from "./ApprovalDisplay.svelte";
   import LockedDetail from "./LockedDetail.svelte";
   import ProfileSkeleton from "./ProfileSkeleton.svelte";
-  import CommentTrigger from "$lib/comment/CommentTrigger.svelte";
-  import { formatDate } from "$lib/search/format";
+  import CommentTrigger from "#lib/comment/CommentTrigger.svelte";
+  import { formatDate } from "#lib/search/format";
 
   let {
     profile = $bindable(null),

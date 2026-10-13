@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import bg from "$lib/assets/registerBG.webp";
-  import { completeOauthLogin } from "$lib/oauth/completeLogin";
-  import { buildAuthorizeUrl } from "$lib/oauth/client";
+  import bg from "#lib/assets/registerBG.webp";
+  import { completeOauthLogin } from "#lib/oauth/completeLogin";
+  import { buildAuthorizeUrl } from "#lib/oauth/client";
 
   let error = $state("");
   let loading = $state(true);

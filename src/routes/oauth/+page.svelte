@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import bg from "$lib/assets/registerBG.webp";
+  import bg from "#lib/assets/registerBG.webp";
   import {
     buildAuthorizeUrl,
     createPkcePair,
     pushAuthorizationRequest,
-  } from "$lib/oauth/client";
-  import { completeOauthLogin } from "$lib/oauth/completeLogin";
+  } from "#lib/oauth/client";
+  import { completeOauthLogin } from "#lib/oauth/completeLogin";
   import {
     OAUTH_REDIRECT_URI,
     setOauthPendingAuth,

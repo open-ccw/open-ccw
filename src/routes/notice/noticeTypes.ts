@@ -1,8 +1,8 @@
-import InteractionIcon from "$lib/assets/notice_icon/interaction.svg";
-import ReplyIcon from "$lib/assets/notice_icon/reply.svg";
-import ShareIcon from "$lib/assets/notice_icon/share.svg";
-import SystemIcon from "$lib/assets/notice_icon/system.svg";
-import type { communityWeb } from "$lib/api";
+import InteractionIcon from "#lib/assets/notice_icon/interaction.svg";
+import ReplyIcon from "#lib/assets/notice_icon/reply.svg";
+import ShareIcon from "#lib/assets/notice_icon/share.svg";
+import SystemIcon from "#lib/assets/notice_icon/system.svg";
+import type { communityWeb } from "#lib/api";
 
 type K = keyof Awaited<ReturnType<typeof communityWeb.getNotificationStats>>;
 

@@ -1,4 +1,4 @@
-import { sealedRequest, SERVER_PUB_KEYS } from "$lib/crypto/sealedRequest";
+import { sealedRequest, SERVER_PUB_KEYS } from "#lib/crypto/sealedRequest";
 
 const LOGIN_API = "https://openccw.seia0070.dpdns.org/login";
 

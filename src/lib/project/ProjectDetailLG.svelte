@@ -1,11 +1,11 @@
 <script lang="ts">
   // 这个不对
-  import like from "$lib/assets/creationStat/like.svg";
-  import view from "$lib/assets/creationStat/view.svg";
-  import comments from "$lib/assets/creationStat/comments.svg";
-  import { formatCount } from "$lib/search/format";
+  import like from "#lib/assets/creationStat/like.svg";
+  import view from "#lib/assets/creationStat/view.svg";
+  import comments from "#lib/assets/creationStat/comments.svg";
+  import { formatCount } from "#lib/search/format";
   import { goto } from "$app/navigation";
-  import AvatarToProfile from "$lib/user/AvatarToProfile.svelte";
+  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
   type Props = {
     oid: string;
     cover: string;

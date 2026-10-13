@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
   import type { PageProps } from "./$types";
   import { page } from "$app/state";
-  import { communityWeb } from "$lib/api";
+  import { communityWeb } from "#lib/api";
 
   let { params }: PageProps = $props();
 
