@@ -4,10 +4,12 @@
 /// <reference lib="esnext" />
 /// <reference lib="webworker" />
 
-// Ensures that the `$service-worker` import has proper type definitions
+// Ensures that the `$app/...` imports have proper type definitions
 /// <reference types="@sveltejs/kit" />
 
-import { build, version } from "$service-worker";
+import { assets, immutable, prerendered } from "$app/manifest";
+import { version } from "$app/env";
+import { resolve } from "$app/paths";
 
 // This gives `self` the correct types
 const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
@@ -16,7 +18,9 @@ const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 const CACHE = `cache-${version}`;
 
 const ASSETS = [
-  ...build, // the app itself
+  ...immutable.map((asset) => resolve(asset.path)), // the app itself
+  ...assets.map((asset) => resolve(asset.path)), // the static directory
+  ...prerendered.map((asset) => resolve(asset.path)), // prerendered pages/endpoints
 ];
 
 self.addEventListener("install", (event) => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import AvatarToProfile from "$lib/user/AvatarToProfile.svelte";
+  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
   import type { SearchResult } from "@ccw-api/api";
   import { formatCount } from "./format";
 

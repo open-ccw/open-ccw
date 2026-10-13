@@ -2,13 +2,13 @@
   import { communityWeb } from "@ccw-api/api";
   import { onMount } from "svelte";
   import type { MinimalComment, TopicConfig } from "./types";
-  import AvatarToProfile from "$lib/user/AvatarToProfile.svelte";
+  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
   import RenderComment from "./RenderComment.svelte";
-  import ApprovalDisplay from "$lib/user/ApprovalDisplay.svelte";
-  import { toast } from "$lib";
-  import { user } from "$lib/user/userStore";
+  import ApprovalDisplay from "#lib/user/ApprovalDisplay.svelte";
+  import { toast } from "#lib";
+  import { user } from "#lib/user/userStore";
   import WriteComment from "./WriteComment.svelte";
-  import up from "$lib/assets/arrow-up-from-line.svg?raw";
+  import up from "#lib/assets/arrow-up-from-line.svg?raw";
 
   const { oid, subjectType, sectionType }: TopicConfig = $props();
   let pageNum = $state(1);

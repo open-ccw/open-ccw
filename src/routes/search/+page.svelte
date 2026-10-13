@@ -1,10 +1,10 @@
 <script lang="ts">
   import { replaceState } from "$app/navigation";
   import { page } from "$app/state";
-  import PageHeader from "$lib/PageHeader.svelte";
-  import { parseType } from "$lib/search/parseType";
-  import SearchResultPages from "$lib/search/SearchResultPages.svelte";
-  import type { SearchTypes } from "$lib/search/searchTypes";
+  import PageHeader from "#lib/PageHeader.svelte";
+  import { parseType } from "#lib/search/parseType";
+  import SearchResultPages from "#lib/search/SearchResultPages.svelte";
+  import type { SearchTypes } from "#lib/search/searchTypes";
   import { onMount, tick } from "svelte";
 
   const { url } = page;

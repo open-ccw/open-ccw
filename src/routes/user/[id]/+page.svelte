@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { PageProps } from "./$types";
-  import Profile from "$lib/user/Profile.svelte";
-  import PageHeader from "$lib/PageHeader.svelte";
-  import { communityWeb } from "$lib/api";
+  import Profile from "#lib/user/Profile.svelte";
+  import PageHeader from "#lib/PageHeader.svelte";
+  import { communityWeb } from "#lib/api";
 
   let { params }: PageProps = $props();
 

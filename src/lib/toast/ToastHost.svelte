@@ -3,10 +3,10 @@
   import { backOut, cubicOut } from "svelte/easing";
   import { flip } from "svelte/animate";
   import { toastItems, dismissToast } from "../toast";
-  import successIcon from "$lib/assets/toast/success.svg?raw";
-  import errorIcon from "$lib/assets/toast/error.svg?raw";
-  import warningIcon from "$lib/assets/toast/warning.svg?raw";
-  import infoIcon from "$lib/assets/toast/info.svg?raw";
+  import successIcon from "#lib/assets/toast/success.svg?raw";
+  import errorIcon from "#lib/assets/toast/error.svg?raw";
+  import warningIcon from "#lib/assets/toast/warning.svg?raw";
+  import infoIcon from "#lib/assets/toast/info.svg?raw";
 
   const ICONS: Record<string, string> = {
     success: successIcon,

@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AvatarToProfile from "$lib/user/AvatarToProfile.svelte";
+  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
   import type { Notification } from "@ccw-api/api";
-  import systemLogo from "$lib/assets/system_logo.svg";
+  import systemLogo from "#lib/assets/system_logo.svg";
 
   const { page }: { page: Notification.NotificationPage } = $props();
   const isSystem = $derived([

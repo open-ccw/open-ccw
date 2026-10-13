@@ -1,11 +1,11 @@
 <script lang="ts">
-  import smile from "$lib/assets/like_icon/smile.svg";
-  import six from "$lib/assets/like_icon/six.svg";
-  import handshake from "$lib/assets/like_icon/handshake.svg";
-  import heart from "$lib/assets/like_icon/heart.svg";
-  import like from "$lib/assets/like_icon/like.svg";
-  import watermelon from "$lib/assets/like_icon/watermelon.svg";
-  import flower from "$lib/assets/like_icon/flower.svg";
+  import smile from "#lib/assets/like_icon/smile.svg";
+  import six from "#lib/assets/like_icon/six.svg";
+  import handshake from "#lib/assets/like_icon/handshake.svg";
+  import heart from "#lib/assets/like_icon/heart.svg";
+  import like from "#lib/assets/like_icon/like.svg";
+  import watermelon from "#lib/assets/like_icon/watermelon.svg";
+  import flower from "#lib/assets/like_icon/flower.svg";
   const { like_icon = smile } = $props();
   let icon = $derived.by(() => {
     switch (like_icon) {

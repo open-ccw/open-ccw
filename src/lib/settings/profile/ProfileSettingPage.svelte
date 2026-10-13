@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { user } from "$lib/user/userStore";
-  import Error from "$lib/utils/Error.svelte";
+  import { user } from "#lib/user/userStore";
+  import Error from "#lib/utils/Error.svelte";
   import ChangeAvatar from "./ChangeAvatar.svelte";
 </script>
 

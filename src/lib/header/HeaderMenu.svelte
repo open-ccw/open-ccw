@@ -1,11 +1,11 @@
 <script lang="ts">
-  import LoginButton from "$lib/user/LoginButton.svelte";
-  import AvatarToProfile from "$lib/user/AvatarToProfile.svelte";
-  import coinSvg from "$lib/assets/coin.svg";
-  import noticeSvg from "$lib/assets/notice.svg";
-  import cogSvg from "$lib/assets/cog.svg";
-  import { user } from "$lib/user/userStore";
-  import SearchIcon from "$lib/search/searchIcon.svelte";
+  import LoginButton from "#lib/user/LoginButton.svelte";
+  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
+  import coinSvg from "#lib/assets/coin.svg";
+  import noticeSvg from "#lib/assets/notice.svg";
+  import cogSvg from "#lib/assets/cog.svg";
+  import { user } from "#lib/user/userStore";
+  import SearchIcon from "#lib/search/searchIcon.svelte";
 
   let {
     checkedIn,

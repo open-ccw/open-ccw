@@ -1,19 +1,19 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
   import { browser } from "$app/environment";
-  import { communityWeb, sso } from "$lib/api";
+  import { communityWeb, sso } from "#lib/api";
   import DeviceTableRow from "./DeviceTableRow.svelte";
   import type { Session } from "./types";
-  import Error from "$lib/utils/Error.svelte";
-  import { toast } from "$lib";
-  import { user } from "$lib/user/userStore";
+  import Error from "#lib/utils/Error.svelte";
+  import { toast } from "#lib";
+  import { user } from "#lib/user/userStore";
   import {
     clearAccountRefresh,
     getAccountRefresh,
     getActiveAccount,
     logout,
-  } from "$lib/auth/tokenStore";
-  import { revokeOauthToken } from "$lib/oauth/client";
+  } from "#lib/auth/tokenStore";
+  import { revokeOauthToken } from "#lib/oauth/client";
 
   let sessions = $state<Session[]>([]);
   let loading = $state(true);
