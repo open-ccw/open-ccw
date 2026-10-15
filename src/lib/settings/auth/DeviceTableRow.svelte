@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { sso } from "#lib/api";
+  import { sso } from "#lib/api.ts";
   import type { LocateRes } from "../../../routes/settings/auth/locate/+server";
   import type { Session } from "./types";
 

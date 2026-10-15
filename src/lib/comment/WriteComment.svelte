@@ -1,9 +1,9 @@
 <script lang="ts">
   import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
-  import { user } from "#lib/user/userStore";
-  import { getOSS } from "#lib/utils/oss";
+  import { user } from "#lib/user/userStore.ts";
+  import { getOSS } from "#lib/utils/oss.ts";
   import { communityWeb } from "@ccw-api/api";
-  import { toast } from "#lib/toast";
+  import { toast } from "#lib/toast.ts";
   import type OSS from "ali-oss";
   import CryptoJS from "crypto-js";
   import type { MinimalComment, TopicConfig } from "./types";

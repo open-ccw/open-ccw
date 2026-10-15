@@ -6,7 +6,7 @@
   import RenderComment from "./RenderComment.svelte";
   import ApprovalDisplay from "#lib/user/ApprovalDisplay.svelte";
   import { toast } from "#lib";
-  import { user } from "#lib/user/userStore";
+  import { user } from "#lib/user/userStore.ts";
   import WriteComment from "./WriteComment.svelte";
   import up from "#lib/assets/arrow-up-from-line.svg?raw";
 

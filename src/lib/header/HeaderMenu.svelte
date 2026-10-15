@@ -4,7 +4,7 @@
   import coinSvg from "#lib/assets/coin.svg";
   import noticeSvg from "#lib/assets/notice.svg";
   import cogSvg from "#lib/assets/cog.svg";
-  import { user } from "#lib/user/userStore";
+  import { user } from "#lib/user/userStore.ts";
   import SearchIcon from "#lib/search/searchIcon.svelte";
 
   let {

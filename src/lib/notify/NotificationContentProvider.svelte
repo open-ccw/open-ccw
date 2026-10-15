@@ -32,7 +32,7 @@
   } from "@ccw-api/api";
   import LikeIcon from "./LikeIcon.svelte";
   import RenderHTML from "#lib/utils/RenderHTML.svelte";
-  import { user } from "#lib/user/userStore";
+  import { user } from "#lib/user/userStore.ts";
   import RenderComment from "../comment/RenderComment.svelte";
 
   const userLinkClass =

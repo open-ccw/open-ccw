@@ -3,7 +3,7 @@
   import Register from "#lib/auth/RegisterPage.svelte";
   import { onMount } from "svelte";
   import bg from "#lib/assets/registerBG.webp";
-  const url = new URL(page.url);
+  const url = new URL(page.url.toString());
   const token = url.searchParams.get("token") || "";
   onMount(() => {
     if (token) {

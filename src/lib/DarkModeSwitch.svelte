@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { browser } from "$app/environment";
+  import { browser } from "$app/env";
   import { onMount } from "svelte";
 
   let dark = $state(false);
@@ -24,9 +24,19 @@
   }
 </script>
 
-<label class="switch" title={dark ? "切换到浅色模式" : "切换到深色模式"}>
-  <span class="sun" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+<label
+  class="relative inline-block h-6.5 w-12 cursor-pointer align-middle"
+  title={dark ? "切换到浅色模式" : "切换到深色模式"}
+>
+  <span
+    class="absolute top-1 left-6.75 z-1 block size-4.5 animate-spin-slow"
+    aria-hidden="true"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      class="size-full"
+    >
       <g fill="#ffd43b">
         <circle r="5" cy="12" cx="12"></circle>
         <path
@@ -35,8 +45,15 @@
       </g>
     </svg>
   </span>
-  <span class="moon" aria-hidden="true">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
+  <span
+    class="absolute top-1 left-1 z-1 block size-4.5 animate-tilt"
+    aria-hidden="true"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 384 512"
+      class="size-full fill-[#73c0fc]"
+    >
       <path
         d="m223.5 32c-123.5 0-223.5 100.3-223.5 224s100 224 223.5 224c60.6 0 115.5-24.2 155.8-63.4 5-4.9 6.3-12.5 3.1-18.7s-10.1-9.7-17-8.5c-9.8 1.7-19.8 2.6-30.1 2.6-96.9 0-175.5-78.8-175.5-176 0-65.8 36-123.1 89.3-153.3 6.1-3.5 9.2-10.5 7.7-17.3s-7.3-11.9-14.3-12.5c-6.3-.5-12.6-.8-19-.8z"
       ></path>
@@ -44,121 +61,12 @@
   </span>
   <input
     type="checkbox"
-    class="input"
+    class="peer size-0 opacity-0"
     aria-label={dark ? "切换到浅色模式" : "切换到深色模式"}
     checked={dark}
     onchange={toggleTheme}
   />
-  <span class="slider"></span>
+  <span
+    class="absolute inset-0 cursor-pointer rounded-full bg-[#73c0fc] transition-all duration-400 before:absolute before:bottom-0.5 before:left-0.5 before:z-2 before:size-5.5 before:rounded-[20px] before:bg-[#e8e8e8] before:shadow-[0_1px_2px_rgba(0,0,0,0.15)] before:transition-transform before:duration-400 before:content-[''] peer-checked:bg-[#183153] peer-checked:before:translate-x-5.5 peer-focus-visible:shadow-[0_0_0_2px_rgba(24,49,83,0.4)]"
+  ></span>
 </label>
-
-<style>
-  .switch {
-    font-size: 17px;
-    position: relative;
-    display: inline-block;
-    width: 48px;
-    height: 26px;
-    vertical-align: middle;
-    @apply cursor-pointer;
-  }
-
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #73c0fc;
-    transition: 0.4s;
-    border-radius: 25px;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 22px;
-    width: 22px;
-    border-radius: 20px;
-    left: 2px;
-    bottom: 2px;
-    z-index: 2;
-    background-color: #e8e8e8;
-    box-shadow: 0 1px 2px rgb(0 0 0 / 0.15);
-    transition: 0.4s;
-  }
-
-  .sun svg {
-    position: absolute;
-    top: 4px;
-    left: 27px;
-    z-index: 1;
-    width: 18px;
-    height: 18px;
-  }
-
-  .moon svg {
-    fill: #73c0fc;
-    position: absolute;
-    top: 4px;
-    left: 4px;
-    z-index: 1;
-    width: 18px;
-    height: 18px;
-  }
-
-  .sun svg {
-    animation: rotate 15s linear infinite;
-  }
-
-  @keyframes rotate {
-    0% {
-      transform: rotate(0);
-    }
-
-    100% {
-      transform: rotate(360deg);
-    }
-  }
-
-  .moon svg {
-    animation: tilt 5s linear infinite;
-  }
-
-  @keyframes tilt {
-    0% {
-      transform: rotate(0deg);
-    }
-
-    25% {
-      transform: rotate(-10deg);
-    }
-
-    75% {
-      transform: rotate(10deg);
-    }
-
-    100% {
-      transform: rotate(0deg);
-    }
-  }
-
-  .input:checked + .slider {
-    background-color: #183153;
-  }
-
-  .input:focus-visible + .slider {
-    box-shadow: 0 0 0 2px rgb(24 49 83 / 0.4);
-  }
-
-  .input:checked + .slider:before {
-    transform: translateX(22px);
-  }
-</style>

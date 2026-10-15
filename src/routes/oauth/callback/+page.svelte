@@ -1,8 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import bg from "#lib/assets/registerBG.webp";
-  import { completeOauthLogin } from "#lib/oauth/completeLogin";
-  import { buildAuthorizeUrl } from "#lib/oauth/client";
+  import { completeOauthLogin } from "#lib/oauth/completeLogin.ts";
 
   let error = $state("");
   let loading = $state(true);
@@ -32,7 +31,10 @@
 <svelte:head>
   <title>OAuth 授权回调 — Open CCW</title>
   <meta name="robots" content="noindex, nofollow" />
-  <meta name="description" content="Open CCW OAuth 授权回调处理页面，正在验证授权信息并完成 Token 获取，验证通过后将自动跳转至注册页面完成账号绑定。" />
+  <meta
+    name="description"
+    content="Open CCW OAuth 授权回调处理页面，正在验证授权信息并完成 Token 获取，验证通过后将自动跳转至注册页面完成账号绑定。"
+  />
 </svelte:head>
 
 <div

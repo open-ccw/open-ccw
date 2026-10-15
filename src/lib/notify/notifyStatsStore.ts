@@ -1,7 +1,7 @@
 import { get, writable } from "svelte/store";
-import { communityWeb } from "#lib/api";
-import { browser } from "$app/environment";
-import { user } from "#lib/user/userStore";
+import { communityWeb } from "#lib/api.ts";
+import { browser } from "$app/env";
+import { user } from "#lib/user/userStore.ts";
 
 export const notificationStats = writable<Awaited<
   ReturnType<typeof communityWeb.getNotificationStats>

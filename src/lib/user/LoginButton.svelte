@@ -1,6 +1,6 @@
 <script lang="ts">
   import LoginModal from "#lib/auth/LoginModal.svelte";
-  import { user } from "#lib/user/userStore";
+  import { user } from "#lib/user/userStore.ts";
 
   let openLogin = $state(false);
   let { onclose = () => null } = $props();

@@ -3,10 +3,10 @@
   import CheckInDialog from "#lib/user/checkin/CheckInDialog.svelte";
   import HamburgerButton from "./header/HamburgerButton.svelte";
   import HeaderMenu from "./header/HeaderMenu.svelte";
-  import { user } from "#lib/user/userStore";
+  import { user } from "#lib/user/userStore.ts";
   import { logout } from "./auth/tokenStore";
   import { goto } from "$app/navigation";
-  import { communityWeb } from "#lib/api";
+  import { communityWeb } from "#lib/api.ts";
   import { fade, slide } from "svelte/transition";
   import { notificationStats } from "./notify/notifyStatsStore";
   import DarkModeSwitch from "./DarkModeSwitch.svelte";

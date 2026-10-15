@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { communityWeb } from "#lib/api";
+  import { communityWeb } from "#lib/api.ts";
   import Error from "#lib/utils/Error.svelte";
   import { onMount } from "svelte";
   import SearchBar from "#lib/search/SearchBar.svelte";

@@ -24,7 +24,7 @@ export interface LocateRes {
 }
 
 export const POST: RequestHandler = async ({ request }) => {
-  const { ip } = await request.json<{ ip?: string }>();
+  const { ip } = (await request.json()) as { ip?: string };
   if (!ip) {
     return error(500, "ip is required");
   }

@@ -1,6 +1,6 @@
 import CryptoJS from "crypto-js";
-import { communityWeb } from "#lib/api";
-import { browser } from "$app/environment";
+import { communityWeb } from "#lib/api.ts";
+import { browser } from "$app/env";
 import type OSS from "ali-oss";
 
 let OSS_lib: typeof OSS;

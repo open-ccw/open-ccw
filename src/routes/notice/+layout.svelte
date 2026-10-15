@@ -5,11 +5,11 @@
   import { noticeTypes } from "./noticeTypes";
   import Error from "#lib/utils/Error.svelte";
   import { goto } from "$app/navigation";
-  import { token } from "#lib/auth/tokenStore";
+  import { token } from "#lib/auth/tokenStore.ts";
   import {
     notificationStats,
     refreshNotificationStats,
-  } from "#lib/notify/notifyStatsStore";
+  } from "#lib/notify/notifyStatsStore.ts";
 
   let { children }: LayoutProps = $props();
 

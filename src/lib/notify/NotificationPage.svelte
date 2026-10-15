@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { communityWeb, type Notification } from "#lib/api";
+  import { communityWeb, type Notification } from "#lib/api.ts";
   import Error from "#lib/utils/Error.svelte";
   import { onMount } from "svelte";
   import NotificationMessage from "./NotificationMessage.svelte";

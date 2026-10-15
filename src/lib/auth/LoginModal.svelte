@@ -6,7 +6,7 @@
   import CancelButton from "#lib/CancelButton.svelte";
   import { fade, scale } from "svelte/transition";
   import AvatarImage from "#lib/user/AvatarImage.svelte";
-  import { updateToken, user } from "#lib/user/userStore";
+  import { updateToken, user } from "#lib/user/userStore.ts";
   import { freshTokenFor } from "#lib/oauth/refresh";
   import {
     disableQuickLogin,

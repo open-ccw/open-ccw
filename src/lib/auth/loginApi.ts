@@ -1,4 +1,4 @@
-import { sealedRequest, SERVER_PUB_KEYS } from "#lib/crypto/sealedRequest";
+import { sealedRequest, SERVER_PUB_KEYS } from "#lib/crypto/sealedRequest.ts";
 
 const LOGIN_API = "https://openccw.seia0070.dpdns.org/login";
 
@@ -7,7 +7,10 @@ interface LoginResult {
   token?: string;
 }
 
-export async function loginAccount(uid: string, password: string): Promise<string> {
+export async function loginAccount(
+  uid: string,
+  password: string,
+): Promise<string> {
   const result = await sealedRequest<LoginResult>(SERVER_PUB_KEYS, LOGIN_API, {
     uid,
     password,

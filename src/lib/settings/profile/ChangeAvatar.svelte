@@ -1,6 +1,6 @@
 <script lang="ts">
   import AvatarImage from "#lib/user/AvatarImage.svelte";
-  import { user } from "#lib/user/userStore";
+  import { user } from "#lib/user/userStore.ts";
   import { blur } from "svelte/transition";
 
   let openModal = $state(false);

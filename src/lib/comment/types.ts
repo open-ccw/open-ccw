@@ -17,6 +17,6 @@ export type MinimalComment = {
   createdAt: number;
   likeCount: number;
   replyCount: number | null;
-  weight?: number;
+  weight?: number | null;
   liked?: boolean;
 };

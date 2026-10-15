@@ -1,13 +1,13 @@
 <script lang="ts">
   import "./layout.css";
   import favicon from "#lib/assets/favicon.svg";
-  import "#lib/api";
+  import "#lib/api.ts";
   let { children } = $props();
 
   import { onMount } from "svelte";
-  import { dev } from "$app/environment";
+  import { dev } from "$app/env";
   import { browser } from "$app/env";
-  import { refreshTokenIfExpired } from "#lib/oauth/refresh";
+  import { refreshTokenIfExpired } from "#lib/oauth/refresh.ts";
   import ToastHost from "#lib/toast/ToastHost.svelte";
 
   if (browser && origin !== "null" && "serviceWorker" in navigator) {

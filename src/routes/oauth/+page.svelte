@@ -5,12 +5,9 @@
     buildAuthorizeUrl,
     createPkcePair,
     pushAuthorizationRequest,
-  } from "#lib/oauth/client";
-  import { completeOauthLogin } from "#lib/oauth/completeLogin";
-  import {
-    OAUTH_REDIRECT_URI,
-    setOauthPendingAuth,
-  } from "./oauthConfig";
+  } from "#lib/oauth/client.ts";
+  import { completeOauthLogin } from "#lib/oauth/completeLogin.ts";
+  import { OAUTH_REDIRECT_URI, setOauthPendingAuth } from "./oauthConfig";
 
   let error = $state("");
   let preparing = $state(true);

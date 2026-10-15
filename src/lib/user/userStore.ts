@@ -1,6 +1,6 @@
 import { writable } from "svelte/store";
 import { token } from "#lib/auth/tokenStore";
-import { communityWeb, setToken } from "#lib/api";
+import { communityWeb, setToken } from "#lib/api.ts";
 
 export const user = writable<SelfUser>({ loggedIn: false });
 

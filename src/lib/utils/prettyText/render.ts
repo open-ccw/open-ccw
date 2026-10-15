@@ -2,10 +2,10 @@ import type { TokenType } from "./tokenizer";
 import Raw from "./Raw.svelte";
 import Img from "./Img.svelte";
 import Url from "./Url.svelte";
-import type { LegacyComponentType } from "svelte/legacy";
+import type { Component } from "svelte";
 
 export function render(tokens: TokenType[]) {
-  const snippets: { component: LegacyComponentType; args: any }[] = tokens.map(
+  const snippets: { component: Component<any>; args: any }[] = tokens.map(
     (tokens) => {
       const { type, value } = tokens;
       switch (type) {

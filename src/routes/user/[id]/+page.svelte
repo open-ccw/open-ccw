@@ -2,7 +2,7 @@
   import type { PageProps } from "./$types";
   import Profile from "#lib/user/Profile.svelte";
   import PageHeader from "#lib/PageHeader.svelte";
-  import { communityWeb } from "#lib/api";
+  import { communityWeb } from "#lib/api.ts";
 
   let { params }: PageProps = $props();
 

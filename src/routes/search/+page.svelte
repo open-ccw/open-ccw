@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { replaceState } from "$app/navigation";
+  import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import PageHeader from "#lib/PageHeader.svelte";
-  import { parseType } from "#lib/search/parseType";
+  import { parseType } from "#lib/search/parseType.ts";
   import SearchResultPages from "#lib/search/SearchResultPages.svelte";
-  import type { SearchTypes } from "#lib/search/searchTypes";
+  import type { SearchTypes } from "#lib/search/searchTypes.ts";
   import { onMount, tick } from "svelte";
 
   const { url } = page;
@@ -13,11 +13,11 @@
   let type: SearchTypes = $state(parseType(url.searchParams.get("type") || ""));
 
   async function refreshSearchParams() {
-    const { url } = page;
+    const url = new URL(page.url.toString());
     url.searchParams.set("key", search);
     url.searchParams.set("type", type);
     await tick();
-    replaceState(url, {});
+    goto(url, { replace: true });
   }
   onMount(() => {
     refreshSearchParams();
