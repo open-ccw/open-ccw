@@ -1,11 +1,8 @@
-import {
-  OAUTH_DEVICE_KEY,
-  OAUTH_DPOP_KEY,
-} from "../../routes/oauth/oauthConfig";
+import { OAUTH_DEVICE_KEY, OAUTH_DPOP_KEY } from '../../routes/oauth/oauthConfig';
 
 interface EcPublicJwk {
-  crv: "P-256";
-  kty: "EC";
+  crv: 'P-256';
+  kty: 'EC';
   x: string;
   y: string;
 }
@@ -16,13 +13,13 @@ interface EcPrivateJwk extends EcPublicJwk {
 
 function b64url(input: ArrayBuffer | Uint8Array): string {
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
-  let binary = "";
+  let binary = '';
   for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary).replaceAll("+", "-").replaceAll("/", "_").replace(/=+$/, "");
+  return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
 }
 
 async function sha256(input: string): Promise<ArrayBuffer> {
-  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
 }
 
 let cachedPublicJwk: EcPublicJwk | null = null;
@@ -36,20 +33,14 @@ export async function getDpopPrivateKey(): Promise<CryptoKey> {
   if (stored) {
     const jwk = JSON.parse(stored) as EcPrivateJwk;
     cachedPublicJwk = { crv: jwk.crv, kty: jwk.kty, x: jwk.x, y: jwk.y };
-    return crypto.subtle.importKey(
-      "jwk",
-      jwk,
-      { name: "ECDSA", namedCurve: "P-256" },
-      false,
-      ["sign"],
-    );
+    return crypto.subtle.importKey('jwk', jwk, { name: 'ECDSA', namedCurve: 'P-256' }, false, [
+      'sign',
+    ]);
   }
-  const keyPair = await crypto.subtle.generateKey(
-    { name: "ECDSA", namedCurve: "P-256" },
-    true,
-    ["sign"],
-  );
-  const jwk = (await crypto.subtle.exportKey("jwk", keyPair.privateKey)) as EcPrivateJwk;
+  const keyPair = await crypto.subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, true, [
+    'sign',
+  ]);
+  const jwk = (await crypto.subtle.exportKey('jwk', keyPair.privateKey)) as EcPrivateJwk;
   cachedPublicJwk = { crv: jwk.crv, kty: jwk.kty, x: jwk.x, y: jwk.y };
   localStorage.setItem(OAUTH_DPOP_KEY, JSON.stringify(jwk));
   return keyPair.privateKey;
@@ -93,7 +84,7 @@ export async function createDpopProof(
 ): Promise<string> {
   const parsed = new URL(htu);
   const publicJwk = await getPublicJwk();
-  const header = { typ: "dpop+jwt", alg: "ES256", jwk: publicJwk };
+  const header = { typ: 'dpop+jwt', alg: 'ES256', jwk: publicJwk };
   const payload: Record<string, unknown> = {
     jti: b64url(crypto.getRandomValues(new Uint8Array(16))),
     htm: htm.toUpperCase(),
@@ -106,7 +97,7 @@ export async function createDpopProof(
   const signingInput = `${b64url(new TextEncoder().encode(JSON.stringify(header)))}.${b64url(new TextEncoder().encode(JSON.stringify(payload)))}`;
   const privateKey = await getDpopPrivateKey();
   const signature = await crypto.subtle.sign(
-    { name: "ECDSA", hash: "SHA-256" },
+    { name: 'ECDSA', hash: 'SHA-256' },
     privateKey,
     new TextEncoder().encode(signingInput),
   );

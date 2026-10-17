@@ -1,11 +1,11 @@
-import { createDpopProof, getDeviceId, getJkt } from "./dpop";
+import { createDpopProof, getDeviceId, getJkt } from './dpop';
 import {
   OAUTH_ENDPOINTS,
   OAUTH_PROXY_ENDPOINTS,
   OAUTH_SCOPE,
   OAUTH_CLIENT_ID,
   STEP_UP_URL,
-} from "../../routes/oauth/oauthConfig";
+} from '../../routes/oauth/oauthConfig';
 
 export interface TokenSet {
   accessToken: string;
@@ -22,16 +22,13 @@ export interface PkcePair {
 
 function b64url(input: ArrayBuffer | Uint8Array): string {
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
-  let binary = "";
+  let binary = '';
   for (const b of bytes) binary += String.fromCharCode(b);
-  return btoa(binary)
-    .replaceAll("+", "-")
-    .replaceAll("/", "_")
-    .replace(/=+$/, "");
+  return btoa(binary).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
 }
 
 async function sha256(input: string): Promise<ArrayBuffer> {
-  return crypto.subtle.digest("SHA-256", new TextEncoder().encode(input));
+  return crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
 }
 
 /** 生成 PKCE code_verifier / code_challenge (S256) 对 */
@@ -56,11 +53,11 @@ async function postForm(
   boundToken?: string,
 ): Promise<unknown> {
   const response = await fetch(proxyUrl, {
-    method: "POST",
+    method: 'POST',
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-      "X-Upstream-Url": upstreamUrl,
-      DPoP: await createDpopProof("POST", upstreamUrl, boundToken),
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'X-Upstream-Url': upstreamUrl,
+      DPoP: await createDpopProof('POST', upstreamUrl, boundToken),
     },
     body: new URLSearchParams(params),
   });
@@ -75,7 +72,7 @@ async function postForm(
     const code = payload?.error;
     const description = payload?.error_description;
     throw new Error(
-      `OAuth 请求失败: ${typeof code === "string" ? code : `http_${response.status}`}${typeof description === "string" ? ` (${description})` : ""}`,
+      `OAuth 请求失败: ${typeof code === 'string' ? code : `http_${response.status}`}${typeof description === 'string' ? ` (${description})` : ''}`,
     );
   }
   return payload;
@@ -84,20 +81,18 @@ async function postForm(
 /** 校验 token 响应并转换为 TokenSet */
 function toTokenSet(payload: unknown): TokenSet {
   const data = payload as Record<string, unknown> | null;
-  const accessToken =
-    (data?.access_token as string) ?? (data?.accessToken as string);
+  const accessToken = (data?.access_token as string) ?? (data?.accessToken as string);
   if (!accessToken) {
-    throw new Error("OAuth 响应中缺少 access token");
+    throw new Error('OAuth 响应中缺少 access token');
   }
   const tokenType = (data?.token_type as string) ?? (data?.tokenType as string);
-  if ((tokenType ?? "").toLowerCase() !== "dpop") {
-    throw new Error(`不支持的 token 类型: ${tokenType || "(缺失)"}`);
+  if ((tokenType ?? '').toLowerCase() !== 'dpop') {
+    throw new Error(`不支持的 token 类型: ${tokenType || '(缺失)'}`);
   }
   const expiresIn = Number(data?.expires_in ?? data?.expiresIn ?? 900);
   return {
     accessToken,
-    refreshToken:
-      (data?.refresh_token as string) ?? (data?.refreshToken as string),
+    refreshToken: (data?.refresh_token as string) ?? (data?.refreshToken as string),
     expiresAt: Date.now() + expiresIn * 1000,
     scope: data?.scope as string | undefined,
   };
@@ -115,22 +110,18 @@ export async function pushAuthorizationRequest(
   state: string,
   pkce: PkcePair,
 ): Promise<string> {
-  const payload = (await postForm(
-    OAUTH_PROXY_ENDPOINTS.par,
-    OAUTH_ENDPOINTS.par,
-    {
-      client_id: OAUTH_CLIENT_ID,
-      redirect_uri: redirectUri,
-      scope: OAUTH_SCOPE,
-      state,
-      code_challenge: pkce.codeChallenge,
-      code_challenge_method: "S256",
-      dpop_jkt: await getJkt(),
-      device_id: await getDeviceId(),
-    },
-  )) as { request_uri?: string } | null;
+  const payload = (await postForm(OAUTH_PROXY_ENDPOINTS.par, OAUTH_ENDPOINTS.par, {
+    client_id: OAUTH_CLIENT_ID,
+    redirect_uri: redirectUri,
+    scope: OAUTH_SCOPE,
+    state,
+    code_challenge: pkce.codeChallenge,
+    code_challenge_method: 'S256',
+    dpop_jkt: await getJkt(),
+    device_id: await getDeviceId(),
+  })) as { request_uri?: string } | null;
   if (!payload?.request_uri) {
-    throw new Error("PAR 响应中缺少 request_uri");
+    throw new Error('PAR 响应中缺少 request_uri');
   }
   return payload.request_uri;
 }
@@ -138,10 +129,10 @@ export async function pushAuthorizationRequest(
 /** 构造跳转浏览器的授权 URL（step-up 包裹 authorize） */
 export function buildAuthorizeUrl(requestUri: string): string {
   const authorizeUrl = new URL(OAUTH_ENDPOINTS.authorize);
-  authorizeUrl.searchParams.set("client_id", OAUTH_CLIENT_ID);
-  authorizeUrl.searchParams.set("request_uri", requestUri);
+  authorizeUrl.searchParams.set('client_id', OAUTH_CLIENT_ID);
+  authorizeUrl.searchParams.set('request_uri', requestUri);
   const browserUrl = new URL(STEP_UP_URL);
-  browserUrl.searchParams.set("return_to", authorizeUrl.toString());
+  browserUrl.searchParams.set('return_to', authorizeUrl.toString());
   return browserUrl.toString();
 }
 
@@ -158,7 +149,7 @@ export async function exchangeAuthorizationCode(
 ): Promise<TokenSet> {
   return toTokenSet(
     await postForm(OAUTH_PROXY_ENDPOINTS.token, OAUTH_ENDPOINTS.token, {
-      grant_type: "authorization_code",
+      grant_type: 'authorization_code',
       client_id: OAUTH_CLIENT_ID,
       code,
       redirect_uri: redirectUri,
@@ -172,12 +163,10 @@ export async function exchangeAuthorizationCode(
  * @param refreshToken 刷新令牌
  * @returns TokenSet（响应未含新 refresh token 时需由调用方沿用旧值）
  */
-export async function refreshAccessToken(
-  refreshToken: string,
-): Promise<TokenSet> {
+export async function refreshAccessToken(refreshToken: string): Promise<TokenSet> {
   return toTokenSet(
     await postForm(OAUTH_PROXY_ENDPOINTS.token, OAUTH_ENDPOINTS.token, {
-      grant_type: "refresh_token",
+      grant_type: 'refresh_token',
       client_id: OAUTH_CLIENT_ID,
       refresh_token: refreshToken,
     }),

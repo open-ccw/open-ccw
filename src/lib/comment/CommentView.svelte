@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { communityWeb } from "@ccw-api/api";
-  import { onMount } from "svelte";
-  import type { MinimalComment, TopicConfig } from "./types";
-  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
-  import RenderComment from "./RenderComment.svelte";
-  import ApprovalDisplay from "#lib/user/ApprovalDisplay.svelte";
-  import { toast } from "#lib";
-  import { user } from "#lib/user/userStore.ts";
-  import WriteComment from "./WriteComment.svelte";
-  import up from "#lib/assets/arrow-up-from-line.svg?raw";
+  import { communityWeb } from '@ccw-api/api';
+  import { onMount } from 'svelte';
+  import type { MinimalComment, TopicConfig } from './types';
+  import AvatarToProfile from '#lib/user/AvatarToProfile.svelte';
+  import RenderComment from './RenderComment.svelte';
+  import ApprovalDisplay from '#lib/user/ApprovalDisplay.svelte';
+  import { toast } from '#lib';
+  import { user } from '#lib/user/userStore.ts';
+  import WriteComment from './WriteComment.svelte';
+  import up from '#lib/assets/arrow-up-from-line.svg?raw';
 
   const { oid, subjectType, sectionType }: TopicConfig = $props();
   let pageNum = $state(1);
@@ -18,7 +18,7 @@
   let comments: MinimalComment[] = $state.raw([]);
   let footer: HTMLElement | null = $state(null);
   let observer: null | IntersectionObserver = $state(null);
-  let error = $state("");
+  let error = $state('');
 
   // 是否还有更多可加载
   let hasMore = $derived(pageNum <= totalPages);
@@ -33,11 +33,11 @@
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
 
-    if (minutes < 1) return "刚刚";
+    if (minutes < 1) return '刚刚';
     if (minutes < 60) return `${minutes}分钟前`;
     if (hours < 24) return `${hours}小时前`;
     if (days < 7) return `${days}天前`;
-    return d.toLocaleDateString("zh-CN", { month: "short", day: "numeric" });
+    return d.toLocaleDateString('zh-CN', { month: 'short', day: 'numeric' });
   }
 
   async function refresh() {
@@ -46,7 +46,7 @@
     }
     loading = true;
     try {
-      error = "";
+      error = '';
       const { data, totalPages: total } = await communityWeb.getCommentsByTopic(
         oid,
         subjectType,
@@ -110,10 +110,10 @@
 />
 <div class="h-fit pl-2">
   {#if error}
-    <div class="flex flex-col items-center justify-center py-8 gap-3">
+    <div class="flex flex-col items-center justify-center gap-3 py-8">
       <p class="text-error text-sm">{error}</p>
       <button
-        class="text-sm text-primary hover:text-primary-hover transition-colors cursor-pointer"
+        class="text-primary hover:text-primary-hover cursor-pointer text-sm transition-colors"
         onclick={() => {
           pageNum = 1;
           totalPages = Infinity;
@@ -124,19 +124,15 @@
       </button>
     </div>
   {:else if loading && comments.length === 0}
-    <div class="flex flex-col items-center justify-center py-12 gap-3">
-      <div
-        class="size-8 border-2 border-border border-t-primary rounded-full animate-spin"
-      ></div>
-      <span class="text-sm text-text-placeholder">加载评论中...</span>
+    <div class="flex flex-col items-center justify-center gap-3 py-12">
+      <div class="border-border border-t-primary size-8 animate-spin rounded-full border-2"></div>
+      <span class="text-text-placeholder text-sm">加载评论中...</span>
     </div>
   {:else if comments.length === 0}
-    <div class="flex flex-col items-center justify-center py-12 gap-3">
-      <div
-        class="size-16 rounded-full bg-bg-secondary flex items-center justify-center"
-      >
+    <div class="flex flex-col items-center justify-center gap-3 py-12">
+      <div class="bg-bg-secondary flex size-16 items-center justify-center rounded-full">
         <svg
-          class="size-8 text-text-placeholder"
+          class="text-text-placeholder size-8"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -152,12 +148,12 @@
       <p class="text-text-placeholder text-sm">暂无评论，快来抢沙发</p>
     </div>
   {:else}
-    <div class="divide-y divide-border">
+    <div class="divide-border divide-y">
       {#each comments as comment, i (comment.id)}
-        <div class="px-4 py-4 hover:bg-bg-secondary/50 transition-colors">
+        <div class="hover:bg-bg-secondary/50 px-4 py-4 transition-colors">
           <div class="flex gap-3">
             <!-- 头像 -->
-            <div class="shrink-0 size-10">
+            <div class="size-10 shrink-0">
               <AvatarToProfile
                 oid={comment.commenter.accountOid}
                 url={comment.commenter.avatar}
@@ -166,13 +162,13 @@
             </div>
 
             <!-- 内容区 -->
-            <div class="flex-1 min-w-0">
-              <div class="flex mb-1">
+            <div class="min-w-0 flex-1">
+              <div class="mb-1 flex">
                 <!-- 用户信息和勋章 -->
                 <div class="flex gap-2">
                   <a
                     href="/user/{comment.commenter.accountOid}"
-                    class="text-base shrink-0 font-semibold text-text-secondary hover:text-primary transition-colors"
+                    class="text-text-secondary hover:text-primary shrink-0 text-base font-semibold transition-colors"
                   >
                     {comment.commenter.name}
                   </a>
@@ -183,36 +179,30 @@
                   ></ApprovalDisplay>
                 </div>
                 {#if comment.weight}
-                  <div
-                    class="size-6 text-star"
-                    aria-label="该评论被置顶"
-                    title="该评论被置顶"
-                  >
+                  <div class="text-star size-6" aria-label="该评论被置顶" title="该评论被置顶">
                     {@html up}
                   </div>
                 {/if}
               </div>
 
               <!-- 评论内容 -->
-              <div class="text-sm text-text-secondary leading-relaxed mb-2">
+              <div class="text-text-secondary mb-2 text-sm leading-relaxed">
                 <RenderComment comment={comment.content}></RenderComment>
               </div>
 
               <!-- 时间和操作栏 -->
               <div class="flex items-center justify-between gap-4">
                 {#if comment.createdAt}
-                  <span class="text-xs text-text-placeholder"
-                    >{formatTime(comment.createdAt)}</span
-                  >
+                  <span class="text-text-placeholder text-xs">{formatTime(comment.createdAt)}</span>
                 {/if}
 
                 <!-- 操作栏 -->
                 <div class="flex items-center gap-4">
                   <button
-                    class="flex items-center gap-1 text-xs text-text-placeholder hover:text-primary transition-colors cursor-pointer"
+                    class="text-text-placeholder hover:text-primary flex cursor-pointer items-center gap-1 text-xs transition-colors"
                     onclick={async () => {
                       if (!$user.loggedIn) {
-                        toast.warning("请登录账号");
+                        toast.warning('请登录账号');
                         return;
                       }
                     }}
@@ -233,10 +223,10 @@
                     <span>回复{comment.replyCount}</span>
                   </button>
                   <button
-                    class="flex items-center gap-1 text-xs text-text-placeholder hover:text-error transition-colors cursor-pointer"
+                    class="text-text-placeholder hover:text-error flex cursor-pointer items-center gap-1 text-xs transition-colors"
                     onclick={async () => {
                       if (!$user.loggedIn) {
-                        toast.warning("请登录账号");
+                        toast.warning('请登录账号');
                         return;
                       }
                       let success = false;
@@ -249,8 +239,7 @@
                         let newComments = [...comments];
                         newComments[i] = {
                           ...comment,
-                          likeCount:
-                            comment.likeCount + (comment.liked ? -1 : 1),
+                          likeCount: comment.likeCount + (comment.liked ? -1 : 1),
                           liked: !comment.liked,
                         };
                         comments = newComments;
@@ -260,7 +249,7 @@
                     <svg
                       class="size-4"
                       viewBox="0 0 24 24"
-                      fill={comment.liked ? "red" : "none"}
+                      fill={comment.liked ? 'red' : 'none'}
                       stroke="currentColor"
                       stroke-width="2"
                     >
@@ -285,15 +274,14 @@
     {#if !finished}
       <footer
         bind:this={footer}
-        class="w-full flex items-center justify-center gap-2 py-4 text-sm text-text-placeholder"
+        class="text-text-placeholder flex w-full items-center justify-center gap-2 py-4 text-sm"
       >
         {#if loadingMore}
-          <span
-            class="size-4 border-2 border-border border-t-primary rounded-full animate-spin"
+          <span class="border-border border-t-primary size-4 animate-spin rounded-full border-2"
           ></span>
           <span>加载中...</span>
         {:else}
-          <span class="size-4 border-2 border-border rounded-full"></span>
+          <span class="border-border size-4 rounded-full border-2"></span>
         {/if}
       </footer>
     {/if}

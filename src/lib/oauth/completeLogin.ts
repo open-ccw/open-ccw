@@ -1,10 +1,10 @@
-import { exchangeAuthorizationCode, type TokenSet } from "./client";
+import { exchangeAuthorizationCode, type TokenSet } from './client';
 import {
   OAUTH_PENDING_REFRESH_KEY,
   OAUTH_REDIRECT_URI,
   clearOauthPendingAuth,
   getOauthPendingAuth,
-} from "../../routes/oauth/oauthConfig";
+} from '../../routes/oauth/oauthConfig';
 
 /**
  * 校验 state 并用授权码换取 token。
@@ -13,19 +13,12 @@ import {
  * @param state 授权码携带的 state
  * @returns TokenSet
  */
-export async function completeOauthLogin(
-  code: string,
-  state: string,
-): Promise<TokenSet> {
+export async function completeOauthLogin(code: string, state: string): Promise<TokenSet> {
   const pending = getOauthPendingAuth();
   if (!pending || state !== pending.state) {
-    throw new Error("安全校验未通过 (state 不匹配)，请返回重新登录");
+    throw new Error('安全校验未通过 (state 不匹配)，请返回重新登录');
   }
-  const tokenSet = await exchangeAuthorizationCode(
-    code,
-    OAUTH_REDIRECT_URI,
-    pending.verifier,
-  );
+  const tokenSet = await exchangeAuthorizationCode(code, OAUTH_REDIRECT_URI, pending.verifier);
   clearOauthPendingAuth();
   if (tokenSet.refreshToken) {
     sessionStorage.setItem(

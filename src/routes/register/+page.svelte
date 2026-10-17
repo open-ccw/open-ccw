@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import Register from "#lib/auth/RegisterPage.svelte";
-  import { onMount } from "svelte";
-  import bg from "#lib/assets/registerBG.webp";
+  import { page } from '$app/state';
+  import Register from '#lib/auth/RegisterPage.svelte';
+  import { onMount } from 'svelte';
+  import bg from '#lib/assets/registerBG.webp';
   const url = new URL(page.url.toString());
-  const token = url.searchParams.get("token") || "";
+  const token = url.searchParams.get('token') || '';
   onMount(() => {
     if (token) {
-      url.searchParams.delete("token");
-      history.replaceState({}, "", url);
+      url.searchParams.delete('token');
+      history.replaceState({}, '', url);
     }
   });
 </script>

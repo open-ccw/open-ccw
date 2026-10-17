@@ -1,24 +1,21 @@
 <script lang="ts">
-  import { communityWeb } from "#lib/api.ts";
-  import Error from "#lib/utils/Error.svelte";
-  import { onMount } from "svelte";
-  import SearchBar from "#lib/search/SearchBar.svelte";
-  import SearchSkeleton from "#lib/search/SearchSkeleton.svelte";
-  import SearchEmpty from "#lib/search/SearchEmpty.svelte";
-  import SearchAllResultsPage from "#lib/search/SearchAllResultsPage.svelte";
-  import type { SearchTypes } from "./searchTypes";
-  import SearchTypeSwitch from "./SearchTypeSwitch.svelte";
+  import { communityWeb } from '#lib/api.ts';
+  import Error from '#lib/utils/Error.svelte';
+  import { onMount } from 'svelte';
+  import SearchBar from '#lib/search/SearchBar.svelte';
+  import SearchSkeleton from '#lib/search/SearchSkeleton.svelte';
+  import SearchEmpty from '#lib/search/SearchEmpty.svelte';
+  import SearchAllResultsPage from '#lib/search/SearchAllResultsPage.svelte';
+  import type { SearchTypes } from './searchTypes';
+  import SearchTypeSwitch from './SearchTypeSwitch.svelte';
 
   let loading = $state(false);
-  let results:
-    | null
-    | Awaited<ReturnType<typeof communityWeb.searchAll>>["results"] =
-    $state(null);
-  let error = $state("");
+  let results: null | Awaited<ReturnType<typeof communityWeb.searchAll>>['results'] = $state(null);
+  let error = $state('');
   let searched = $state(false);
   let {
-    keyword = $bindable(""),
-    type = $bindable("all"),
+    keyword = $bindable(''),
+    type = $bindable('all'),
     onSearch,
   }: {
     keyword?: string;
@@ -37,7 +34,7 @@
       return;
     }
     loading = true;
-    error = "";
+    error = '';
     try {
       const res = await communityWeb.searchAll(keyword);
       results = res.results;
@@ -58,7 +55,7 @@
   }
 </script>
 
-<div class="max-w-3xl mx-auto p-2">
+<div class="mx-auto max-w-3xl p-2">
   <div class="mb-6">
     <SearchBar bind:value={keyword} onsearch={handleSearch}></SearchBar>
   </div>
@@ -68,7 +65,7 @@
   {#if loading}
     <SearchSkeleton />
   {:else if searched && results && results.length > 0}
-    {#if type === "all"}
+    {#if type === 'all'}
       <SearchAllResultsPage {results}></SearchAllResultsPage>
     {:else}
       未实现

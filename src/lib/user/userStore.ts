@@ -1,6 +1,6 @@
-import { writable } from "svelte/store";
-import { token } from "#lib/auth/tokenStore";
-import { communityWeb, setToken } from "#lib/api.ts";
+import { writable } from 'svelte/store';
+import { token } from '#lib/auth/tokenStore';
+import { communityWeb, setToken } from '#lib/api.ts';
 
 export const user = writable<SelfUser>({ loggedIn: false });
 
@@ -27,7 +27,7 @@ async function updateUser() {
         virtualValue,
       });
     } else {
-      throw "login failed, oid is not defined";
+      throw 'login failed, oid is not defined';
     }
   } catch (e) {
     user.set({ loggedIn: false });
@@ -46,7 +46,7 @@ export async function refreshUser(): Promise<void> {
 }
 
 export function clearTokenAndUser() {
-  setToken("");
+  setToken('');
   user.set({ loggedIn: false });
-  token.set("");
+  token.set('');
 }

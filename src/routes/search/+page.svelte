@@ -1,21 +1,21 @@
 <script lang="ts">
-  import { goto } from "$app/navigation";
-  import { page } from "$app/state";
-  import PageHeader from "#lib/PageHeader.svelte";
-  import { parseType } from "#lib/search/parseType.ts";
-  import SearchResultPages from "#lib/search/SearchResultPages.svelte";
-  import type { SearchTypes } from "#lib/search/searchTypes.ts";
-  import { onMount, tick } from "svelte";
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import PageHeader from '#lib/PageHeader.svelte';
+  import { parseType } from '#lib/search/parseType.ts';
+  import SearchResultPages from '#lib/search/SearchResultPages.svelte';
+  import type { SearchTypes } from '#lib/search/searchTypes.ts';
+  import { onMount, tick } from 'svelte';
 
   const { url } = page;
 
-  let search = $state(url.searchParams.get("key") || "");
-  let type: SearchTypes = $state(parseType(url.searchParams.get("type") || ""));
+  let search = $state(url.searchParams.get('key') || '');
+  let type: SearchTypes = $state(parseType(url.searchParams.get('type') || ''));
 
   async function refreshSearchParams() {
     const url = new URL(page.url.toString());
-    url.searchParams.set("key", search);
-    url.searchParams.set("type", type);
+    url.searchParams.set('key', search);
+    url.searchParams.set('type', type);
     await tick();
     goto(url, { replace: true });
   }

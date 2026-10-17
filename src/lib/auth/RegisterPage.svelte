@@ -1,27 +1,27 @@
 <script lang="ts">
-  import { toast } from "#lib";
-  import { getStudentProfile, registerAccount } from "#lib/auth/registerApi";
+  import { toast } from '#lib';
+  import { getStudentProfile, registerAccount } from '#lib/auth/registerApi';
   import {
     listAccounts,
     localAccountName,
     saveAccount,
     setAccountRefresh,
     updateAccountToken,
-  } from "#lib/auth/tokenStore";
+  } from '#lib/auth/tokenStore';
 
-  import ccwLogo from "#lib/assets/ccw-logo.webp";
-  import bg from "#lib/assets/registerBG.webp";
-  import successSvg from "#lib/assets/toast/success.svg";
+  import ccwLogo from '#lib/assets/ccw-logo.webp';
+  import bg from '#lib/assets/registerBG.webp';
+  import successSvg from '#lib/assets/toast/success.svg';
 
-  let { token = "" } = $props();
+  let { token = '' } = $props();
 
-  let password = $state("");
-  let confirmPassword = $state("");
+  let password = $state('');
+  let confirmPassword = $state('');
   let success = $state(false);
-  let registeredName = $state("");
+  let registeredName = $state('');
   let submitting = $state(false);
   let cloudSave = $state(false);
-  let registeredMode = $state<"cloud" | "local">("cloud");
+  let registeredMode = $state<'cloud' | 'local'>('cloud');
 
   const hasToken = () => token.trim().length > 0;
 
@@ -29,19 +29,19 @@
     e.preventDefault();
 
     if (!hasToken()) {
-      toast.warning("请先通过 CCW 一键授权获取 Token");
+      toast.warning('请先通过 CCW 一键授权获取 Token');
       return;
     }
     if (!password) {
-      toast.warning("请输入密码");
+      toast.warning('请输入密码');
       return;
     }
     if (!confirmPassword) {
-      toast.warning("请再次输入密码确认");
+      toast.warning('请再次输入密码确认');
       return;
     }
     if (password !== confirmPassword) {
-      toast.error("请输入相同的密码");
+      toast.error('请输入相同的密码');
       return;
     }
 
@@ -57,9 +57,9 @@
         } else {
           await saveAccount(uid, t, password, avatar, displayName);
         }
-        registeredMode = "cloud";
+        registeredMode = 'cloud';
         savedName = uid;
-        toast.success("注册成功");
+        toast.success('注册成功');
       } else {
         const localName = localAccountName(uid);
         if (listAccounts().some((a) => a.name === localName)) {
@@ -67,9 +67,9 @@
         } else {
           await saveAccount(localName, t, password, avatar, displayName);
         }
-        registeredMode = "local";
+        registeredMode = 'local';
         savedName = localName;
-        toast.success("账号已保存到本地");
+        toast.success('账号已保存到本地');
       }
       persistOAuthRefresh(savedName);
       registeredName = uid;
@@ -83,11 +83,11 @@
 
   /** 将 OAuth 回调暂存的 refresh token 绑定到已保存账号 */
   function persistOAuthRefresh(name: string) {
-    const raw = sessionStorage.getItem("oc_oauth_refresh");
+    const raw = sessionStorage.getItem('oc_oauth_refresh');
     if (!raw) {
       return;
     }
-    sessionStorage.removeItem("oc_oauth_refresh");
+    sessionStorage.removeItem('oc_oauth_refresh');
     try {
       const { refreshToken, expiresAt } = JSON.parse(raw) as {
         refreshToken: string;
@@ -102,22 +102,16 @@
 
 <div>
   <div
-    class="w-screen h-screen min-h-fit flex items-center justify-center"
+    class="flex h-screen min-h-fit w-screen items-center justify-center"
     style:background="url({bg}) repeat center/cover"
   >
-    <div
-      class="bg-bg/70 w-lg h-fit rounded-2xl p-8 shadow-xl backdrop-blur-[15px]"
-    >
+    <div class="bg-bg/70 h-fit w-lg rounded-2xl p-8 shadow-xl backdrop-blur-[15px]">
       {#if success}
-        <div class="text-center py-6">
-          <img
-            src={successSvg}
-            alt="success"
-            class="w-16 h-16 mx-auto mb-4 shrink-0"
-          />
-          <h2 class="text-2xl font-bold text-text-primary mb-2">注册成功</h2>
+        <div class="py-6 text-center">
+          <img src={successSvg} alt="success" class="mx-auto mb-4 h-16 w-16 shrink-0" />
+          <h2 class="text-text-primary mb-2 text-2xl font-bold">注册成功</h2>
           <p class="text-text-secondary mb-6">
-            {#if registeredMode === "cloud"}
+            {#if registeredMode === 'cloud'}
               账号 "{registeredName}" 注册成功
             {:else}
               账号 "{registeredName}" 已保存到当前设备
@@ -125,47 +119,33 @@
           </p>
           <a
             href="/"
-            class="inline-block rounded-lg bg-primary text-white font-semibold px-6 py-3 hover:bg-primary-hover transition-colors"
+            class="bg-primary hover:bg-primary-hover inline-block rounded-lg px-6 py-3 font-semibold text-white transition-colors"
           >
             返回首页登录
           </a>
         </div>
       {:else}
-        <h1
-          class="ml-auto mr-auto w-fit text-2xl font-bold mb-6 text-text-primary"
-        >
+        <h1 class="text-text-primary mr-auto mb-6 ml-auto w-fit text-2xl font-bold">
           欢迎来到Open CCW
         </h1>
 
         <form onsubmit={handleSubmit} class="space-y-4">
-          <div
-            class="rounded-xl border border-border p-4 flex items-center gap-3"
-          >
+          <div class="border-border flex items-center gap-3 rounded-xl border p-4">
             {#if hasToken()}
-              <img src={successSvg} alt="success" class="w-12 h-12 shrink-0" />
-              <div class="flex-1 min-w-0">
-                <p class="text-sm font-medium text-text-primary">
-                  已获取 CCW Token
-                </p>
-                <p class="text-xs text-text-secondary break-all">
+              <img src={successSvg} alt="success" class="h-12 w-12 shrink-0" />
+              <div class="min-w-0 flex-1">
+                <p class="text-text-primary text-sm font-medium">已获取 CCW Token</p>
+                <p class="text-text-secondary text-xs break-all">
                   {token.trim()}
                 </p>
               </div>
-              <a
-                href="/oauth"
-                class="text-xs text-info underline whitespace-nowrap"
-                >重新授权</a
-              >
+              <a href="/oauth" class="text-info text-xs whitespace-nowrap underline">重新授权</a>
             {:else}
               <a
                 href="/oauth"
-                class="w-full flex items-center justify-center gap-2 rounded-lg bg-primary text-white font-semibold py-3 hover:bg-primary-hover active:bg-primary-active transition-colors"
+                class="bg-primary hover:bg-primary-hover active:bg-primary-active flex w-full items-center justify-center gap-2 rounded-lg py-3 font-semibold text-white transition-colors"
               >
-                <img
-                  src={ccwLogo}
-                  alt="CCW"
-                  class="w-6 h-6 rounded-full object-contain"
-                />
+                <img src={ccwLogo} alt="CCW" class="h-6 w-6 rounded-full object-contain" />
                 CCW 一键授权
               </a>
             {/if}
@@ -173,7 +153,7 @@
 
           {#if hasToken()}
             <div class="mt-2">
-              <label for="password" class="block text-sm text-text-primary mb-2"
+              <label for="password" class="text-text-primary mb-2 block text-sm"
                 >密码（加密Token）</label
               >
               <input
@@ -182,14 +162,13 @@
                 bind:value={password}
                 autocomplete="new-password"
                 placeholder="请设置密码"
-                class="w-full rounded-lg border border-border px-4 py-3 text-text-primary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                class="border-border text-text-primary focus:border-primary focus:ring-primary w-full rounded-lg border px-4 py-3 transition-colors focus:ring-1 focus:outline-none"
               />
             </div>
 
             <div class="mt-2">
-              <label
-                for="confirm-password"
-                class="block text-sm text-text-primary mb-2">确认密码</label
+              <label for="confirm-password" class="text-text-primary mb-2 block text-sm"
+                >确认密码</label
               >
               <input
                 id="confirm-password"
@@ -197,11 +176,11 @@
                 bind:value={confirmPassword}
                 autocomplete="new-password"
                 placeholder="请再次输入密码"
-                class="w-full rounded-lg border border-border px-4 py-3 text-text-primary focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                class="border-border text-text-primary focus:border-primary focus:ring-primary w-full rounded-lg border px-4 py-3 transition-colors focus:ring-1 focus:outline-none"
               />
             </div>
 
-            <label class="flex items-center gap-2 cursor-pointer select-none">
+            <label class="flex cursor-pointer items-center gap-2 select-none">
               <input
                 type="checkbox"
                 name="account-storage"
@@ -221,13 +200,13 @@
             <button
               type="submit"
               disabled={submitting}
-              class="w-full rounded-lg bg-primary text-white font-semibold py-3 hover:bg-primary-hover active:bg-primary-active disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+              class="bg-primary hover:bg-primary-hover active:bg-primary-active w-full cursor-pointer rounded-lg py-3 font-semibold text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {submitting ? "注册中..." : "注册"}
+              {submitting ? '注册中...' : '注册'}
             </button>
           {/if}
 
-          <p class="text-center text-sm text-text-secondary">
+          <p class="text-text-secondary text-center text-sm">
             已有账号？
             <a href="/" class="text-info underline">返回登录</a>
           </p>
@@ -262,8 +241,7 @@
     height: var(--checkbox-diameter);
     border-radius: var(--checkbox-border-radius);
     background: var(--secondary-color);
-    border: var(--checkbox-border-width) var(--checkbox-border-style)
-      var(--checkbox-border-color);
+    border: var(--checkbox-border-width) var(--checkbox-border-style) var(--checkbox-border-color);
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
@@ -272,14 +250,13 @@
   }
 
   .ui-checkbox::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    -webkit-box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5)
-      var(--primary-color);
+    -webkit-box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
     box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
     border-radius: inherit;
     opacity: 0;
@@ -291,7 +268,7 @@
   .ui-checkbox::before {
     top: 40%;
     left: 50%;
-    content: "";
+    content: '';
     position: absolute;
     width: 4px;
     height: 7px;
@@ -324,10 +301,8 @@
 
   .ui-checkbox:checked::before {
     opacity: 1;
-    -webkit-transform: translate(-50%, -50%) rotate(45deg)
-      scale(var(--checkmark-size));
-    -ms-transform: translate(-50%, -50%) rotate(45deg)
-      scale(var(--checkmark-size));
+    -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
+    -ms-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
     transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
     -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
     -o-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;

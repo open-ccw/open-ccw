@@ -1,13 +1,13 @@
 <script lang="ts">
-  import type { PageProps } from "./$types";
-  import Profile from "#lib/user/Profile.svelte";
-  import PageHeader from "#lib/PageHeader.svelte";
-  import { communityWeb } from "#lib/api.ts";
+  import type { PageProps } from './$types';
+  import Profile from '#lib/user/Profile.svelte';
+  import PageHeader from '#lib/PageHeader.svelte';
+  import { communityWeb } from '#lib/api.ts';
 
   let { params }: PageProps = $props();
 
   let profile = $state<UserProfile | null>(null);
-  let error = $state("");
+  let error = $state('');
   let loading = $state(false);
   let stats = $state<{
     likeCount: number;
@@ -19,13 +19,13 @@
 
   async function load() {
     if (!params.id) {
-      error = "config error";
+      error = 'config error';
       return;
     }
     lockDetail = { locked: false, createdAt: -1, unlocksAt: -1 };
     profile = null;
     loading = true;
-    error = "";
+    error = '';
     try {
       let studentNumber: string | undefined = undefined,
         studentOid: string | undefined = undefined;
@@ -39,9 +39,7 @@
         studentNumber,
         studentOid,
       });
-      const lockDetailResult = await communityWeb.getLockedUserDetail(
-        profile.studentOid,
-      );
+      const lockDetailResult = await communityWeb.getLockedUserDetail(profile.studentOid);
       if (lockDetailResult.locked) {
         lockDetail = {
           locked: true,
@@ -52,9 +50,7 @@
         return;
       }
 
-      const detail = await communityWeb.getCreationStudentDetail(
-        profile.studentOid,
-      );
+      const detail = await communityWeb.getCreationStudentDetail(profile.studentOid);
       stats = {
         likeCount: detail.likeCount,
         favoriteCount: detail.favoriteCount,
@@ -75,10 +71,7 @@
       setTimeout(load, 10);
       return;
     }
-    if (
-      profile.studentNumber !== params.id &&
-      profile.studentOid !== params.id
-    ) {
+    if (profile.studentNumber !== params.id && profile.studentOid !== params.id) {
       setTimeout(load, 10);
       return;
     }
@@ -87,28 +80,16 @@
 
 <svelte:head>
   <title>Open CCW - 用户主页 - {profile?.name ?? params.id}</title>
-  <meta
-    name="description"
-    content={profile?.bio ?? "查看 CCW 用户的个人主页"}
-  />
+  <meta name="description" content={profile?.bio ?? '查看 CCW 用户的个人主页'} />
   <meta name="og:title" content="Open CCW - {profile?.name ?? '用户主页'}" />
-  <meta
-    name="og:description"
-    content={profile?.bio ?? "查看 CCW 用户的个人主页"}
-  />
+  <meta name="og:description" content={profile?.bio ?? '查看 CCW 用户的个人主页'} />
   {#if profile?.avatar}
     <meta name="og:image" content={profile.avatar} />
   {/if}
   <meta name="og:url" content="https://ccw.kivotos.qzz.io/user/{params.id}" />
   <meta name="twitter:card" content="summary" />
-  <meta
-    name="twitter:title"
-    content="Open CCW - {profile?.name ?? '用户主页'}"
-  />
-  <meta
-    name="twitter:description"
-    content={profile?.bio ?? "查看 CCW 用户的个人主页"}
-  />
+  <meta name="twitter:title" content="Open CCW - {profile?.name ?? '用户主页'}" />
+  <meta name="twitter:description" content={profile?.bio ?? '查看 CCW 用户的个人主页'} />
   {#if profile?.avatar}
     <meta name="twitter:image" content={profile.avatar} />
   {/if}

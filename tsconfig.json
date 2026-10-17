@@ -18,9 +18,5 @@
     }
   },
   "include": ["./src/**/*"],
-  "exclude": [
-    "./functions/**/*",
-    "src/service-worker.ts",
-    "worker-configuration.d.ts"
-  ]
+  "exclude": ["./functions/**/*", "src/service-worker.ts", "worker-configuration.d.ts"]
 }

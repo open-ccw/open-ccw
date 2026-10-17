@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import type { PageProps } from "./$types";
-  import { page } from "$app/state";
-  import { communityWeb } from "#lib/api.ts";
+  import { onMount } from 'svelte';
+  import type { PageProps } from './$types';
+  import { page } from '$app/state';
+  import { communityWeb } from '#lib/api.ts';
 
   let { params }: PageProps = $props();
 
@@ -10,23 +10,23 @@
   let loading = $state(false);
   let complete = $state(false);
   let safe = $state(false);
-  let oid: string = $derived(params.oid || "69740f1a61b891733d5ee2c6");
+  let oid: string = $derived(params.oid || '69740f1a61b891733d5ee2c6');
   let sb3: string = $derived.by(() => {
-    const orig = page.url.searchParams.get("sb3");
+    const orig = page.url.searchParams.get('sb3');
     if (orig) {
       return orig;
     }
     loadVersion();
-    return "";
+    return '';
   });
   let usePostMessage: boolean = $derived(
-    !(page.url.searchParams.get("usePostMessage") === "false"),
+    !(page.url.searchParams.get('usePostMessage') === 'false'),
   );
-  let player: typeof import("@open-ccw/player") | undefined = $state();
-  let rpc: typeof import("@mixer/postmessage-rpc") | undefined = $state();
+  let player: typeof import('@open-ccw/player') | undefined = $state();
+  let rpc: typeof import('@mixer/postmessage-rpc') | undefined = $state();
 
   async function loadVersion() {
-    const { latestProjectLink } = await communityWeb.getCreationDetail(oid, "");
+    const { latestProjectLink } = await communityWeb.getCreationDetail(oid, '');
     sb3 = latestProjectLink;
   }
 
@@ -37,15 +37,15 @@
   });
 
   onMount(() => {
-    if (window.origin != "null") {
-      safe = confirm("使用player直接运行未知作品可能造成token泄露,是否继续?");
+    if (window.origin != 'null') {
+      safe = confirm('使用player直接运行未知作品可能造成token泄露,是否继续?');
     } else {
       safe = true;
     }
     if (usePostMessage) {
-      import("@mixer/postmessage-rpc").then((lib) => (rpc = lib));
+      import('@mixer/postmessage-rpc').then((lib) => (rpc = lib));
     }
-    import("@open-ccw/player").then((lib) => (player = lib));
+    import('@open-ccw/player').then((lib) => (player = lib));
   });
 
   async function initPlayer() {
@@ -62,7 +62,7 @@
     });
     vm.runtime.ccwAPI.getUserInfo = () => {
       return Promise.resolve({
-        userId: "a",
+        userId: 'a',
       });
     };
     vm.runtime.precompile();
@@ -78,6 +78,6 @@
   }
 </script>
 
-<div class="w-screen h-screen">
-  <canvas bind:this={canvas} class="w-full h-full object-contain"></canvas>
+<div class="h-screen w-screen">
+  <canvas bind:this={canvas} class="h-full w-full object-contain"></canvas>
 </div>

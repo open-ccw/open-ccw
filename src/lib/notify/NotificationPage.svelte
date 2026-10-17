@@ -1,16 +1,14 @@
 <script lang="ts">
-  import { communityWeb, type Notification } from "#lib/api.ts";
-  import Error from "#lib/utils/Error.svelte";
-  import { onMount } from "svelte";
-  import NotificationMessage from "./NotificationMessage.svelte";
-  import { token } from "#lib/auth/tokenStore";
+  import { communityWeb, type Notification } from '#lib/api.ts';
+  import Error from '#lib/utils/Error.svelte';
+  import { onMount } from 'svelte';
+  import NotificationMessage from './NotificationMessage.svelte';
+  import { token } from '#lib/auth/tokenStore';
 
-  let {
-    type = "CREATION_INTERACTION",
-  }: { type: Notification.NotificationGroup } = $props();
+  let { type = 'CREATION_INTERACTION' }: { type: Notification.NotificationGroup } = $props();
   let pageNum = $state(1);
   let totalPages = $state(Infinity);
-  let error = $state("");
+  let error = $state('');
   let pages: Notification.NotificationPage[] = $state.raw([]);
   let loading = $state(false);
   let footer: HTMLElement | null = $state(null);
@@ -27,12 +25,11 @@
     }
     loading = true;
     try {
-      error = "";
-      const { data, totalPages: total } =
-        await communityWeb.getNotificationPage(type, {
-          perPage: 20,
-          page: pageNum,
-        });
+      error = '';
+      const { data, totalPages: total } = await communityWeb.getNotificationPage(type, {
+        perPage: 20,
+        page: pageNum,
+      });
       if (total > 0) {
         totalPages = total;
       }
@@ -86,16 +83,14 @@
 
 <footer
   bind:this={footer}
-  class="w-full flex items-center justify-center gap-2 py-4 text-sm text-text-placeholder"
+  class="text-text-placeholder flex w-full items-center justify-center gap-2 py-4 text-sm"
 >
   {#if loading}
-    <span
-      class="size-4 border-2 border-border border-t-info rounded-full animate-spin"
-    ></span>
+    <span class="border-border border-t-info size-4 animate-spin rounded-full border-2"></span>
     <span>加载中...</span>
   {:else if finished}
     <span>— 已加载全部消息 —</span>
   {:else}
-    <span class="size-4 border-2 border-border rounded-full"></span>
+    <span class="border-border size-4 rounded-full border-2"></span>
   {/if}
 </footer>

@@ -1,4 +1,4 @@
-import { tokenize } from "./tokenizer";
+import { tokenize } from './tokenizer';
 
 const test = `
 测试文本

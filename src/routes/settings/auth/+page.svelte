@@ -1,5 +1,5 @@
 <script lang="ts">
-  import DeviceList from "#lib/settings/auth/DeviceList.svelte";
+  import DeviceList from '#lib/settings/auth/DeviceList.svelte';
 </script>
 
 <svelte:head>

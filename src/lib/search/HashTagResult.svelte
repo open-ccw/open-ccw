@@ -1,33 +1,27 @@
 <script lang="ts">
-  import type { HashTag } from "@ccw-api/api";
-  import { formatCount } from "./format";
+  import type { HashTag } from '@ccw-api/api';
+  import { formatCount } from './format';
 
   let { item }: { item: HashTag.HashTag } = $props();
 
-  const name = $derived(
-    item.identifier.replaceAll("<em>", "").replaceAll("</em>", ""),
-  );
+  const name = $derived(item.identifier.replaceAll('<em>', '').replaceAll('</em>', ''));
 </script>
 
-<div class="h-16 mt-2">
+<div class="mt-2 h-16">
   <a
     href="https://www.ccw.site/topic/{name}"
-    class="h-full flex items-center gap-4 bg-bg-secondary rounded-xl shadow border border-border p-4 hover:border-indigo-400 hover:shadow-md transition-all"
+    class="bg-bg-secondary border-border flex h-full items-center gap-4 rounded-xl border p-4 shadow transition-all hover:border-indigo-400 hover:shadow-md"
   >
     {#if item.coverLink}
-      <img
-        src={item.coverLink}
-        alt={name}
-        class="size-12 rounded-xl object-cover shrink-0"
-      />
+      <img src={item.coverLink} alt={name} class="size-12 shrink-0 rounded-xl object-cover" />
     {/if}
     <div class="min-w-0 flex-1">
-      <div class="font-medium text-text-primary truncate">{name}</div>
-      <div class="text-sm text-text-placeholder truncate">
-        {item.description || "---"}
+      <div class="text-text-primary truncate font-medium">{name}</div>
+      <div class="text-text-placeholder truncate text-sm">
+        {item.description || '---'}
       </div>
     </div>
-    <div class="flex gap-4 text-xs text-text-placeholder shrink-0">
+    <div class="text-text-placeholder flex shrink-0 gap-4 text-xs">
       <span>成员 {formatCount(item.memberCount)}</span>
       <span>作品 {formatCount(item.creationCount)}</span>
     </div>

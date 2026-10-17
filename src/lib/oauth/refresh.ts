@@ -1,13 +1,13 @@
-import { get } from "svelte/store";
-import { refreshAccessToken } from "./client";
+import { get } from 'svelte/store';
+import { refreshAccessToken } from './client';
 import {
   getAccountRefresh,
   getActiveAccount,
   setAccountRefresh,
   token,
-} from "#lib/auth/tokenStore";
-import { setToken } from "#lib/api.ts";
-import { refreshUser } from "#lib/user/userStore.ts";
+} from '#lib/auth/tokenStore';
+import { setToken } from '#lib/api.ts';
+import { refreshUser } from '#lib/user/userStore.ts';
 
 /** 提前 30 秒视为过期 */
 const EXPIRY_SKEW_MS = 30_000;
@@ -24,21 +24,14 @@ function currentToken(): string {
  * @param tok 当前 token
  * @returns 可用的新 token（未过期或刷新失败时为原 token）
  */
-export async function freshTokenFor(
-  name: string,
-  tok: string,
-): Promise<string> {
+export async function freshTokenFor(name: string, tok: string): Promise<string> {
   const record = getAccountRefresh(name);
   if (!record?.refreshToken || record.expiresAt - EXPIRY_SKEW_MS > Date.now()) {
     return tok;
   }
   try {
     const tokens = await refreshAccessToken(record.refreshToken);
-    setAccountRefresh(
-      name,
-      tokens.refreshToken ?? record.refreshToken,
-      tokens.expiresAt,
-    );
+    setAccountRefresh(name, tokens.refreshToken ?? record.refreshToken, tokens.expiresAt);
     return tokens.accessToken;
   } catch {
     return tok;

@@ -1,7 +1,7 @@
 export type TopicConfig = {
   oid: string;
-  subjectType: "EXTENSION" | "POST" | "CREATION" | "PROFILE";
-  sectionType: "COMMENT" | "REVIEW";
+  subjectType: 'EXTENSION' | 'POST' | 'CREATION' | 'PROFILE';
+  sectionType: 'COMMENT' | 'REVIEW';
 };
 
 export type MinimalComment = {

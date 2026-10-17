@@ -1,18 +1,18 @@
 <script lang="ts">
-  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
-  import { user } from "#lib/user/userStore.ts";
-  import { getOSS } from "#lib/utils/oss.ts";
-  import { communityWeb } from "@ccw-api/api";
-  import { toast } from "#lib/toast.ts";
-  import type OSS from "ali-oss";
-  import CryptoJS from "crypto-js";
-  import type { MinimalComment, TopicConfig } from "./types";
+  import AvatarToProfile from '#lib/user/AvatarToProfile.svelte';
+  import { user } from '#lib/user/userStore.ts';
+  import { getOSS } from '#lib/utils/oss.ts';
+  import { communityWeb } from '@ccw-api/api';
+  import { toast } from '#lib/toast.ts';
+  import type OSS from 'ali-oss';
+  import CryptoJS from 'crypto-js';
+  import type { MinimalComment, TopicConfig } from './types';
 
-  let comment = $state("");
+  let comment = $state('');
   let textArea: HTMLTextAreaElement | undefined = $state();
   let oss: OSS | undefined = $state();
   let submitting = $state(false);
-  let error = $state("");
+  let error = $state('');
   let {
     oid,
     subjectType,
@@ -27,7 +27,7 @@
     if (!item) {
       return;
     }
-    if (item.type.startsWith("image/")) {
+    if (item.type.startsWith('image/')) {
       const file = item.getAsFile();
       if (!file) {
         return;
@@ -39,18 +39,17 @@
 
   async function handleImg(img: File) {
     if (!oss || !$user.loggedIn) {
-      console.error("未登录,无法上传");
+      console.error('未登录,无法上传');
       return;
     }
     const wa = CryptoJS.lib.WordArray.create(await img.arrayBuffer());
     const id = CryptoJS.MD5(wa);
-    const type = img.name.split(".").at(-1);
+    const type = img.name.split('.').at(-1);
     const pattern = `![${img.name}](UPLOADING_${id}.${type})`;
     const path = `works-covers/${$user.studentNumber}/${id}.${type}`;
     if (textArea) {
       const start = textArea.selectionStart;
-      comment =
-        comment.substring(0, start) + pattern + comment.substring(start);
+      comment = comment.substring(0, start) + pattern + comment.substring(start);
     }
     const url = `https://m.ccw.site/${path}?t=.png`;
     upload(img, path)
@@ -59,21 +58,18 @@
       })
       .catch((e) => {
         console.warn(e);
-        comment = comment.replaceAll(
-          pattern,
-          `![${img.name}(可能上传失败)](${url})`,
-        );
+        comment = comment.replaceAll(pattern, `![${img.name}(可能上传失败)](${url})`);
       });
   }
 
   async function upload(img: File, url: string) {
     if (!oss || !$user.loggedIn) {
-      console.error("未登录,无法上传");
+      console.error('未登录,无法上传');
       return;
     }
     return oss.put(url, img, {
       headers: {
-        "x-oss-forbid-overwrite": true,
+        'x-oss-forbid-overwrite': true,
       },
     });
   }
@@ -96,7 +92,7 @@
       return;
     }
     if (!comment.trim()) {
-      toast.error("评论内容不能为空");
+      toast.error('评论内容不能为空');
       return;
     }
     submitting = true;
@@ -109,7 +105,7 @@
         },
         sectionType,
       );
-      comment = "";
+      comment = '';
       const patchedNewComment: MinimalComment = {
         ...newComment,
         likeCount: 0,
@@ -132,15 +128,11 @@
 
 {#if $user.loggedIn}
   {#if error}
-    <div class="text-error border border-error">{error}</div>
+    <div class="text-error border-error border">{error}</div>
   {/if}
-  <div class="mt-4 flex flex-row gap-4 md:gap-8 w-full p-2">
-    <div class="size-8 md:size-12 translate-x-1.5 translate-y-1 shrink-0">
-      <AvatarToProfile
-        oid={$user.oid}
-        url={$user.avatar}
-        virtual={$user.virtualValue}
-      />
+  <div class="mt-4 flex w-full flex-row gap-4 p-2 md:gap-8">
+    <div class="size-8 shrink-0 translate-x-1.5 translate-y-1 md:size-12">
+      <AvatarToProfile oid={$user.oid} url={$user.avatar} virtual={$user.virtualValue} />
     </div>
     <form class="flex-1">
       <div class="input-group w-auto">
@@ -156,13 +148,9 @@
             }
             const { clipboardData } = e;
             handlePaste(clipboardData);
-          }}
-        >
-        </textarea>
+          }}></textarea>
         <button
-          class="button--submit {submitting
-            ? 'cursor-not-allowed'
-            : 'cursor-pointer'}"
+          class="button--submit {submitting ? 'cursor-not-allowed' : 'cursor-pointer'}"
           disabled={submitting}
           onclick={createComment}>评论</button
         >

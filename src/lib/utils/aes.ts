@@ -1,17 +1,17 @@
 // 密码派生加密工具
-import CryptoJS from "crypto-js";
+import CryptoJS from 'crypto-js';
 
 const PBKDF2_ITERATIONS = 600_000;
 const SALT_BYTES = 16;
 const IV_BYTES = 12;
-const V2_PREFIX = "v2:";
+const V2_PREFIX = 'v2:';
 
 export function isV2Encrypted(encrypted: string): boolean {
   return encrypted.startsWith(V2_PREFIX);
 }
 
 function bytesToBase64(bytes: Uint8Array): string {
-  let bin = "";
+  let bin = '';
   for (const b of bytes) bin += String.fromCharCode(b);
   return btoa(bin);
 }
@@ -24,39 +24,29 @@ function base64ToBytes(b64: string): Uint8Array<ArrayBuffer> {
   return bytes;
 }
 
-async function deriveAesKey(
-  password: string,
-  salt: Uint8Array<ArrayBuffer>,
-): Promise<CryptoKey> {
+async function deriveAesKey(password: string, salt: Uint8Array<ArrayBuffer>): Promise<CryptoKey> {
   const material = await crypto.subtle.importKey(
-    "raw",
+    'raw',
     new TextEncoder().encode(password),
-    "PBKDF2",
+    'PBKDF2',
     false,
-    ["deriveKey"],
+    ['deriveKey'],
   );
   return crypto.subtle.deriveKey(
-    { name: "PBKDF2", hash: "SHA-256", salt, iterations: PBKDF2_ITERATIONS },
+    { name: 'PBKDF2', hash: 'SHA-256', salt, iterations: PBKDF2_ITERATIONS },
     material,
-    { name: "AES-GCM", length: 256 },
+    { name: 'AES-GCM', length: 256 },
     false,
-    ["encrypt", "decrypt"],
+    ['encrypt', 'decrypt'],
   );
 }
 
-export async function encryptWithPassword(
-  plain: string,
-  password: string,
-): Promise<string> {
+export async function encryptWithPassword(plain: string, password: string): Promise<string> {
   const salt = crypto.getRandomValues(new Uint8Array(SALT_BYTES));
   const iv = crypto.getRandomValues(new Uint8Array(IV_BYTES));
   const key = await deriveAesKey(password, salt);
   const cipher = new Uint8Array(
-    await crypto.subtle.encrypt(
-      { name: "AES-GCM", iv },
-      key,
-      new TextEncoder().encode(plain),
-    ),
+    await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(plain)),
   );
   const payload = new Uint8Array(iv.length + cipher.length);
   payload.set(iv, 0);
@@ -69,7 +59,7 @@ export async function decryptWithPassword(
   password: string,
 ): Promise<string | null> {
   if (isV2Encrypted(encrypted)) {
-    const [saltB64, payloadB64] = encrypted.slice(V2_PREFIX.length).split(":");
+    const [saltB64, payloadB64] = encrypted.slice(V2_PREFIX.length).split(':');
     if (!saltB64 || !payloadB64) {
       return null;
     }
@@ -82,7 +72,7 @@ export async function decryptWithPassword(
     const data = payload.subarray(IV_BYTES);
     try {
       const key = await deriveAesKey(password, salt);
-      const plain = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, key, data);
+      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
       return new TextDecoder().decode(plain);
     } catch {
       return null;

@@ -1,19 +1,15 @@
-import { writable } from "svelte/store";
-import {
-  decryptWithPassword,
-  encryptWithPassword,
-  isV2Encrypted,
-} from "#lib/utils/aes";
-import { browser } from "$app/env";
-import { clearTokenAndUser, updateToken } from "#lib/user/userStore.ts";
+import { writable } from 'svelte/store';
+import { decryptWithPassword, encryptWithPassword, isV2Encrypted } from '#lib/utils/aes';
+import { browser } from '$app/env';
+import { clearTokenAndUser, updateToken } from '#lib/user/userStore.ts';
 
-const ACCOUNTS_KEY = "oc_accounts";
-const TOKEN_PREFIX = "oc_token_";
-const QUICK_TOKEN_PREFIX = "oc_quick_token_"; // 快捷登录 token密文
-const ACTIVE_KEY = "oc_active_account";
-const QUICK_KEY_DB = "oc_quick_key_db"; // 快捷登录加密密钥存储IndexedDB
-const QUICK_KEY_STORE = "keys";
-const QUICK_KEY_RECORD = "device_key";
+const ACCOUNTS_KEY = 'oc_accounts';
+const TOKEN_PREFIX = 'oc_token_';
+const QUICK_TOKEN_PREFIX = 'oc_quick_token_'; // 快捷登录 token密文
+const ACTIVE_KEY = 'oc_active_account';
+const QUICK_KEY_DB = 'oc_quick_key_db'; // 快捷登录加密密钥存储IndexedDB
+const QUICK_KEY_STORE = 'keys';
+const QUICK_KEY_RECORD = 'device_key';
 
 let quickKeyCache: CryptoKey | null = null;
 
@@ -33,7 +29,7 @@ function openQuickKeyDB(): Promise<IDBDatabase> {
 async function idbSet(key: string, value: ArrayBuffer): Promise<void> {
   const db = await openQuickKeyDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(QUICK_KEY_STORE, "readwrite");
+    const tx = db.transaction(QUICK_KEY_STORE, 'readwrite');
     tx.objectStore(QUICK_KEY_STORE).put(value, key);
     tx.oncomplete = () => {
       db.close();
@@ -49,7 +45,7 @@ async function idbSet(key: string, value: ArrayBuffer): Promise<void> {
 async function idbGet(key: string): Promise<ArrayBuffer | undefined> {
   const db = await openQuickKeyDB();
   return new Promise((resolve, reject) => {
-    const tx = db.transaction(QUICK_KEY_STORE, "readonly");
+    const tx = db.transaction(QUICK_KEY_STORE, 'readonly');
     const req = tx.objectStore(QUICK_KEY_STORE).get(key);
     req.onsuccess = () => {
       db.close();
@@ -66,21 +62,17 @@ async function getQuickKey(): Promise<CryptoKey> {
   if (quickKeyCache) return quickKeyCache;
   const raw = await idbGet(QUICK_KEY_RECORD);
   if (raw) {
-    quickKeyCache = await crypto.subtle.importKey(
-      "raw",
-      raw,
-      { name: "AES-GCM" },
-      true,
-      ["encrypt", "decrypt"],
-    );
+    quickKeyCache = await crypto.subtle.importKey('raw', raw, { name: 'AES-GCM' }, true, [
+      'encrypt',
+      'decrypt',
+    ]);
     return quickKeyCache;
   }
-  const key = await crypto.subtle.generateKey(
-    { name: "AES-GCM", length: 256 },
-    true,
-    ["encrypt", "decrypt"],
-  );
-  const exported = await crypto.subtle.exportKey("raw", key);
+  const key = await crypto.subtle.generateKey({ name: 'AES-GCM', length: 256 }, true, [
+    'encrypt',
+    'decrypt',
+  ]);
+  const exported = await crypto.subtle.exportKey('raw', key);
   await idbSet(QUICK_KEY_RECORD, exported);
   quickKeyCache = key;
   return key;
@@ -90,7 +82,7 @@ async function quickEncrypt(value: string): Promise<string> {
   const key = await getQuickKey();
   const iv = crypto.getRandomValues(new Uint8Array(12));
   const cipher = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
+    { name: 'AES-GCM', iv },
     key,
     new TextEncoder().encode(value),
   );
@@ -106,11 +98,7 @@ async function quickDecrypt(payload: string): Promise<string | null> {
     const combined = base64ToArrayBuffer(payload);
     const iv = combined.slice(0, 12);
     const cipher = combined.slice(12);
-    const plain = await crypto.subtle.decrypt(
-      { name: "AES-GCM", iv },
-      key,
-      cipher,
-    );
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, cipher);
     return new TextDecoder().decode(plain);
   } catch {
     return null;
@@ -119,7 +107,7 @@ async function quickDecrypt(payload: string): Promise<string | null> {
 
 function arrayBufferToBase64(buffer: ArrayBuffer): string {
   const bytes = new Uint8Array(buffer);
-  let binary = "";
+  let binary = '';
   for (const b of bytes) binary += String.fromCharCode(b);
   return btoa(binary);
 }
@@ -131,19 +119,17 @@ function base64ToArrayBuffer(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-export const LOCAL_ACCOUNT_SUFFIX = "-local";
+export const LOCAL_ACCOUNT_SUFFIX = '-local';
 
 export function localAccountName(uid: string): string {
   return uid + LOCAL_ACCOUNT_SUFFIX;
 }
 
 export function displayAccountName(name: string): string {
-  return name.endsWith(LOCAL_ACCOUNT_SUFFIX)
-    ? name.slice(0, -LOCAL_ACCOUNT_SUFFIX.length)
-    : name;
+  return name.endsWith(LOCAL_ACCOUNT_SUFFIX) ? name.slice(0, -LOCAL_ACCOUNT_SUFFIX.length) : name;
 }
 
-const LEGACY_LOCAL_KEY = "oc_token";
+const LEGACY_LOCAL_KEY = 'oc_token';
 
 export interface Account {
   name: string;
@@ -152,12 +138,12 @@ export interface Account {
   displayName?: string;
 }
 
-export const token = writable<string>("");
+export const token = writable<string>('');
 
 if (browser) {
   localStorage.removeItem(LEGACY_LOCAL_KEY);
   try {
-    indexedDB.deleteDatabase("oc_token_db");
+    indexedDB.deleteDatabase('oc_token_db');
   } catch {}
 
   const storedToken = sessionStorage.getItem(TOKEN_PREFIX);
@@ -200,13 +186,13 @@ export async function saveAccount(
   const existingIdx = accounts.findIndex((a) => a.name === name);
 
   if (existingIdx >= 0) {
-    throw "该账号已注册";
+    throw '该账号已注册';
   } else {
     accounts.push({
       name,
       createdAt: Date.now(),
-      avatar: avatar ?? "",
-      displayName: displayName ?? "",
+      avatar: avatar ?? '',
+      displayName: displayName ?? '',
     });
   }
 
@@ -224,7 +210,7 @@ export async function updateAccountToken(
   displayName?: string,
 ): Promise<void> {
   if (!listAccounts().some((a) => a.name === name)) {
-    throw "账号不存在";
+    throw '账号不存在';
   }
   const encrypted = await encryptWithPassword(tokenValue, pin);
   localStorage.setItem(TOKEN_PREFIX + name, encrypted);
@@ -261,14 +247,8 @@ export function updateAccountInfo(
   saveAccounts(accounts);
 }
 
-export async function enableQuickLogin(
-  name: string,
-  tokenValue: string,
-): Promise<void> {
-  localStorage.setItem(
-    QUICK_TOKEN_PREFIX + name,
-    await quickEncrypt(tokenValue),
-  );
+export async function enableQuickLogin(name: string, tokenValue: string): Promise<void> {
+  localStorage.setItem(QUICK_TOKEN_PREFIX + name, await quickEncrypt(tokenValue));
 }
 
 export function disableQuickLogin(name: string): void {
@@ -295,7 +275,7 @@ export function setActiveAccount(name: string): void {
   localStorage.setItem(ACTIVE_KEY, name);
 }
 
-const REFRESH_PREFIX = "oc_oauth_refresh_";
+const REFRESH_PREFIX = 'oc_oauth_refresh_';
 
 /** 账号 OAuth refresh token 与过期时间 */
 export interface AccountTokenRefresh {
@@ -305,11 +285,7 @@ export interface AccountTokenRefresh {
 }
 
 /** 保存账号的 OAuth refresh token（明文存储，仅本机） */
-export function setAccountRefresh(
-  name: string,
-  refreshToken: string,
-  expiresAt: number,
-): void {
+export function setAccountRefresh(name: string, refreshToken: string, expiresAt: number): void {
   localStorage.setItem(
     REFRESH_PREFIX + name,
     JSON.stringify({ refreshToken, expiresAt } satisfies AccountTokenRefresh),
@@ -334,10 +310,7 @@ export function clearAccountRefresh(name: string): void {
   localStorage.removeItem(REFRESH_PREFIX + name);
 }
 
-export async function loadAccount(
-  id: string,
-  pin: string,
-): Promise<string | null> {
+export async function loadAccount(id: string, pin: string): Promise<string | null> {
   const encrypted = localStorage.getItem(TOKEN_PREFIX + id);
   if (!encrypted) {
     return null;
@@ -349,10 +322,7 @@ export async function loadAccount(
       return null;
     }
     if (!isV2Encrypted(encrypted)) {
-      localStorage.setItem(
-        TOKEN_PREFIX + id,
-        await encryptWithPassword(value, pin),
-      );
+      localStorage.setItem(TOKEN_PREFIX + id, await encryptWithPassword(value, pin));
     }
     token.set(value);
     localStorage.setItem(ACTIVE_KEY, id);
@@ -388,7 +358,7 @@ export async function logout() {
   clearToken();
   sessionStorage.removeItem(TOKEN_PREFIX);
   try {
-    token.set("");
+    token.set('');
   } catch (e) {
     return;
   }

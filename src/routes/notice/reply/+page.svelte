@@ -1,5 +1,5 @@
 <script>
-  import NotificationPage from "#lib/notify/NotificationPage.svelte";
+  import NotificationPage from '#lib/notify/NotificationPage.svelte';
 </script>
 
 <svelte:head>

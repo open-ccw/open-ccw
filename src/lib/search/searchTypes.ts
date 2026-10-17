@@ -1,1 +1,1 @@
-export type SearchTypes = "all" | "students" | "creation" | "post" | "hashtag";
+export type SearchTypes = 'all' | 'students' | 'creation' | 'post' | 'hashtag';

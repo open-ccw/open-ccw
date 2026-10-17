@@ -1,15 +1,15 @@
 <script lang="ts">
-  import Logo from "./SiteLogo.svelte";
-  import CheckInDialog from "#lib/user/checkin/CheckInDialog.svelte";
-  import HamburgerButton from "./header/HamburgerButton.svelte";
-  import HeaderMenu from "./header/HeaderMenu.svelte";
-  import { user } from "#lib/user/userStore.ts";
-  import { logout } from "./auth/tokenStore";
-  import { goto } from "$app/navigation";
-  import { communityWeb } from "#lib/api.ts";
-  import { fade, slide } from "svelte/transition";
-  import { notificationStats } from "./notify/notifyStatsStore";
-  import DarkModeSwitch from "./DarkModeSwitch.svelte";
+  import Logo from './SiteLogo.svelte';
+  import CheckInDialog from '#lib/user/checkin/CheckInDialog.svelte';
+  import HamburgerButton from './header/HamburgerButton.svelte';
+  import HeaderMenu from './header/HeaderMenu.svelte';
+  import { user } from '#lib/user/userStore.ts';
+  import { logout } from './auth/tokenStore';
+  import { goto } from '$app/navigation';
+  import { communityWeb } from '#lib/api.ts';
+  import { fade, slide } from 'svelte/transition';
+  import { notificationStats } from './notify/notifyStatsStore';
+  import DarkModeSwitch from './DarkModeSwitch.svelte';
 
   let checkedIn = $state(true);
   let showCheckIn = $state(false);
@@ -24,7 +24,7 @@
   async function handleLogout() {
     await logout();
     menuOpen = false;
-    await goto("/");
+    await goto('/');
   }
 
   function handleCheckIn() {
@@ -34,8 +34,7 @@
 
   async function updateCheckIn() {
     try {
-      const { checkInRecordResps, todayIndex } =
-        await communityWeb.getCheckInRecords();
+      const { checkInRecordResps, todayIndex } = await communityWeb.getCheckInRecords();
       const today = checkInRecordResps[todayIndex];
       checkedIn = today.isCheckIn;
     } catch (e) {
@@ -56,19 +55,17 @@
 
 <!-- 导航栏 -->
 <header
-  class="bg-[#11111B]/70 w-full h-12 md:h-16 sticky top-0 flex items-center justify-center md:justify-start shrink-0 z-50 backdrop-blur-[10px] [-webkit-backdrop-filter:blur(10px)]"
+  class="sticky top-0 z-50 flex h-12 w-full shrink-0 items-center justify-center bg-[#11111B]/70 backdrop-blur-[10px] [-webkit-backdrop-filter:blur(10px)] md:h-16 md:justify-start"
 >
-  <a href="/" class="flex items-center justify-center h-full" title="homepage">
-    <div class="size-8 md:size-10 ml-2 md:ml-3 shrink-0"><Logo /></div>
+  <a href="/" class="flex h-full items-center justify-center" title="homepage">
+    <div class="ml-2 size-8 shrink-0 md:ml-3 md:size-10"><Logo /></div>
     <h1
-      class="ml-2 md:ml-3 overflow-hidden h-full text-2xl md:text-3xl text-logo font-bold font-inter whitespace-nowrap flex items-center translate-y-[-3%]"
+      class="text-logo font-inter ml-2 flex h-full translate-y-[-3%] items-center overflow-hidden text-2xl font-bold whitespace-nowrap md:ml-3 md:text-3xl"
     >
       Open CCW
     </h1>
   </a>
-  <div
-    class="absolute right-0 flex flex-row items-center mr-2 md:mr-4 gap-0 md:gap-4"
-  >
+  <div class="absolute right-0 mr-2 flex flex-row items-center gap-0 md:mr-4 md:gap-4">
     <DarkModeSwitch></DarkModeSwitch>
     <HamburgerButton
       open={menuOpen}
@@ -83,12 +80,12 @@
   <!-- svelte-ignore a11y_click_events_have_key_events -->
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
-    class="fixed inset-0 top-12 md:top-16 z-40 bg-black/20"
+    class="fixed inset-0 top-12 z-40 bg-black/20 md:top-16"
     transition:fade={{ duration: 100 }}
     onclick={() => (menuOpen = false)}
   >
     <div
-      class="absolute top-0 right-0 w-48 md:w-56 bg-bg-secondary rounded-bl-2xl shadow-xl py-2 border border-border"
+      class="bg-bg-secondary border-border absolute top-0 right-0 w-48 rounded-bl-2xl border py-2 shadow-xl md:w-56"
       onclick={(e: MouseEvent) => e.stopPropagation()}
       transition:slide={{ duration: 100 }}
     >

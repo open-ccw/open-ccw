@@ -1,7 +1,7 @@
-import CryptoJS from "crypto-js";
-import { communityWeb } from "#lib/api.ts";
-import { browser } from "$app/env";
-import type OSS from "ali-oss";
+import CryptoJS from 'crypto-js';
+import { communityWeb } from '#lib/api.ts';
+import { browser } from '$app/env';
+import type OSS from 'ali-oss';
 
 let OSS_lib: typeof OSS;
 
@@ -25,7 +25,7 @@ let oss: OSS | null = null;
 
 export async function getOSS(oid: string): Promise<OSS> {
   if (browser) {
-    OSS_lib = await import("ali-oss").then((res) => res.default);
+    OSS_lib = await import('ali-oss').then((res) => res.default);
   }
   if (!OSS_lib) {
     return null as unknown as OSS;
@@ -39,8 +39,8 @@ export async function getOSS(oid: string): Promise<OSS> {
       accessKeyId,
       accessKeySecret,
       stsToken,
-      bucket: "zhishi",
-      region: "oss-cn-beijing",
+      bucket: 'zhishi',
+      region: 'oss-cn-beijing',
     });
   }
   return oss;

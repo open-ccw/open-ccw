@@ -1,0 +1,7 @@
+node_modules
+.svelte-kit
+.wrangler
+build
+package-lock.json
+src/lib/assets
+worker-configuration.d.ts

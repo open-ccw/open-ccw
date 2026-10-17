@@ -6,14 +6,9 @@
 <img
   src={url}
   alt="cover"
-  class="hidden md:block w-full object-cover"
-  style:transform="translate({Url.searchParams.get('x') || '0'}px, {Url.searchParams.get(
-    'y',
-  ) || '0'}px)"
+  class="hidden w-full object-cover md:block"
+  style:transform="translate({Url.searchParams.get('x') || '0'}px, {Url.searchParams.get('y') ||
+    '0'}px)"
 />
 
-<img
-  src={url}
-  alt="cover"
-  class="md:hidden block object-cover min-h-72 min-w-full"
-/>
+<img src={url} alt="cover" class="block min-h-72 min-w-full object-cover md:hidden" />

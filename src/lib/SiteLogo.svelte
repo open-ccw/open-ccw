@@ -1,9 +1,9 @@
 <script lang="ts">
-  import icon from "./assets/favicon.svg";
+  import icon from './assets/favicon.svg';
 </script>
 
 <div
-  class="size-full bg-logo"
+  class="bg-logo size-full"
   style:mask-image="url({icon})"
   style:-webkit-mask-image="url({icon})"
   style:mask-size="contain"

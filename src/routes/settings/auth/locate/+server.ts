@@ -1,5 +1,5 @@
-import { error, text } from "@sveltejs/kit";
-import type { RequestHandler } from "./$types";
+import { error, text } from '@sveltejs/kit';
+import type { RequestHandler } from './$types';
 
 export interface LocateRes {
   ret: number;
@@ -26,11 +26,11 @@ export interface LocateRes {
 export const POST: RequestHandler = async ({ request }) => {
   const { ip } = (await request.json()) as { ip?: string };
   if (!ip) {
-    return error(500, "ip is required");
+    return error(500, 'ip is required');
   }
   const controller = new AbortController();
   const signal = controller.signal;
-  setTimeout(() => controller.abort("timeout"), 3000);
+  setTimeout(() => controller.abort('timeout'), 3000);
   return await fetch(`https://ip9.com.cn/get?ip=${ip}`, { signal })
     .then(async (res) => text(await res.text()))
     .catch((e) => error(e));

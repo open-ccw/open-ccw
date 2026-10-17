@@ -1,7 +1,7 @@
-({ state = "" }) => {
+({ state = '' }) => {
   return fetch(`https://sso.ccw.site/oauth/authorize?state=${state}`, {
-    method: "post",
+    method: 'post',
     body: JSON.stringify({}),
-    credentials: "include",
+    credentials: 'include',
   }).then((res) => res.json());
 };

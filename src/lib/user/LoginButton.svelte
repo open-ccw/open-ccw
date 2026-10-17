@@ -1,6 +1,6 @@
 <script lang="ts">
-  import LoginModal from "#lib/auth/LoginModal.svelte";
-  import { user } from "#lib/user/userStore.ts";
+  import LoginModal from '#lib/auth/LoginModal.svelte';
+  import { user } from '#lib/user/userStore.ts';
 
   let openLogin = $state(false);
   let { onclose = () => null } = $props();
@@ -8,7 +8,7 @@
 
 {#if !$user.loggedIn}
   <button
-    class="border-primary border-2 rounded-[15px] w-auto md:h-12 h-8 pl-6 pr-6 md:text-2xl text-xl text-primary cursor-pointer"
+    class="border-primary text-primary h-8 w-auto cursor-pointer rounded-[15px] border-2 pr-6 pl-6 text-xl md:h-12 md:text-2xl"
     onclick={() => {
       openLogin = true;
     }}

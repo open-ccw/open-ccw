@@ -6,8 +6,17 @@
   "editor.tabSize": 2,
   "editor.formatOnSave": true,
   "editor.quickSuggestions": {
-    "other": "offWhenInlineCompletions",
+    "other": false,
     "comments": true,
     "strings": "off"
-  }
+  },
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.svelte-kit": true,
+    "**/.wrangler": true
+  },
+  "files.eol": "\n",
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true
 }

@@ -1,7 +1,6 @@
-const image =
-  /!\[(.*)\]\((https:\/\/m\.ccw\.site\/works-covers[^\s\(\)]*\.png)\)/;
+const image = /!\[(.*)\]\((https:\/\/m\.ccw\.site\/works-covers[^\s\(\)]*\.png)\)/;
 const link = /(https?:\/\/(?:\w*\.)?ccw\.site\/[^\s\(\)]*)/;
-const complied = new RegExp(`${image.source}|${link.source}`, "g");
+const complied = new RegExp(`${image.source}|${link.source}`, 'g');
 
 export type TokenType = ImageToken | URLToken | PlainToken;
 
@@ -36,7 +35,7 @@ interface Token {
 }
 
 class PlainToken implements Token {
-  type: "plain" = "plain";
+  type: 'plain' = 'plain';
   value: string;
   constructor(v: string) {
     this.value = v;
@@ -44,7 +43,7 @@ class PlainToken implements Token {
 }
 
 class ImageToken implements Token {
-  type: "image" = "image";
+  type: 'image' = 'image';
   value: {
     url: string;
     alt: string;
@@ -58,7 +57,7 @@ class ImageToken implements Token {
 }
 
 class URLToken implements Token {
-  type: "url" = "url";
+  type: 'url' = 'url';
   value: string;
   constructor(url: string) {
     this.value = url;

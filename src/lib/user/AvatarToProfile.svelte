@@ -1,7 +1,7 @@
 <script lang="ts">
-  import AvatarImage from "./AvatarImage.svelte";
+  import AvatarImage from './AvatarImage.svelte';
 
-  const { url, alt = "avatar", virtual = null, oid } = $props();
+  const { url, alt = 'avatar', virtual = null, oid } = $props();
 </script>
 
 <a href="/user/{oid}" class="cursor-pointer">

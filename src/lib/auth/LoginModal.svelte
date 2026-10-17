@@ -1,13 +1,13 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { get } from "svelte/store";
-  import { loginAccount } from "./loginApi";
-  import { toast } from "#lib";
-  import CancelButton from "#lib/CancelButton.svelte";
-  import { fade, scale } from "svelte/transition";
-  import AvatarImage from "#lib/user/AvatarImage.svelte";
-  import { updateToken, user } from "#lib/user/userStore.ts";
-  import { freshTokenFor } from "#lib/oauth/refresh";
+  import { onMount } from 'svelte';
+  import { get } from 'svelte/store';
+  import { loginAccount } from './loginApi';
+  import { toast } from '#lib';
+  import CancelButton from '#lib/CancelButton.svelte';
+  import { fade, scale } from 'svelte/transition';
+  import AvatarImage from '#lib/user/AvatarImage.svelte';
+  import { updateToken, user } from '#lib/user/userStore.ts';
+  import { freshTokenFor } from '#lib/oauth/refresh';
   import {
     disableQuickLogin,
     displayAccountName,
@@ -22,10 +22,10 @@
     updateAccountInfo,
     updateAccountToken,
     type Account,
-  } from "./tokenStore";
+  } from './tokenStore';
 
   let dialog = $state<HTMLDialogElement>();
-  let passkey = $state("");
+  let passkey = $state('');
   let submitting = $state(false);
   let accounts = $state<Account[]>([]);
   let menuAccount = $state<string | null>(null);
@@ -63,7 +63,7 @@
   async function handleLogin(e: SubmitEvent) {
     e.preventDefault();
     if (!selectedAccount) {
-      toast.warning("请先选择要登录的账号");
+      toast.warning('请先选择要登录的账号');
       return;
     }
     const name = selectedAccount.name;
@@ -73,7 +73,7 @@
         // 未填密钥时尝试快捷登录
         const tok = await loadQuickToken(name);
         if (!tok) {
-          toast.warning("该账号未启用快捷登录，请输入密钥");
+          toast.warning('该账号未启用快捷登录，请输入密钥');
           return;
         }
         await applyLogin(name, tok);
@@ -93,14 +93,14 @@
         return;
       }
       if (localOnly) {
-        toast.error("密钥错误");
+        toast.error('密钥错误');
         return;
       }
       // 本地解密失败，尝试云端登录并更新本地数据
       const tok = await loginAccount(name, passkey);
       const currentUser = get(user);
-      const avatar = currentUser.loggedIn ? currentUser.avatar : "";
-      const displayName = currentUser.loggedIn ? currentUser.name : "";
+      const avatar = currentUser.loggedIn ? currentUser.avatar : '';
+      const displayName = currentUser.loggedIn ? currentUser.name : '';
       if (listAccounts().some((a) => a.name === name)) {
         await updateAccountToken(name, tok, passkey, avatar, displayName);
       } else {
@@ -126,11 +126,11 @@
     }
     if (selectedAccount?.name === account.name) {
       selectedAccount = null;
-      passkey = "";
+      passkey = '';
       return;
     }
     selectedAccount = account;
-    passkey = "";
+    passkey = '';
   }
 
   function handleRemoveAccount(account: Account) {
@@ -138,7 +138,7 @@
     menuAccount = null;
     if (selectedAccount?.name === account.name) {
       selectedAccount = null;
-      passkey = "";
+      passkey = '';
     }
     accounts = listAccounts();
     toast.success(`已删除账号 ${displayAccountName(account.name)} 的本地数据`);
@@ -152,26 +152,20 @@
 
 <dialog
   bind:this={dialog}
-  class="bg-transparent border-0 p-0"
+  class="border-0 bg-transparent p-0"
   onclick={(e) => {
-    if (
-      menuAccount &&
-      !(e.target as HTMLElement).closest("[data-account-card]")
-    ) {
+    if (menuAccount && !(e.target as HTMLElement).closest('[data-account-card]')) {
       menuAccount = null;
     }
   }}
 >
-  <div
-    class="fixed inset-0 flex items-center justify-center"
-    transition:scale={{ duration: 200 }}
-  >
+  <div class="fixed inset-0 flex items-center justify-center" transition:scale={{ duration: 200 }}>
     <div
-      class="w-108 rounded-xl bg-bg-secondary/70 backdrop-blur-[10px] border border-white/20 p-8 shadow-2xl"
+      class="bg-bg-secondary/70 w-108 rounded-xl border border-white/20 p-8 shadow-2xl backdrop-blur-[10px]"
     >
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-2xl font-bold text-text-primary">登录</h2>
-        <div class="w-6 h-6">
+      <div class="mb-4 flex items-center justify-between">
+        <h2 class="text-text-primary text-2xl font-bold">登录</h2>
+        <div class="h-6 w-6">
           <CancelButton
             onclick={() => {
               if (!dialog) {
@@ -185,23 +179,21 @@
 
       <form onsubmit={handleLogin} class="space-y-4">
         {#if accounts.length === 0}
-          <p class="py-8 text-center text-sm text-text-secondary">
-            本地暂无账号，请先注册
-          </p>
+          <p class="text-text-secondary py-8 text-center text-sm">本地暂无账号，请先注册</p>
         {:else}
-          <div class="grid grid-cols-3 gap-3 py-2 max-h-60 overflow-y-auto">
+          <div class="grid max-h-60 grid-cols-3 gap-3 overflow-y-auto py-2">
             {#each accounts as account (account.name)}
               <div
-                class="relative flex flex-col items-center gap-2 p-2 rounded-lg transition-colors cursor-pointer select-none {selectedAccount?.name ===
+                class="relative flex cursor-pointer flex-col items-center gap-2 rounded-lg p-2 transition-colors select-none {selectedAccount?.name ===
                 account.name
-                  ? 'bg-primary/10 ring-2 ring-primary ring-inset'
+                  ? 'bg-primary/10 ring-primary ring-2 ring-inset'
                   : 'hover:bg-white/5'}"
                 data-account-card
                 role="button"
                 tabindex="0"
                 onclick={() => handleAccountClick(account)}
                 onkeydown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
+                  if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     handleAccountClick(account);
                   }
@@ -211,20 +203,19 @@
                   menuAccount = account.name;
                 }}
               >
-                <div class="w-14 h-14">
+                <div class="h-14 w-14">
                   <AvatarImage
                     url={account.avatar || undefined}
                     alt={displayAccountName(account.name)}
                   />
                 </div>
                 {#if account.displayName}
-                  <span
-                    class="text-xs font-medium text-text-primary truncate w-full text-center"
+                  <span class="text-text-primary w-full truncate text-center text-xs font-medium"
                     >{account.displayName}</span
                   >
                 {/if}
                 <span
-                  class="text-xs text-text-secondary truncate w-full text-center {account.displayName
+                  class="text-text-secondary w-full truncate text-center text-xs {account.displayName
                     ? '-mt-1.5'
                     : ''}">{displayAccountName(account.name)}</span
                 >
@@ -239,7 +230,7 @@
                     title="删除账号"
                     in:scale={{ duration: 120, start: 0.7 }}
                     out:fade={{ duration: 120 }}
-                    class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-bg/90 border border-border-strong text-text-secondary shadow-md flex items-center justify-center hover:bg-error hover:text-white hover:border-error transition-colors cursor-pointer z-10"
+                    class="bg-bg/90 border-border-strong text-text-secondary hover:bg-error hover:border-error absolute -top-1.5 -right-1.5 z-10 flex h-5 w-5 cursor-pointer items-center justify-center rounded-full border shadow-md transition-colors hover:text-white"
                   >
                     <svg
                       width="10"
@@ -261,8 +252,8 @@
 
         {#if selectedAccount}
           <div>
-            <label for="password" class="block text-sm text-text-primary mb-2"
-              >密钥<span class="text-text-secondary text-xs ml-1"
+            <label for="password" class="text-text-primary mb-2 block text-sm"
+              >密钥<span class="text-text-secondary ml-1 text-xs"
                 >（已启用快捷登录的账号可留空）</span
               ></label
             >
@@ -272,11 +263,11 @@
               bind:value={passkey}
               autocomplete="current-password"
               placeholder="请输入密钥"
-              class="p-3 w-full rounded-lg bg-bg border border-border-strong text-text-primary focus:border-primary focus:outline-none transition-colors"
+              class="bg-bg border-border-strong text-text-primary focus:border-primary w-full rounded-lg border p-3 transition-colors focus:outline-none"
             />
           </div>
 
-          <label class="flex items-center gap-2 cursor-pointer select-none">
+          <label class="flex cursor-pointer items-center gap-2 select-none">
             <input
               type="checkbox"
               checked={trustDevice}
@@ -296,17 +287,17 @@
         <button
           type="submit"
           disabled={submitting || accounts.length === 0}
-          class="w-full rounded-lg bg-bg border-2 border-primary text-text-primary font-semibold p-3 hover:bg-success/10 active:bg-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          class="bg-bg border-primary text-text-primary hover:bg-success/10 active:bg-primary w-full cursor-pointer rounded-lg border-2 p-3 font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50"
         >
-          {submitting ? "登录中..." : "登录"}
+          {submitting ? '登录中...' : '登录'}
         </button>
       </form>
 
-      <div class="flex items-center justify-center gap-1 mt-5 text-sm">
+      <div class="mt-5 flex items-center justify-center gap-1 text-sm">
         <span class="text-text-secondary">还没有账号？</span>
         <a
           href="/register"
-          class="text-info underline hover:text-primary transition-colors cursor-pointer"
+          class="text-info hover:text-primary cursor-pointer underline transition-colors"
           >注册新账号</a
         >
       </div>
@@ -339,8 +330,7 @@
     height: var(--checkbox-diameter);
     border-radius: var(--checkbox-border-radius);
     background: var(--secondary-color);
-    border: var(--checkbox-border-width) var(--checkbox-border-style)
-      var(--checkbox-border-color);
+    border: var(--checkbox-border-width) var(--checkbox-border-style) var(--checkbox-border-color);
     -webkit-transition: all 0.3s;
     -o-transition: all 0.3s;
     transition: all 0.3s;
@@ -349,14 +339,13 @@
   }
 
   .ui-checkbox::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    -webkit-box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5)
-      var(--primary-color);
+    -webkit-box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
     box-shadow: 0 0 0 calc(var(--checkbox-diameter) / 2.5) var(--primary-color);
     border-radius: inherit;
     opacity: 0;
@@ -368,7 +357,7 @@
   .ui-checkbox::before {
     top: 40%;
     left: 50%;
-    content: "";
+    content: '';
     position: absolute;
     width: 4px;
     height: 7px;
@@ -401,10 +390,8 @@
 
   .ui-checkbox:checked::before {
     opacity: 1;
-    -webkit-transform: translate(-50%, -50%) rotate(45deg)
-      scale(var(--checkmark-size));
-    -ms-transform: translate(-50%, -50%) rotate(45deg)
-      scale(var(--checkmark-size));
+    -webkit-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
+    -ms-transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
     transform: translate(-50%, -50%) rotate(45deg) scale(var(--checkmark-size));
     -webkit-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;
     -o-transition: all 0.2s cubic-bezier(0.12, 0.4, 0.29, 1.46) 0.1s;

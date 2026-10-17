@@ -2,4 +2,4 @@
   const { url } = $props();
 </script>
 
-<a class="text-blue-500 underline cursor-pointer text-wrap" href={url}>{url}</a>
+<a class="cursor-pointer text-wrap text-blue-500 underline" href={url}>{url}</a>

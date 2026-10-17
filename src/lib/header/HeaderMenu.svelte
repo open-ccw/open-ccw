@@ -1,11 +1,11 @@
 <script lang="ts">
-  import LoginButton from "#lib/user/LoginButton.svelte";
-  import AvatarToProfile from "#lib/user/AvatarToProfile.svelte";
-  import coinSvg from "#lib/assets/coin.svg";
-  import noticeSvg from "#lib/assets/notice.svg";
-  import cogSvg from "#lib/assets/cog.svg";
-  import { user } from "#lib/user/userStore.ts";
-  import SearchIcon from "#lib/search/searchIcon.svelte";
+  import LoginButton from '#lib/user/LoginButton.svelte';
+  import AvatarToProfile from '#lib/user/AvatarToProfile.svelte';
+  import coinSvg from '#lib/assets/coin.svg';
+  import noticeSvg from '#lib/assets/notice.svg';
+  import cogSvg from '#lib/assets/cog.svg';
+  import { user } from '#lib/user/userStore.ts';
+  import SearchIcon from '#lib/search/searchIcon.svelte';
 
   let {
     checkedIn,
@@ -24,44 +24,44 @@
 
 {#if $user.loggedIn}
   <!-- 用户信息 -->
-  <div class="px-4 py-3 border-b border-border">
+  <div class="border-border border-b px-4 py-3">
     <div class="flex items-center gap-3">
-      <div class="size-8 md:size-10 shrink-0">
+      <div class="size-8 shrink-0 md:size-10">
         <AvatarToProfile url={$user.avatar} oid={$user.oid} />
       </div>
       <div class="min-w-0">
         <a
-          class="text-sm md:text-base font-medium text-text-primary truncate block hover:text-text-secondary"
+          class="text-text-primary hover:text-text-secondary block truncate text-sm font-medium md:text-base"
           href="/user/{$user.oid}"
           onclick={onclose}
         >
-          {$user.name || "未命名"}
+          {$user.name || '未命名'}
         </a>
       </div>
     </div>
   </div>
 
   <button
-    class="w-full flex items-center gap-3 px-4 py-3 text-text-primary hover:bg-bg-secondary transition-colors cursor-pointer relative"
+    class="text-text-primary hover:bg-bg-secondary relative flex w-full cursor-pointer items-center gap-3 px-4 py-3 transition-colors"
     onclick={onCheckIn}
   >
     <img src={coinSvg} alt="签到" class="size-6" />
     {#if !checkedIn}
-      <span class="bg-error rounded-full size-2 absolute left-8 top-3"></span>
+      <span class="bg-error absolute top-3 left-8 size-2 rounded-full"></span>
     {/if}
     <span class="text-sm font-medium">每日签到</span>
   </button>
 
   <a
     href="/notice/interaction"
-    class="flex items-center gap-3 px-4 py-3 text-text-primary hover:bg-bg-secondary transition-colors"
+    class="text-text-primary hover:bg-bg-secondary flex items-center gap-3 px-4 py-3 transition-colors"
     onclick={onclose}
   >
-    <div class="size-6 relative">
+    <div class="relative size-6">
       <img src={noticeSvg} alt="消息" class="size-6" />
       {#if notifyCount > 0}
         <div
-          class="bg-error rounded-full absolute size-4 -top-2 -right-2 text-center text-white text-xs flex justify-center items-center"
+          class="bg-error absolute -top-2 -right-2 flex size-4 items-center justify-center rounded-full text-center text-xs text-white"
         >
           {#if notifyCount < 100}
             <span>{notifyCount}</span>
@@ -76,7 +76,7 @@
 
   <a
     href="/settings/auth"
-    class="flex items-center gap-3 px-4 py-3 text-text-primary hover:bg-bg-secondary transition-colors"
+    class="text-text-primary hover:bg-bg-secondary flex items-center gap-3 px-4 py-3 transition-colors"
     onclick={onclose}
   >
     <img src={cogSvg} alt="设置" class="size-6" />
@@ -85,9 +85,9 @@
 
   {@render search()}
 
-  <div class="border-t border-border mt-1 pt-2">
+  <div class="border-border mt-1 border-t pt-2">
     <button
-      class="w-full flex items-center gap-3 px-4 py-3 text-error hover:bg-bg-secondary transition-colors cursor-pointer"
+      class="text-error hover:bg-bg-secondary flex w-full cursor-pointer items-center gap-3 px-4 py-3 transition-colors"
       onclick={onlogout}
     >
       <svg
@@ -117,7 +117,7 @@
 {#snippet search()}
   <a
     href="/search"
-    class="flex items-center gap-3 px-4 py-3 text-text-primary hover:bg-bg-secondary transition-colors"
+    class="text-text-primary hover:bg-bg-secondary flex items-center gap-3 px-4 py-3 transition-colors"
   >
     <div class="size-6"><SearchIcon /></div>
     <span class="text-sm font-medium">搜索</span>

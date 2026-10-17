@@ -1,6 +1,6 @@
-import { writable } from "svelte/store";
+import { writable } from 'svelte/store';
 
-export type ToastType = "success" | "error" | "warning" | "info";
+export type ToastType = 'success' | 'error' | 'warning' | 'info';
 
 export interface ToastOptions {
   msg?: string;
@@ -34,7 +34,7 @@ export function dismissToast(id: number): void {
 }
 
 function showToast(options: ToastOptions = {}): { close: () => void } {
-  const { msg = "success", time = 2500, icon = "success" } = options;
+  const { msg = 'success', time = 2500, icon = 'success' } = options;
   const id = ++nextId;
   toastItems.update((list) => [...list, { id, type: icon, msg }]);
   let closed = false;
@@ -43,18 +43,15 @@ function showToast(options: ToastOptions = {}): { close: () => void } {
     closed = true;
     dismissToast(id);
   };
-  if (typeof window !== "undefined" && time > 0) {
+  if (typeof window !== 'undefined' && time > 0) {
     window.setTimeout(close, time);
   }
   return { close };
 }
 
 export const toast = Object.assign(showToast, {
-  success: (msg?: string, time?: number) =>
-    showToast({ msg, time, icon: "success" }),
-  error: (msg?: string, time?: number) =>
-    showToast({ msg, time, icon: "error" }),
-  warning: (msg?: string, time?: number) =>
-    showToast({ msg, time, icon: "warning" }),
-  info: (msg?: string, time?: number) => showToast({ msg, time, icon: "info" }),
+  success: (msg?: string, time?: number) => showToast({ msg, time, icon: 'success' }),
+  error: (msg?: string, time?: number) => showToast({ msg, time, icon: 'error' }),
+  warning: (msg?: string, time?: number) => showToast({ msg, time, icon: 'warning' }),
+  info: (msg?: string, time?: number) => showToast({ msg, time, icon: 'info' }),
 }) as ToastFn;
