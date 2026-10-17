@@ -25,7 +25,7 @@
 </script>
 
 <svelte:head>
-  <title>搜索 — Open CCW</title>
+  <title>搜索 - Open CCW | 搜索 CCW 社区作品、创作者、文章与星球</title>
   <meta
     name="description"
     content="在 Open CCW 中搜索 CCW 社区的作品、创作者、文章和星球。支持关键词搜索，快速找到你感兴趣的 CCW 内容。"
