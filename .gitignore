@@ -26,3 +26,6 @@ vite.config.ts.timestamp-*
 
 .dev.vars*
 !.dev.vars.example
+
+# 本地 npm 配置（由 cf.npmrc 复制而来，含令牌占位符，团队共享配置以 cf.npmrc 入库）
+.npmrc

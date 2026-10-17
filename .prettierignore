@@ -5,3 +5,5 @@ build
 package-lock.json
 src/lib/assets
 worker-configuration.d.ts
+# GITHUB_TOKEN 无法获得 workflows 权限，无法推送工作流文件改动，故不格式化 .github 目录
+.github
