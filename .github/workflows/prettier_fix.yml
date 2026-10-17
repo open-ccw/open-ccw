@@ -1,0 +1,38 @@
+name: prettier-fix
+on:
+  schedule:
+    # 每天 UTC 0:00（北京时间 8:00）运行
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+permissions:
+  pull-requests: write
+  contents: write
+  packages: read
+jobs:
+  prettier:
+    name: prettier / format & create pr
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.github_token }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: 配置 npmrc
+        run: cp cf.npmrc .npmrc
+      - uses: actions/setup-node@v4
+      - name: 安装依赖
+        run: npm ci
+      - name: 严格格式化
+        run: npm run format
+      - name: 创建 PR
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.github_token }}
+          commit-message: "style: 全量 prettier 格式化"
+          title: "style: 全量 prettier 格式化"
+          body: |
+            由 prettier-fix 工作流自动创建（每日定时/手动触发）。
+
+            - 运行 `npm run format`（prettier --write .）全量格式化
+            - 请合并前确认 CI 检查通过
+          branch: bot/prettier-fix
+          delete-branch: true
