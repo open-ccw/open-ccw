@@ -28,7 +28,7 @@ jobs:
       - name: 严格格式化
         run: npm run format
       - name: 创建 PR
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           token: ${{ secrets.github_token }}
           commit-message: 'style: 全量 prettier 格式化'
