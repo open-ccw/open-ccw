@@ -34,7 +34,7 @@
         throw '消息类型错误';
       }
     } catch (e) {
-      error = String(error);
+      error = String(e);
     }
   });
 </script>
