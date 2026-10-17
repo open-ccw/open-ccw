@@ -1,12 +1,23 @@
 name: reviewdog
 on:
   pull_request
+permissions:
+  pull-requests: write
+  contents: read
+  packages: read
 jobs:
   prettier:
     name: runner / prettier
     runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.github_token }}
     steps:
       - uses: actions/checkout@v2
+      - name: 配置 npmrc
+        run: cp cf.npmrc .npmrc
+      - uses: actions/setup-node@v4
+      - name: 安装依赖
+        run: npm ci
       - uses: EPMatt/reviewdog-action-prettier@v1.3.0
         with:
           github_token: ${{ secrets.github_token }}
