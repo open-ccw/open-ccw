@@ -1,16 +1,13 @@
 <script lang="ts">
   import AvatarToProfile from '#lib/user/AvatarToProfile.svelte';
   import { user } from '#lib/user/userStore.ts';
-  import { getOSS } from '#lib/utils/oss.ts';
+  import { fileMd5, uploadFile } from '#lib/utils/storage.ts';
   import { communityWeb } from '@ccw-api/api';
   import { toast } from '#lib/toast.ts';
-  import type OSS from 'ali-oss';
-  import CryptoJS from 'crypto-js';
   import type { MinimalComment, TopicConfig } from './types';
 
   let comment = $state('');
   let textArea: HTMLTextAreaElement | undefined = $state();
-  let oss: OSS | undefined = $state();
   let submitting = $state(false);
   let error = $state('');
   let {
@@ -38,54 +35,27 @@
   }
 
   async function handleImg(img: File) {
-    if (!oss || !$user.loggedIn) {
+    if (!$user.loggedIn) {
       console.error('未登录,无法上传');
       return;
     }
-    const wa = CryptoJS.lib.WordArray.create(await img.arrayBuffer());
-    const id = CryptoJS.MD5(wa);
+    const id = await fileMd5(img);
     const type = img.name.split('.').at(-1);
     const pattern = `![${img.name}](UPLOADING_${id}.${type})`;
-    const path = `works-covers/${$user.studentNumber}/${id}.${type}`;
     if (textArea) {
       const start = textArea.selectionStart;
       comment = comment.substring(0, start) + pattern + comment.substring(start);
     }
-    const url = `https://m.ccw.site/${path}?t=.png`;
-    upload(img, path)
-      .then(() => {
-        comment = comment.replaceAll(pattern, `![${img.name}](${url})`);
+    uploadFile(img, 'WORK_COVER')
+      .then((url) => {
+        comment = comment.replaceAll(pattern, `![${img.name}](${url}?t=.png)`);
       })
       .catch((e) => {
         console.warn(e);
+        const url = `https://m.ccw.site/works-covers/${$user.studentNumber}/${id}.${type}?t=.png`;
         comment = comment.replaceAll(pattern, `![${img.name}(可能上传失败)](${url})`);
       });
   }
-
-  async function upload(img: File, url: string) {
-    if (!oss || !$user.loggedIn) {
-      console.error('未登录,无法上传');
-      return;
-    }
-    return oss.put(url, img, {
-      headers: {
-        'x-oss-forbid-overwrite': true,
-      },
-    });
-  }
-
-  async function init() {
-    if (!$user.loggedIn) {
-      return;
-    }
-    oss = await getOSS($user.oid);
-  }
-
-  $effect(() => {
-    if ($user.loggedIn) {
-      setTimeout(init, 10);
-    }
-  });
 
   async function createComment() {
     if (submitting || !$user.loggedIn) {

@@ -23,7 +23,6 @@
     "@sveltejs/kit": "^3.0.1",
     "@sveltejs/vite-plugin-svelte": "^7.3.1",
     "@tailwindcss/vite": "^4.3.0",
-    "@types/crypto-js": "^4.2.2",
     "@types/node": "^26.6.5",
     "prettier": "^3.9.10",
     "prettier-plugin-svelte": "^4.1.1",
@@ -36,14 +35,12 @@
     "wrangler": "^4.150.0"
   },
   "dependencies": {
-    "@ccw-api/api": "^2.1.10",
+    "@ccw-api/api": "^2.1.11",
     "@ccw-api/request": "^1.2.3",
     "@mixer/postmessage-rpc": "^1.1.4",
     "@open-ccw/player": "^0.0.5",
-    "@types/ali-oss": "^6.23.3",
-    "ali-oss": "^6.23.0",
-    "crypto-js": "^4.2.0",
     "dompurify": "^3.4.17",
+    "js-md5": "^0.8.3",
     "marked": "^18.1.1",
     "svelte-portal": "^2.2.1"
   },
