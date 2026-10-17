@@ -1,5 +1,5 @@
 import { writable } from 'svelte/store';
-import { decryptWithPassword, encryptWithPassword, isV2Encrypted } from '#lib/utils/aes';
+import { decryptWithPassword, encryptWithPassword } from '#lib/utils/aes';
 import { browser } from '$app/env';
 import { clearTokenAndUser, updateToken } from '#lib/user/userStore.ts';
 
@@ -320,9 +320,6 @@ export async function loadAccount(id: string, pin: string): Promise<string | nul
     const value = await decryptWithPassword(encrypted, pin);
     if (!value) {
       return null;
-    }
-    if (!isV2Encrypted(encrypted)) {
-      localStorage.setItem(TOKEN_PREFIX + id, await encryptWithPassword(value, pin));
     }
     token.set(value);
     localStorage.setItem(ACTIVE_KEY, id);

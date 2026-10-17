@@ -1,14 +1,9 @@
 // 密码派生加密工具
-import CryptoJS from 'crypto-js';
 
 const PBKDF2_ITERATIONS = 600_000;
 const SALT_BYTES = 16;
 const IV_BYTES = 12;
 const V2_PREFIX = 'v2:';
-
-export function isV2Encrypted(encrypted: string): boolean {
-  return encrypted.startsWith(V2_PREFIX);
-}
 
 function bytesToBase64(bytes: Uint8Array): string {
   let bin = '';
@@ -58,34 +53,24 @@ export async function decryptWithPassword(
   encrypted: string,
   password: string,
 ): Promise<string | null> {
-  if (isV2Encrypted(encrypted)) {
-    const [saltB64, payloadB64] = encrypted.slice(V2_PREFIX.length).split(':');
-    if (!saltB64 || !payloadB64) {
-      return null;
-    }
-    const salt = base64ToBytes(saltB64);
-    const payload = base64ToBytes(payloadB64);
-    if (payload.length <= IV_BYTES) {
-      return null;
-    }
-    const iv = payload.subarray(0, IV_BYTES);
-    const data = payload.subarray(IV_BYTES);
-    try {
-      const key = await deriveAesKey(password, salt);
-      const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
-      return new TextDecoder().decode(plain);
-    } catch {
-      return null;
-    }
+  if (!encrypted.startsWith(V2_PREFIX)) {
+    return null;
   }
-
-  //旧版兼容
+  const [saltB64, payloadB64] = encrypted.slice(V2_PREFIX.length).split(':');
+  if (!saltB64 || !payloadB64) {
+    return null;
+  }
+  const salt = base64ToBytes(saltB64);
+  const payload = base64ToBytes(payloadB64);
+  if (payload.length <= IV_BYTES) {
+    return null;
+  }
+  const iv = payload.subarray(0, IV_BYTES);
+  const data = payload.subarray(IV_BYTES);
   try {
-    const key = CryptoJS.MD5(password);
-    const iv = CryptoJS.SHA1(password);
-    const decrypted = CryptoJS.AES.decrypt(encrypted, key, { iv });
-    const text = CryptoJS.enc.Utf8.stringify(decrypted);
-    return text || null;
+    const key = await deriveAesKey(password, salt);
+    const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv }, key, data);
+    return new TextDecoder().decode(plain);
   } catch {
     return null;
   }
