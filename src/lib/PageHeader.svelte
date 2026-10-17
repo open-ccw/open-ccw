@@ -59,11 +59,11 @@
 >
   <a href="/" class="flex h-full items-center justify-center" title="homepage">
     <div class="ml-2 size-8 shrink-0 md:ml-3 md:size-10"><Logo /></div>
-    <h1
+    <p
       class="text-logo font-inter ml-2 flex h-full translate-y-[-3%] items-center overflow-hidden text-2xl font-bold whitespace-nowrap md:ml-3 md:text-3xl"
     >
       Open CCW
-    </h1>
+    </p>
   </a>
   <div class="absolute right-0 mr-2 flex flex-row items-center gap-0 md:mr-4 md:gap-4">
     <DarkModeSwitch></DarkModeSwitch>
