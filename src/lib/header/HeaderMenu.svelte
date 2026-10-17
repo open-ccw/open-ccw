@@ -27,7 +27,7 @@
   <div class="border-border border-b px-4 py-3">
     <div class="flex items-center gap-3">
       <div class="size-8 shrink-0 md:size-10">
-        <AvatarToProfile url={$user.avatar} oid={$user.oid} />
+        <AvatarToProfile url={$user.avatar} oid={$user.oid} card={false} />
       </div>
       <div class="min-w-0">
         <a

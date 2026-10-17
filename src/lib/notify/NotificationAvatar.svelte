@@ -21,7 +21,7 @@
   {:else}
     <AvatarToProfile
       url={page.senderInfo?.avatar || page.avatar || systemLogo}
-      oid={page.senderInfo?.oid || page.senderOid}
+      oid={page.senderInfo?.oid || page.senderOid || ''}
     />
   {/if}
 </div>

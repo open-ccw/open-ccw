@@ -8,8 +8,8 @@
 </script>
 
 <div
-  class="bg-bg-secondary z-20 h-full w-80 overflow-y-auto shadow-lg shadow-black md:w-lg"
-  transition:slide={{ axis: 'x', duration: 250, easing: backOut }}
+  class="bg-bg-secondary border-border max-h-[70vh] w-full overflow-y-auto rounded-t-lg border border-b-0 shadow-md"
+  transition:slide={{ axis: 'y', duration: 250, easing: backOut }}
 >
   <CommentView {oid} {subjectType} {sectionType} />
 </div>
