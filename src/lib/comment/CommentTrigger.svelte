@@ -7,31 +7,27 @@
   const { oid, subjectType, sectionType }: TopicConfig = $props();
 </script>
 
-<div class="fixed top-0 right-0 z-30 h-full pt-12 md:pt-16">
-  <div class="flex h-full flex-row items-center">
+<div class="pointer-events-none fixed right-4 bottom-0 z-30 flex flex-col items-end">
+  {#if openComment}
+    <div class="pointer-events-auto w-[calc(100vw-2rem)] max-w-lg">
+      <CommentMain {oid} {subjectType} {sectionType}></CommentMain>
+    </div>
+  {/if}
+  <button
+    title="comment"
+    class="border-border bg-bg-secondary text-text-primary pointer-events-auto flex h-10 w-16 shrink-0 cursor-pointer items-center justify-center border transition-all duration-100 {openComment
+      ? 'rounded-none border-t-0'
+      : 'rounded-t-lg'}"
+    onclick={() => {
+      openComment = !openComment;
+    }}
+  >
     <div
-      class="shadow-left shadow-border-strong bg-bg-secondary relative -top-12 z-10 h-18 w-9 rounded-l-full"
+      class="{openComment
+        ? '-rotate-90'
+        : 'rotate-90'} flex items-center transition-all duration-100"
     >
-      <button
-        title="comment"
-        class="flex h-full w-full cursor-pointer items-center pl-2"
-        onclick={() => {
-          openComment = !openComment;
-        }}
-      >
-        <div
-          class="{openComment
-            ? '-scale-x-100'
-            : 'scale-x-100'} text-text-primary flex transform items-center transition-all duration-300"
-        >
-          {@html icon}
-        </div>
-      </button>
+      {@html icon}
     </div>
-    <div class="relative z-0 h-full">
-      {#if openComment}
-        <CommentMain {oid} {subjectType} {sectionType}></CommentMain>
-      {/if}
-    </div>
-  </div>
+  </button>
 </div>
