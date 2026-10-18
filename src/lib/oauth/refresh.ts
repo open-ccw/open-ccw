@@ -25,13 +25,13 @@ function currentToken(): string {
  * @returns 可用的新 token（未过期或刷新失败时为原 token）
  */
 export async function freshTokenFor(name: string, tok: string): Promise<string> {
-  const record = getAccountRefresh(name);
+  const record = await getAccountRefresh(name);
   if (!record?.refreshToken || record.expiresAt - EXPIRY_SKEW_MS > Date.now()) {
     return tok;
   }
   try {
     const tokens = await refreshAccessToken(record.refreshToken);
-    setAccountRefresh(name, tokens.refreshToken ?? record.refreshToken, tokens.expiresAt);
+    await setAccountRefresh(name, tokens.refreshToken ?? record.refreshToken, tokens.expiresAt);
     return tokens.accessToken;
   } catch {
     return tok;
@@ -61,4 +61,28 @@ export async function refreshTokenIfExpired(): Promise<boolean> {
   token.set(fresh);
   await refreshUser().catch(() => {});
   return true;
+}
+
+/** 定时刷新间隔：5 分钟检查一次 */
+const REFRESH_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+
+let refreshTimerStarted = false;
+
+/**
+ * 启动定时刷新：周期检查活跃账号 token 是否过期并自动续期，
+ * 页面从后台切回时也立即检查一次。仅在浏览器环境且只启动一次。
+ */
+export function startTokenRefreshTimer(): void {
+  if (refreshTimerStarted) {
+    return;
+  }
+  refreshTimerStarted = true;
+  setInterval(() => {
+    refreshTokenIfExpired().catch(() => {});
+  }, REFRESH_CHECK_INTERVAL_MS);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) {
+      refreshTokenIfExpired().catch(() => {});
+    }
+  });
 }

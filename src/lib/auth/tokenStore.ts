@@ -277,6 +277,14 @@ export function setActiveAccount(name: string): void {
 
 const REFRESH_PREFIX = 'oc_oauth_refresh_';
 
+/** localStorage 中存储的 refresh token 密文记录 */
+interface StoredAccountRefresh {
+  /** refresh token 密文 */
+  rt: string;
+  /** 过期时间戳（毫秒） */
+  expiresAt: number;
+}
+
 /** 账号 OAuth refresh token 与过期时间 */
 export interface AccountTokenRefresh {
   refreshToken: string;
@@ -284,22 +292,39 @@ export interface AccountTokenRefresh {
   expiresAt: number;
 }
 
-/** 保存账号的 OAuth refresh token（明文存储，仅本机） */
-export function setAccountRefresh(name: string, refreshToken: string, expiresAt: number): void {
+/** 保存账号的 OAuth refresh token（密文存储，密钥保存在 IndexedDB） */
+export async function setAccountRefresh(
+  name: string,
+  refreshToken: string,
+  expiresAt: number,
+): Promise<void> {
   localStorage.setItem(
     REFRESH_PREFIX + name,
-    JSON.stringify({ refreshToken, expiresAt } satisfies AccountTokenRefresh),
+    JSON.stringify({
+      rt: await quickEncrypt(refreshToken),
+      expiresAt,
+    } satisfies StoredAccountRefresh),
   );
 }
 
-/** 读取账号的 OAuth refresh token */
-export function getAccountRefresh(name: string): AccountTokenRefresh | null {
+/** 读取账号的 OAuth refresh token，旧版明文记录会自动升级为密文 */
+export async function getAccountRefresh(name: string): Promise<AccountTokenRefresh | null> {
   const raw = localStorage.getItem(REFRESH_PREFIX + name);
   if (!raw) {
     return null;
   }
   try {
-    return JSON.parse(raw) as AccountTokenRefresh;
+    const parsed = JSON.parse(raw) as Partial<StoredAccountRefresh & AccountTokenRefresh>;
+    if (parsed.rt) {
+      const refreshToken = await quickDecrypt(parsed.rt);
+      return refreshToken ? { refreshToken, expiresAt: parsed.expiresAt ?? 0 } : null;
+    }
+    // 旧版明文格式，读出后重新加密存储
+    if (parsed.refreshToken) {
+      await setAccountRefresh(name, parsed.refreshToken, parsed.expiresAt ?? 0);
+      return { refreshToken: parsed.refreshToken, expiresAt: parsed.expiresAt ?? 0 };
+    }
+    return null;
   } catch {
     return null;
   }

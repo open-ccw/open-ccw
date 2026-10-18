@@ -71,7 +71,7 @@
         savedName = localName;
         toast.success('账号已保存到本地');
       }
-      persistOAuthRefresh(savedName);
+      await persistOAuthRefresh(savedName);
       registeredName = uid;
       success = true;
     } catch (e) {
@@ -82,7 +82,7 @@
   }
 
   /** 将 OAuth 回调暂存的 refresh token 绑定到已保存账号 */
-  function persistOAuthRefresh(name: string) {
+  async function persistOAuthRefresh(name: string) {
     const raw = sessionStorage.getItem('oc_oauth_refresh');
     if (!raw) {
       return;
@@ -94,7 +94,7 @@
         expiresAt: number;
       };
       if (refreshToken && Number.isFinite(expiresAt)) {
-        setAccountRefresh(name, refreshToken, expiresAt);
+        await setAccountRefresh(name, refreshToken, expiresAt);
       }
     } catch {}
   }

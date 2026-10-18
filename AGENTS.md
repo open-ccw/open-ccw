@@ -67,11 +67,13 @@
 
 - 简约风格，浅色主题为基准；深色模式通过 `@custom-variant dark` + `.dark` 类实现，颜色一律走 `layout.css` 里的语义 token（`bg-bg`、`text-text-primary`、`border-border` 等），禁止硬编码色值，白名单场景（第三方组件配色）除外。
 - 统一小圆角：`rounded` / `rounded-lg`，禁止混用大圆角与异形圆角。
-- 不使用渐变色（`bg-gradient-*` 禁用）。
+- !!除特别小的以外按钮使用 rounded-lg!!
+- 禁止使用渐变色（`bg-gradient-*` 禁用）。
 - 交互样式过渡统一 100ms（`duration-100`），超过 300ms 仅限入场/退场动画。
 - 布局优先 flex（`flex` + `gap-*`），尽量少用绝对定位；绝对定位仅限浮层、角标、装饰元素。
 - 禁止明显的亮色单边框；描边用 `border-border` 这类低对比 token，强调用背景色或阴影表达。
 - 图标优先内联 SVG（`size-full` 填充容器），属性动画（keyframes）注册到 `@theme` 的 `--animate-*` token，组件内禁止定义 keyframes。
+- 如能通过svelte实现动画, 禁止在`@theme`中修改!保证theme纯粹
 - 组件的可变外观通过 props/class 传入，不在组件内部硬编码业务色值。
 
 ## 状态管理

@@ -4,7 +4,7 @@ import { communityWeb, setToken } from '#lib/api.ts';
 
 export const user = writable<SelfUser>({ loggedIn: false });
 
-async function updateUser() {
+export async function updateUser() {
   try {
     const {
       oid,
