@@ -31,6 +31,7 @@
   --color-text-secondary: #585b6a;
   --color-text-placeholder: #9197ad;
   --color-text-disabled: #cdd6f4;
+  --color-text-link: rgb(167, 167, 254);
   --color-logo: #e4e2f0;
 
   --color-border: #c4c5d4;
@@ -74,6 +75,7 @@
     --color-text-secondary: #a6adc8;
     --color-text-placeholder: #7f849c;
     --color-text-disabled: #585b70;
+    --color-text-link: rgb(81, 81, 255);
     --color-logo: #e4e2f0;
 
     --color-star: #ffd753;

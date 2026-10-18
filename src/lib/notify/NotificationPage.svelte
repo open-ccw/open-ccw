@@ -26,7 +26,7 @@
     loading = true;
     try {
       error = '';
-      const { data, totalPages: total } = await communityWeb.getNotificationPage(type, {
+      const { data, totalPages: total } = await communityWeb.getNotification(type, {
         perPage: 20,
         page: pageNum,
       });
