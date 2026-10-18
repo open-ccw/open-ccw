@@ -11,7 +11,9 @@
 </script>
 
 <PageHeader></PageHeader>
-<nav class="border-border bg-bg-secondary/50 flex items-center justify-center gap-2 border-b py-2">
+<nav
+  class="border-border bg-bg-secondary/50 flex items-center justify-center gap-2 border-b py-2"
+>
   {#each NAV_ITEMS as item (item.href)}
     <a
       href={item.href}
