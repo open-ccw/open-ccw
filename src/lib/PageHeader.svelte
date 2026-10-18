@@ -86,7 +86,7 @@
     {@render githubLink()}
   </div>
   <div class="absolute right-0 mr-2 flex flex-row items-center gap-0 md:mr-4 md:gap-4">
-    <div class="mr-1 hidden md:mr-0 md:block">{@render githubLink()}</div>
+    <div class="mr-1 hidden md:mr-0 md:block md:translate-y-0.5">{@render githubLink()}</div>
     <DarkModeSwitch></DarkModeSwitch>
     <HamburgerButton
       open={menuOpen}
