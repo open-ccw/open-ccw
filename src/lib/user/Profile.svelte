@@ -88,7 +88,7 @@
             </div>
 
             <!-- 头像右侧基本信息 -->
-            <div class="mt-0 ml-2 flex flex-col">
+            <div class="mt-0 ml-4 flex flex-col">
               <h1 class="flex items-center gap-2 text-2xl font-bold text-black dark:text-white">
                 {profile.name}
                 <AuthRankDisplay rank={profile.identityAuthRank}></AuthRankDisplay>

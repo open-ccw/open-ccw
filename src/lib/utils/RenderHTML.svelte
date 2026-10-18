@@ -61,8 +61,13 @@
 </div>
 
 <style>
-  #marked :global(a) {
+  :global(.dark) #marked :global(a) {
     text-decoration: underline;
     color: lightblue;
+  }
+
+  #marked :global(a) {
+    text-decoration: underline;
+    color: blue;
   }
 </style>

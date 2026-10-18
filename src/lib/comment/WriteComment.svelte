@@ -4,7 +4,7 @@
   import { fileMd5, uploadFile } from '#lib/utils/storage.ts';
   import { communityWeb } from '@ccw-api/api';
   import { toast } from '#lib/toast.ts';
-  import type { MinimalComment, TopicConfig } from './types';
+  import type { MinimalComment, ReplyTarget, TopicConfig } from './types';
 
   let comment = $state('');
   let textArea: HTMLTextAreaElement | undefined = $state();
@@ -14,10 +14,27 @@
     oid,
     subjectType,
     sectionType,
+    replyTarget = null,
     onNewComment,
+    onCancelReply,
+    onReplied,
   }: TopicConfig & {
-    onNewComment(c: MinimalComment): void;
+    /** 回复目标，非空时输入框进入回复模式 */
+    replyTarget?: ReplyTarget | null;
+    /** 新评论创建成功后的回调（顶部评论框使用，回复框暂不需要） */
+    onNewComment?(c: MinimalComment): void;
+    /** 取消回复 */
+    onCancelReply?(): void;
+    /** 回复发送成功后的回调，用于让父组件同步回复计数 */
+    onReplied?(): void;
   } = $props();
+
+  // 进入回复模式后聚焦输入框，避免用户还要手动点一次
+  $effect(() => {
+    if (replyTarget) {
+      textArea?.focus();
+    }
+  });
 
   function handlePaste(clipboardData: DataTransfer) {
     const item = Array.from(clipboardData.items).at(-1);
@@ -57,12 +74,24 @@
       });
   }
 
-  async function createComment() {
+  async function submit() {
     if (submitting || !$user.loggedIn) {
       return;
     }
     if (!comment.trim()) {
       toast.error('评论内容不能为空');
+      return;
+    }
+    if (replyTarget) {
+      submitting = true;
+      try {
+        await communityWeb.replyComment(comment, replyTarget.id);
+        comment = '';
+        onReplied?.();
+      } catch (e) {
+        error = String(e);
+      }
+      submitting = false;
       return;
     }
     submitting = true;
@@ -88,7 +117,7 @@
           approvalTagRelations: null,
         },
       };
-      onNewComment(patchedNewComment);
+      onNewComment?.(patchedNewComment);
     } catch (e) {
       error = String(e);
     }
@@ -101,15 +130,30 @@
     <div class="text-error border-error border">{error}</div>
   {/if}
   <div class="mt-4 flex w-full flex-row gap-4 p-2 md:gap-8">
-    <div class="size-8 shrink-0 translate-x-1.5 translate-y-1 md:size-12">
-      <AvatarToProfile oid={$user.oid} url={$user.avatar} virtual={$user.virtualValue} />
-    </div>
+    {#if !replyTarget}
+      <!-- 回复模式下省略自己的头像，把宽度让给输入框 -->
+      <div class="size-8 shrink-0 translate-x-1.5 translate-y-1 md:size-12">
+        <AvatarToProfile oid={$user.oid} url={$user.avatar} virtual={$user.virtualValue} />
+      </div>
+    {/if}
     <form class="flex-1">
+      {#if replyTarget}
+        <div class="text-text-secondary mb-1 flex items-center gap-2 text-xs">
+          <span class="truncate">
+            回复 <span class="text-primary">{replyTarget.name}</span>
+          </span>
+          <button
+            type="button"
+            class="text-text-placeholder hover:text-error shrink-0 cursor-pointer transition-colors duration-100"
+            onclick={onCancelReply}>取消</button
+          >
+        </div>
+      {/if}
       <div class="input-group w-auto">
         <textarea
           class="input"
           name="comment"
-          placeholder="评论(可粘贴图片文件)"
+          placeholder={replyTarget ? `回复 ${replyTarget.name}` : '评论(可粘贴图片文件)'}
           bind:value={comment}
           bind:this={textArea}
           onpaste={(e) => {
@@ -122,7 +166,7 @@
         <button
           class="button--submit {submitting ? 'cursor-not-allowed' : 'cursor-pointer'}"
           disabled={submitting}
-          onclick={createComment}>评论</button
+          onclick={submit}>{replyTarget ? '回复' : '评论'}</button
         >
       </div>
     </form>

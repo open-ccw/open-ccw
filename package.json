@@ -35,7 +35,7 @@
     "wrangler": "^4.150.0"
   },
   "dependencies": {
-    "@ccw-api/api": "^2.1.12",
+    "@ccw-api/api": "^2.1.13",
     "@ccw-api/request": "^1.2.3",
     "@mixer/postmessage-rpc": "^1.1.4",
     "@open-ccw/player": "^0.0.5",

@@ -35,7 +35,8 @@
   import { user } from '#lib/user/userStore.ts';
   import RenderComment from '../comment/RenderComment.svelte';
 
-  const userLinkClass = 'font-medium text-info hover:underline whitespace-break-spaces';
+  const userLinkClass =
+    'font-medium text-info hover:underline whitespace-break-spaces text-nowrap shrink-0';
   const subjectLinkClass = 'font-medium text-primary hover:underline';
 
   const {
