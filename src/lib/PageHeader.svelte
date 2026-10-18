@@ -65,13 +65,14 @@
       Open CCW
     </p>
   </a>
-  <div class="absolute right-0 mr-2 flex flex-row items-center gap-0 md:mr-4 md:gap-4">
+  <!-- 移动端放在左侧，避免遮挡居中的 logo；桌面端并入右侧控制区 -->
+  {#snippet githubLink()}
     <a
       href="https://github.com/open-ccw/open-ccw"
       target="_blank"
       rel="noopener noreferrer"
       title="GitHub 仓库"
-      class="text-text-secondary hover:text-text-primary mr-1 inline-block size-6 transition-colors duration-100 md:mr-0"
+      class="text-text-secondary hover:text-text-primary inline-block size-6 transition-colors duration-100"
     >
       <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="size-full">
         <path
@@ -79,6 +80,13 @@
         />
       </svg>
     </a>
+  {/snippet}
+
+  <div class="absolute top-0 left-0 flex h-full items-center pl-3 md:hidden">
+    {@render githubLink()}
+  </div>
+  <div class="absolute right-0 mr-2 flex flex-row items-center gap-0 md:mr-4 md:gap-4">
+    <div class="mr-1 hidden md:mr-0 md:block">{@render githubLink()}</div>
     <DarkModeSwitch></DarkModeSwitch>
     <HamburgerButton
       open={menuOpen}
