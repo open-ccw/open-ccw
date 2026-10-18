@@ -1,6 +1,5 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
-  import { browser } from '$app/env';
   import { communityWeb, sso } from '#lib/api.ts';
   import DeviceTableRow from './DeviceTableRow.svelte';
   import type { Session } from './types';
@@ -26,12 +25,15 @@
   const otherDeviceCount = $derived(sessions.filter((s) => !s.currentDevice).length);
   const selectedSessions = $derived(sessions.filter((s) => selected[s.id] && !s.currentDevice));
   const selectedCount = $derived(selectedSessions.length);
-  const hasOauthRefresh = $derived.by(() => {
-    if (!browser) {
-      return false;
+  let hasOauthRefresh = $state(false);
+
+  $effect(() => {
+    if ($user.loggedIn) {
+      setTimeout(async () => {
+        const name = getActiveAccount();
+        hasOauthRefresh = Boolean(name && (await getAccountRefresh(name))?.refreshToken);
+      }, 10);
     }
-    const name = getActiveAccount();
-    return Boolean(name && getAccountRefresh(name)?.refreshToken);
   });
 
   $effect(() => {
@@ -86,7 +88,7 @@
   /** 撤销当前账号的 OAuth refresh token 并退出登录 */
   async function logoutOauth() {
     const name = getActiveAccount();
-    const refreshToken = name ? getAccountRefresh(name)?.refreshToken : null;
+    const refreshToken = name ? (await getAccountRefresh(name))?.refreshToken : null;
     if (!refreshToken) {
       toast.warning('当前账号无 OAuth 登录信息');
       return;

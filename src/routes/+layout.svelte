@@ -7,7 +7,7 @@
   import { onMount } from 'svelte';
   import { dev } from '$app/env';
   import { browser } from '$app/env';
-  import { refreshTokenIfExpired } from '#lib/oauth/refresh.ts';
+  import { refreshTokenIfExpired, startTokenRefreshTimer } from '#lib/oauth/refresh.ts';
   import ToastHost from '#lib/toast/ToastHost.svelte';
 
   if (browser && origin !== 'null' && 'serviceWorker' in navigator) {
@@ -18,6 +18,7 @@
 
   onMount(() => {
     refreshTokenIfExpired().catch(() => {});
+    startTokenRefreshTimer();
   });
 </script>
 
