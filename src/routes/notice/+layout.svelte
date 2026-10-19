@@ -78,3 +78,10 @@
 {:else}
   <Error error="请登录"></Error>
 {/if}
+
+<footer class="text-text-placeholder mx-auto w-full max-w-3xl px-4 pt-4 pb-8 text-center">
+  <p class="text-xs leading-relaxed">
+    消息中心汇集了你在 CCW
+    社区的全部动态通知：内容互动通知汇总作品收到的点赞、收藏与评论；回复通知帮你追踪每一条针对你的讨论；好友分享通知展示好友向你推荐的优质内容；系统消息则包含平台公告、账号安全提醒与审核结果。登录后即可在此统一查看与管理所有通知，不错过社区里的任何重要消息。
+  </p>
+</footer>
