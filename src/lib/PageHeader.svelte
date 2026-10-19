@@ -72,7 +72,7 @@
       target="_blank"
       rel="noopener noreferrer"
       title="GitHub 仓库"
-      class="text-text-secondary hover:text-text-primary inline-block size-6 transition-colors duration-100"
+      class="text-logo/80 hover:text-logo inline-block size-6 transition-colors duration-100"
     >
       <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true" class="size-full">
         <path
