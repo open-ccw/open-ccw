@@ -44,6 +44,7 @@
 </svelte:head>
 
 <PageHeader></PageHeader>
+<h1 class="text-text-placeholder py-3 text-center text-lg font-bold">Open CCW 消息中心</h1>
 <div class="flex w-full justify-center gap-8 border-b md:gap-24">
   {#if selectedId >= 0}
     {#each noticeTypes as { type, name, icon }, id}
@@ -70,8 +71,6 @@
     {/each}
   {/if}
 </div>
-
-<h1 class="text-text-placeholder py-3 text-center text-sm font-bold">Open CCW 消息中心</h1>
 
 {#if $token}
   {@render children()}
