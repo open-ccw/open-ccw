@@ -24,7 +24,7 @@
   "previews": {},
   "upload_source_maps": true,
   "cache": {
-    "enabled": false,
+    "enabled": true,
   },
   /**
    * Smart Placement
