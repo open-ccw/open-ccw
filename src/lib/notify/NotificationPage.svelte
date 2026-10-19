@@ -1,12 +1,3 @@
-<script module lang="ts">
-  import { writable } from 'svelte/store';
-
-  /**
-   * 首页通知是否已加载完成，供布局隐藏 SEO 介绍占位文本。
-   */
-  export const notificationLoaded = writable(false);
-</script>
-
 <script lang="ts">
   import { communityWeb, type Notification } from '#lib/api.ts';
   import Error from '#lib/utils/Error.svelte';
@@ -50,9 +41,6 @@
       if (data.length === 0) {
         totalPages = pageNum - 1;
       }
-      if (pages.length > 0) {
-        notificationLoaded.set(true);
-      }
     } catch (e) {
       error = String(e);
     }
@@ -66,8 +54,6 @@
   });
 
   onMount(() => {
-    // 重置加载状态，让布局的介绍占位重新显示
-    notificationLoaded.set(false);
     observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
@@ -97,11 +83,17 @@
 
 <footer
   bind:this={footer}
-  class="text-text-placeholder flex w-full items-center justify-center gap-2 py-4 text-sm"
+  class="text-text-placeholder flex w-full flex-col items-center justify-center gap-2 py-4 text-sm"
 >
   {#if loading}
-    <span class="border-border border-t-info size-4 animate-spin rounded-full border-2"></span>
-    <span>加载中...</span>
+    <span class="flex items-center gap-2">
+      <span class="border-border border-t-info size-4 animate-spin rounded-full border-2"></span>
+      <span>加载中...</span>
+    </span>
+    <p class="text-text-placeholder mx-auto max-w-3xl px-4 text-xs leading-relaxed">
+      消息中心汇集了你在 CCW
+      社区的全部动态通知：内容互动通知汇总作品收到的点赞、收藏与评论；回复通知帮你追踪每一条针对你的讨论；好友分享通知展示好友向你推荐的优质内容；系统消息则包含平台公告、账号安全提醒与审核结果。登录后即可在此统一查看与管理所有通知，不错过社区里的任何重要消息。
+    </p>
   {:else if finished}
     <span>— 已加载全部消息 —</span>
   {:else}
