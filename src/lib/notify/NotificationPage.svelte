@@ -1,3 +1,12 @@
+<script module lang="ts">
+  import { writable } from 'svelte/store';
+
+  /**
+   * 首页通知是否已加载完成，供布局隐藏 SEO 介绍占位文本。
+   */
+  export const notificationLoaded = writable(false);
+</script>
+
 <script lang="ts">
   import { communityWeb, type Notification } from '#lib/api.ts';
   import Error from '#lib/utils/Error.svelte';
@@ -41,6 +50,9 @@
       if (data.length === 0) {
         totalPages = pageNum - 1;
       }
+      if (pages.length > 0) {
+        notificationLoaded.set(true);
+      }
     } catch (e) {
       error = String(e);
     }
@@ -54,6 +66,8 @@
   });
 
   onMount(() => {
+    // 重置加载状态，让布局的介绍占位重新显示
+    notificationLoaded.set(false);
     observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
