@@ -317,7 +317,12 @@ export async function getAccountRefresh(name: string): Promise<AccountTokenRefre
     const parsed = JSON.parse(raw) as Partial<StoredAccountRefresh & AccountTokenRefresh>;
     if (parsed.rt) {
       const refreshToken = await quickDecrypt(parsed.rt);
-      return refreshToken ? { refreshToken, expiresAt: parsed.expiresAt ?? 0 } : null;
+      if (!refreshToken) {
+        // IndexedDB 密钥已丢失（隐私模式/浏览器清理），密文无法解密，清掉避免残留脏记录
+        clearAccountRefresh(name);
+        return null;
+      }
+      return { refreshToken, expiresAt: parsed.expiresAt ?? 0 };
     }
     // 旧版明文格式，读出后重新加密存储
     if (parsed.refreshToken) {

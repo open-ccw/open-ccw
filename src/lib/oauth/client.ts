@@ -20,6 +20,18 @@ export interface PkcePair {
   codeChallenge: string;
 }
 
+/** OAuth 协议错误，code 携带服务端 error（如 invalid_grant）用于区分可恢复与不可恢复失败 */
+export class OAuthError extends Error {
+  constructor(
+    public code: string,
+    message?: string,
+    public detail?: string,
+  ) {
+    super(message ?? code);
+    this.name = 'OAuthError';
+  }
+}
+
 function b64url(input: ArrayBuffer | Uint8Array): string {
   const bytes = input instanceof Uint8Array ? input : new Uint8Array(input);
   let binary = '';
@@ -71,8 +83,10 @@ async function postForm(
   if (!response.ok) {
     const code = payload?.error;
     const description = payload?.error_description;
-    throw new Error(
-      `OAuth 请求失败: ${typeof code === 'string' ? code : `http_${response.status}`}${typeof description === 'string' ? ` (${description})` : ''}`,
+    throw new OAuthError(
+      typeof code === 'string' ? code : `http_${response.status}`,
+      typeof description === 'string' ? description : undefined,
+      `${new URL(proxyUrl).pathname} -> ${response.status}`,
     );
   }
   return payload;
