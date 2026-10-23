@@ -34,6 +34,11 @@ export default defineConfig({
   build: {
     minify: true,
     sourcemap: true,
+    rollupOptions: {
+      output: {
+        experimentalMinChunkSize: 20 * 1024, // 20KB
+      }
+    }
   },
   server: {
     cors: {
