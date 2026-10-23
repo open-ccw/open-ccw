@@ -2,7 +2,7 @@
 
 一款第三方 CCW 启动器，提供账号管理、OAuth 一键登录、每日签到等功能。基于 SvelteKit 构建，部署在 Cloudflare Workers 上。
 
-[链接直达 https://ccw.kivotos.qzz.io](https://ccw.kivotos.qzz.io)
+[官网链接直达 https://ccw.kivotos.qzz.io](https://ccw.kivotos.qzz.io)
 
 ## 功能
 
