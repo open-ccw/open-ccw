@@ -32,7 +32,7 @@
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
     "vite": "^8.3.4",
-    "wrangler": "^4.151.2"
+    "wrangler": "^4.151.3"
   },
   "dependencies": {
     "@ccw-api/api": "^2.1.13",
