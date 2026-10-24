@@ -37,8 +37,8 @@ export default defineConfig({
     rollupOptions: {
       output: {
         experimentalMinChunkSize: 20 * 1024, // 20KB
-      }
-    }
+      },
+    },
   },
   server: {
     cors: {
