@@ -40,3 +40,4 @@ jobs:
             - 请合并前确认 CI 检查通过
           branch: bot/prettier-fix
           delete-branch: true
+          assignees: BenPaoDeXiaoZhi
