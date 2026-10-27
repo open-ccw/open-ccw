@@ -22,7 +22,8 @@
       target="_blank"
       rel="noopener noreferrer"
       class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
-    >Cloudflare Workers</a>
+      >Cloudflare Workers</a
+    >
   </div>
   <span>Open CCW — 非官方第三方 CCW 启动器</span>
 </footer>
