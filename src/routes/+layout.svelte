@@ -9,6 +9,7 @@
   import { browser } from '$app/env';
   import { refreshTokenIfExpired, startTokenRefreshTimer } from '#lib/oauth/refresh.ts';
   import ToastHost from '#lib/toast/ToastHost.svelte';
+  import SiteFooter from '#lib/SiteFooter.svelte';
 
   if (browser && origin !== 'null' && 'serviceWorker' in navigator) {
     navigator.serviceWorker.register('/service-worker.js', {
@@ -31,3 +32,4 @@
 </svelte:head>
 <ToastHost />
 {@render children()}
+<SiteFooter />
