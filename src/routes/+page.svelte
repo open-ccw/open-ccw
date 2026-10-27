@@ -28,14 +28,14 @@
   <title>Open CCW-第三方 CCW 启动器</title>
   <meta
     name="description"
-    content="Open CCW 是一款轻量化的第三方 CCW 社区客户端，基于svelte框架，支持 OAuth 一键授权登录、多账号管理、AES 本地加密存储 Token、每日签到领金币。是一款以安全为主要理念，便捷实用的 CCW 第三方启动器。同时提供了pwa支持。"
+    content="Open CCW 是一款开源的第三方 CCW 社区客户端，基于svelte框架，支持 OAuth 一键授权登录、多账号管理、AES 本地加密存储 Token、每日签到领金币。是一款以安全为主要理念，便捷实用的 CCW 第三方启动器。同时提供了pwa支持。"
   />
-  <meta name="keywords" content="Open CCW, CCW启动器, CCW第三方客户端, CCW签到, CCW OAuth登录" />
+  <meta name="keywords" content="Open CCW, CCW启动器, CCW第三方客户端, CCW开源, CCW签到, CCW OAuth登录" />
   <link rel="canonical" href="https://ccw.kivotos.qzz.io/" />
   <meta name="og:title" content="Open CCW-第三方 CCW 启动器" />
   <meta
     name="og:description"
-    content="Open CCW 是一款轻量化的第三方 CCW 社区客户端，基于svelte框架，支持 OAuth 一键授权登录、多账号管理、AES 本地加密存储 Token、每日签到领金币。是一款以安全为主要理念，便捷实用的 CCW 第三方启动器。同时提供了pwa支持。"
+    content="Open CCW 是一款开源的第三方 CCW 社区客户端，基于svelte框架，支持 OAuth 一键授权登录、多账号管理、AES 本地加密存储 Token、每日签到领金币。是一款以安全为主要理念，便捷实用的 CCW 第三方启动器。同时提供了pwa支持。"
   />
 </svelte:head>
 
