@@ -15,14 +15,16 @@
       target="_blank"
       rel="noopener noreferrer"
       class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
-    >DigitalPlat FreeDomain</a>
+      >DigitalPlat FreeDomain</a
+    >
     <span>提供 · 部署于</span>
     <a
       href={CLOUDFLARE_URL}
       target="_blank"
       rel="noopener noreferrer"
       class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
-    >Cloudflare Workers</a>
+      >Cloudflare Workers</a
+    >
   </div>
   <div class="flex items-center gap-1">
     <a
@@ -30,7 +32,8 @@
       target="_blank"
       rel="noopener noreferrer"
       class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
-    >开源</a>
+      >开源</a
+    >
     <span>的第三方 CCW 启动器</span>
   </div>
 </footer>
