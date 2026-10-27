@@ -14,7 +14,8 @@
       target="_blank"
       rel="noopener noreferrer"
       class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
-    >DigitalPlat FreeDomain</a>
+      >DigitalPlat FreeDomain</a
+    >
     <span>提供 · 部署于</span>
     <a
       href={CLOUDFLARE_URL}
