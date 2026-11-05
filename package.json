@@ -28,11 +28,11 @@
     "prettier-plugin-svelte": "^4.1.1",
     "prettier-plugin-tailwindcss": "^0.8.1",
     "svelte": "^5.57.3",
-    "svelte-check": "^4.7.6",
+    "svelte-check": "^4.7.8",
     "tailwindcss": "^4.3.0",
     "typescript": "^6.0.3",
     "vite": "^8.3.5",
-    "wrangler": "^4.156.0"
+    "wrangler": "^4.156.2"
   },
   "dependencies": {
     "@ccw-api/api": "^2.1.13",
