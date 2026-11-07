@@ -1,11 +1,18 @@
 name: IndexNow Ping
 
-# 每次 master 分支有推送时，把 sitemap 中的全部 URL 提交给 IndexNow。
-# Bing 对小站点的爬取预算极低，主动推送是让 Bing 及时发现新页面的主要手段。
+# 手动推送：在 Actions 页面运行，可选传入要提交的 URL 列表；
+# 不传则自动拉取 https://<host>/sitemap.xml 中的全部 URL 提交给 IndexNow。
 on:
-  push:
-    branches: [master]
   workflow_dispatch:
+    inputs:
+      host:
+        description: '站点域名（如 ccw.kivotos.qzz.io 或镜像域名）'
+        required: true
+        default: 'ccw.kivotos.qzz.io'
+      urls:
+        description: '要提交的 URL（空格分隔，留空则使用 sitemap 全部 URL）'
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -17,26 +24,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
       - name: Submit URLs to IndexNow
-        env:
-          KEY: e13f190b8bf84161b3b1acc7cc7a65cd
-          HOST: ccw.kivotos.qzz.io
-        run: |
-          # 从线上动态 sitemap（按请求域名生成）提取 URL 并生成 JSON 请求体，写入临时文件后用 --data-binary 发送，
-          # 避免内联 JSON 的 shell 引号转义问题
-          curl -fsS "https://$HOST/sitemap.xml" -o /tmp/sitemap.xml
-          URLS=$(grep -o '<loc>[^<]*</loc>' /tmp/sitemap.xml | sed 's/<\/\?loc>//g' | jq -R . | jq -sc .)
-          jq -n --arg host "$HOST" --arg key "$KEY" \
-            --arg keyLocation "https://$HOST/$KEY.txt" \
-            --argjson urlList "$URLS" \
-            '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}' > /tmp/body.json
-          STATUS=$(curl -sS -o /tmp/resp.txt -w "%{http_code}" \
-            -X POST "https://api.indexnow.org/IndexNow" \
-            -H "Content-Type: application/json; charset=utf-8" \
-            --data-binary @/tmp/body.json)
-          echo "IndexNow response: $STATUS"
-          cat /tmp/resp.txt || true
-          # 200 表示 URL 已收录或此前已提交，202 表示已接受待处理
-          if [ "$STATUS" != "200" ] && [ "$STATUS" != "202" ]; then
-            echo "::warning::IndexNow submission returned $STATUS"
-          fi
+        run: node scripts/indexnow.mjs "${{ inputs.host }}" ${{ inputs.urls }}
