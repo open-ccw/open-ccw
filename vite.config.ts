@@ -12,19 +12,6 @@ export default defineConfig({
         runes: ({ filename }) =>
           filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
       },
-      prerender: {
-        entries: [
-          '*',
-          '/',
-          '/notice',
-          '/notice/interaction',
-          '/notice/reply',
-          '/oauth',
-          '/oauth/callback',
-          '/register',
-          '/settings/auth',
-        ],
-      },
       adapter: adapter(),
       serviceWorker: {
         register: false,

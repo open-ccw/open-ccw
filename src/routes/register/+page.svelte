@@ -20,6 +20,6 @@
     content="Open CCW 注册页面，CCW 一键授权自动获取 Token，仅需设置密码即可完成注册。账号数据云端保存，登录时凭学号与密码换取 Token，安全便捷的 CCW 第三方启动器。"
   />
   <link rel="preload" as="image" href={bg} />
-  <link rel="canonical" href="https://ccw.kivotos.qzz.io/register" />
+  <link rel="canonical" href="https://{page.url.host}/register" />
 </svelte:head>
 <Register {token}></Register>

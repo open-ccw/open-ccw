@@ -1,7 +1,7 @@
 import type { Handle } from '@sveltejs/kit/hooks';
 
 /**
- * sitemap 中列出的页面路径集合，需与 static/sitemap.xml 保持一致。
+ * sitemap 中列出的页面路径集合，需与 src/routes/sitemap.xml/+server.ts 保持一致。
  * 这些页面的 HTML 响应将携带 max-age 缓存指令。
  */
 const SITEMAP_ROUTES: ReadonlySet<string> = new Set([
@@ -16,6 +16,8 @@ const SITEMAP_ROUTES: ReadonlySet<string> = new Set([
   '/oauth',
   '/oauth/callback',
   '/settings/auth',
+  '/sitemap.xml',
+  '/robots.txt',
 ]);
 
 /**
