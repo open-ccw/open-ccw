@@ -3,6 +3,7 @@
   import type { PageProps } from './$types';
   import { communityWeb, type Creation } from '#lib/api.ts';
   import Error from '#lib/utils/Error.svelte';
+  import { page } from '$app/state';
   let { params }: PageProps = $props();
 
   let error = $state('');
@@ -25,7 +26,7 @@
       content="{creation.title} - 查看 CCW 社区作品详情，包括作品信息、作者等。Open CCW 第三方 CCW 启动器。"
     />
   {/if}
-  <link rel="canonical" href={`https://ccw.kivotos.qzz.io/detail/${params.id}`} />
+  <link rel="canonical" href="https://{page.url.host}/detail/{params.id}" />
 </svelte:head>
 
 <Error {error}></Error>

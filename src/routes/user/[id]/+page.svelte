@@ -91,14 +91,14 @@
   {#if profile?.avatar}
     <meta name="og:image" content={profile.avatar} />
   {/if}
-  <meta name="og:url" content="https://ccw.kivotos.qzz.io/user/{params.id}" />
+  <meta name="og:url" content="https://{page.url.host}/user/{params.id}" />
   <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Open CCW - {profile?.name ?? '用户主页'}" />
   <meta name="twitter:description" content={profile?.bio ?? '查看 CCW 用户的个人主页'} />
   {#if profile?.avatar}
     <meta name="twitter:image" content={profile.avatar} />
   {/if}
-  <link rel="canonical" href="https://ccw.kivotos.qzz.io/user/{params.id}" />
+  <link rel="canonical" href="https://{page.url.host}/user/{params.id}" />
 </svelte:head>
 <PageHeader></PageHeader>
 <Profile {profile} {stats} {error} {loading} {lockDetail} {anchorCommentId}></Profile>
