@@ -1,7 +1,7 @@
 name: IndexNow Ping
 
-# 每次推送到 master 后向 IndexNow 提交 sitemap 中的所有 URL。
-# Bing 对小站点爬取预算极低，主动推送是让 Bing 及时发现更新的主要手段。
+# 每次 master 分支有推送时，把 sitemap 中的全部 URL 提交给 IndexNow。
+# Bing 对小站点的爬取预算极低，主动推送是让 Bing 及时发现新页面的主要手段。
 on:
   push:
     branches: [master]
@@ -18,18 +18,24 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Submit URLs to IndexNow
+        env:
+          KEY: e13f190b8bf84161b3b1acc7cc7a65cd
+          HOST: ccw.kivotos.qzz.io
         run: |
-          KEY="d07b4800d20da3771df2bc7d7b584855"
-          HOST="ccw.kivotos.qzz.io"
-          # 从 sitemap 提取所有 URL，json 数组化
-          URLS=$(grep -o '<loc>[^<]*</loc>' static/sitemap.xml | sed 's/<\/\?loc>//g' | sed 's/^/"/;s/$/"/' | paste -sd, -)
-          STATUS=$(curl -sS -o /tmp/indexnow_resp.txt -w "%{http_code}" \
-            -X POST "https://api.indexnow.org/indexnow" \
+          # 从 sitemap 提取 URL 并生成 JSON 请求体，写入临时文件后用 --data-binary 发送，
+          # 避免内联 JSON 的 shell 引号转义问题
+          URLS=$(grep -o '<loc>[^<]*</loc>' static/sitemap.xml | sed 's/<\/\?loc>//g' | jq -R . | jq -sc .)
+          jq -n --arg host "$HOST" --arg key "$KEY" \
+            --arg keyLocation "https://$HOST/$KEY.txt" \
+            --argjson urlList "$URLS" \
+            '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}' > /tmp/body.json
+          STATUS=$(curl -sS -o /tmp/resp.txt -w "%{http_code}" \
+            -X POST "https://api.indexnow.org/IndexNow" \
             -H "Content-Type: application/json; charset=utf-8" \
-            -d "{\"host\":\"$HOST\",\"key\":\"$KEY\",\"keyLocation\":\"https://$HOST/$KEY.txt\",\"urlList\":[$URLS]}")
+            --data-binary @/tmp/body.json)
           echo "IndexNow response: $STATUS"
-          cat /tmp/indexnow_resp.txt || true
-          # 202 已接受 / 200 成功
+          cat /tmp/resp.txt || true
+          # 200 表示 URL 已收录或此前已提交，202 表示已接受待处理
           if [ "$STATUS" != "200" ] && [ "$STATUS" != "202" ]; then
             echo "::warning::IndexNow submission returned $STATUS"
           fi
