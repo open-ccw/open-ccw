@@ -17,6 +17,7 @@
     error = '',
     loading = false,
     lockDetail = { locked: false, createdAt: 0, unlocksAt: 0 },
+    anchorCommentId,
   }: {
     profile: UserProfile | null;
     stats: {
@@ -28,6 +29,8 @@
     error: string;
     loading: boolean;
     lockDetail: { locked: boolean; createdAt: number; unlocksAt: number };
+    /** 锚点评论 id，来自 URL ?comment=，用于自动展开留言板并定位 */
+    anchorCommentId?: number;
   } = $props();
 
   // 统计计数（缺省时为 0）
@@ -56,7 +59,11 @@
   {#if lockDetail.locked}
     <LockedDetail {lockDetail} {profile}></LockedDetail>
   {:else if profile}
-    <CommentTrigger oid={profile.studentOid} subjectType="PROFILE" sectionType="COMMENT"
+    <CommentTrigger
+      oid={profile.studentOid}
+      subjectType="PROFILE"
+      sectionType="COMMENT"
+      {anchorCommentId}
     ></CommentTrigger>
     <div class="mx-auto -mt-12 max-w-full md:-mt-16">
       <div class="relative flex h-84 w-full items-center overflow-hidden">

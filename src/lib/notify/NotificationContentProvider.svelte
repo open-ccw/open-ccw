@@ -32,12 +32,12 @@
   } from '@ccw-api/api';
   import LikeIcon from './LikeIcon.svelte';
   import RenderHTML from '#lib/utils/RenderHTML.svelte';
+  import NotificationSubjectLink from './NotificationSubjectLink.svelte';
   import { user } from '#lib/user/userStore.ts';
   import RenderComment from '../comment/RenderComment.svelte';
 
   const userLinkClass =
-    'font-medium text-info hover:underline whitespace-break-spaces text-nowrap shrink-0';
-  const subjectLinkClass = 'font-medium text-primary hover:underline';
+    'font-medium text-info underline whitespace-break-spaces text-nowrap shrink-0';
 
   const {
     page,
@@ -142,9 +142,9 @@
 
 {#snippet creationFavorite(page: CREATION_FAVORITE)}
   你的作品
-  <a href="/detail/{page.content.subject_oid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   被
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   加入了收藏
@@ -153,24 +153,24 @@
 {#snippet creationLiked(page: CREATION_LIKED)}
   <a href="/user/{page.content.subject_oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   为你的作品
-  <a href="/detail/{page.content.subject_oid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.homework_title}
-  </a>
+  </NotificationSubjectLink>
   点了个赞
   <LikeIcon like_icon={page.content.like_icon}></LikeIcon>
 {/snippet}
 
 {#snippet creationRemixed(page: CREATION_REMIXED)}
   你的作品
-  <a href="/detail/{page.content.remixed_creation_oid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="/detail/{page.content.remixed_creation_oid}">
     {page.content.remixed_creation_title}
-  </a>
+  </NotificationSubjectLink>
   被
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   改编为了新作品
-  <a href="/detail/{page.content.subject_oid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
 {/snippet}
 
 {#snippet creationCommented(page: CREATION_COMMENTED)}
@@ -178,9 +178,12 @@
     <div class="inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       在你的作品
-      <a href="/detail/{page.content.subject_oid}}" class={subjectLinkClass}>
+      <NotificationSubjectLink
+        href="/detail/{page.content.subject_oid}"
+        commentId={page.triggeredById}
+      >
         {page.content.subject_outline}
-      </a>
+      </NotificationSubjectLink>
       下评论:
     </div>
     <div class="bg-bg-secondary border-border w-full rounded-lg border p-2 whitespace-break-spaces">
@@ -194,9 +197,12 @@
     <div class="inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       回复了你在作品
-      <a href="/detail/{page.content.subject_oid}}" class={subjectLinkClass}>
+      <NotificationSubjectLink
+        href="/detail/{page.content.subject_oid}"
+        commentId={page.triggeredById}
+      >
         {page.content.subject_outline}
-      </a>
+      </NotificationSubjectLink>
       下的评论:
     </div>
     <div class="bg-bg-secondary border-border w-full rounded-t-lg border p-2">
@@ -217,43 +223,44 @@
     <div class="inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       向你分享了作品
-      <a href="/detail/{page.content.subject_oid}" class={subjectLinkClass}>
+      <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
         {page.content.subject_outline}
-      </a>
+      </NotificationSubjectLink>
     </div>
   </div>
 {/snippet}
 
 {#snippet creationRecommendedAsPotential(page: CREATION_RECOMMENDED_AS_POTENTIAL)}
   你的作品
-  <a href="/detail/{page.content.subject_oid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   已被评为[潜力新作]
 {/snippet}
 
 {#snippet creationChecked(page: CREATION_CHECKED)}
   你的作品
-  <a href="/detail/{page.content.subject_oid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   通过了审核
 {/snippet}
 
 {#snippet extensionLiked(page: EXTENSION_LIKED)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   为你的扩展
-  <a href="https://assets.ccw.site/extension/{page.extensionInfo.eid}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="https://assets.ccw.site/extension/{page.extensionInfo.eid}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   点了个赞
 {/snippet}
 
 {#snippet extensionCommented(page: EXTENSION_COMMENTED)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   在你的扩展
-  <a href="https://assets.ccw.site/extension/{page.extensionInfo.eid}" class={subjectLinkClass}
-    >{page.extensionInfo.name}</a
+  <NotificationSubjectLink
+    href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
+    commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
   >
   下留言
   <div class="bg-bg-secondary border-border w-full rounded-lg border p-2 whitespace-break-spaces">
@@ -264,8 +271,9 @@
 {#snippet extensionCommentReplied(page: EXTENSION_COMMENT_REPLIED)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   回复了你在扩展
-  <a href="https://assets.ccw.site/extension/{page.extensionInfo.eid}" class={subjectLinkClass}
-    >{page.extensionInfo.name}</a
+  <NotificationSubjectLink
+    href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
+    commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
   >
   的评论
   <div class="bg-bg-secondary border-border w-full rounded-t-lg border p-2">
@@ -281,9 +289,9 @@
 
 {#snippet postFavorite(page: POST_FAVORITE)}
   你的文章
-  <a href="https://www.ccw.site/post/{page.content.slug}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="https://www.ccw.site/post/{page.content.slug}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   被
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   加入了收藏
@@ -292,9 +300,9 @@
 {#snippet postLiked(page: POST_LIKED)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   为你的文章
-  <a href="https://www.ccw.site/post/{page.content.slug}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="https://www.ccw.site/post/{page.content.slug}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   点了个赞
 {/snippet}
 
@@ -304,14 +312,18 @@
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       {#if page.message && $user.loggedIn}
         回复了你在文章
-        <a href="https://ccw.site/post/{page.content.ext.slug}" class={userLinkClass}
-          >{page.content.subject_outline}</a
+        <NotificationSubjectLink
+          href="https://ccw.site/post/{page.content.ext.slug}"
+          commentId={page.triggeredById}>{page.content.subject_outline}</NotificationSubjectLink
         >
         中的留言
       {:else}
-        在你的文章<a href="https://ccw.site/post/{page.content.ext.slug}" class={userLinkClass}
-          >{page.content.subject_outline}</a
-        >下留言:
+        在你的文章
+        <NotificationSubjectLink
+          href="https://ccw.site/post/{page.content.ext.slug}"
+          commentId={page.triggeredById}>{page.content.subject_outline}</NotificationSubjectLink
+        >
+        下留言:
       {/if}
     </div>
     <div
@@ -343,18 +355,18 @@
 {#snippet assetMarketLiked(page: ASSET_MARKET_LIKED)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   为你的素材
-  <a href="https://assets.ccw.site/assets{page.assetMarketInfo.path}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="https://assets.ccw.site/assets{page.assetMarketInfo.path}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   点了个赞
 {/snippet}
 
 {#snippet assetMarketDonate(page: ASSET_MARKET_DONATE)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   为你的素材
-  <a href="https://assets.ccw.site/assets{page.assetMarketInfo.path}" class={subjectLinkClass}>
+  <NotificationSubjectLink href="https://assets.ccw.site/assets{page.assetMarketInfo.path}">
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   投了币
 {/snippet}
 
@@ -364,18 +376,18 @@
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       {#if page.message && $user.loggedIn}
         回复了你在战队
-        <a
+        <NotificationSubjectLink
           href="https://www.ccw.site/gamejam/teamDetail?id={page.content.subject_oid}"
-          class={userLinkClass}
-          target="_blank">{page.content.subject_outline}</a
+          commentId={page.triggeredById}
+          target="_blank">{page.content.subject_outline}</NotificationSubjectLink
         >
         中的留言
       {:else}
         在你的战队
-        <a
+        <NotificationSubjectLink
           href="https://www.ccw.site/gamejam/teamDetail?id={page.content.subject_oid}"
-          class={userLinkClass}
-          target="_blank">{page.content.subject_outline}</a
+          commentId={page.triggeredById}
+          target="_blank">{page.content.subject_outline}</NotificationSubjectLink
         >下留言:
       {/if}
     </div>
@@ -411,10 +423,18 @@
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       {#if page.message && $user.loggedIn}
         回复了你在
-        <a href="/user/{page.content.subject_oid}" class={userLinkClass}>留言板</a>
+        <NotificationSubjectLink
+          href="/user/{page.content.subject_oid}"
+          commentId={page.triggeredById}>留言板</NotificationSubjectLink
+        >
         中的留言
       {:else}
-        在你的留言板下留言:
+        在你的
+        <NotificationSubjectLink
+          href="/user/{$user.loggedIn && $user.oid}"
+          commentId={page.triggeredById}>留言板</NotificationSubjectLink
+        >
+        下留言:
       {/if}
     </div>
     <div
@@ -457,13 +477,12 @@
 {#snippet assetMarketPurchased(page: ASSET_MARKET_PURCHASED)}
   <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
   将你的素材
-  <a
+  <NotificationSubjectLink
     href="https://assets.ccw.site/assets{page.assetMarketInfo.path}"
-    class={subjectLinkClass}
     target="_blank"
   >
     {page.content.subject_outline}
-  </a>
+  </NotificationSubjectLink>
   加入了背包
 {/snippet}
 

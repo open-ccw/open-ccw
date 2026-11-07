@@ -35,7 +35,7 @@
     "wrangler": "^4.157.0"
   },
   "dependencies": {
-    "@ccw-api/api": "^2.1.13",
+    "@ccw-api/api": "^2.1.15",
     "@ccw-api/request": "^1.2.3",
     "@mixer/postmessage-rpc": "^1.1.4",
     "@open-ccw/player": "^0.0.5",
@@ -47,5 +47,9 @@
   "imports": {
     "#lib": "./src/lib/index.ts",
     "#lib/*": "./src/lib/*"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "workerd@1.20261103.1": true
   }
 }

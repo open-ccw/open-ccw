@@ -4,7 +4,15 @@
   import type { TopicConfig } from './types';
   import { backOut } from 'svelte/easing';
 
-  const { oid, subjectType, sectionType }: TopicConfig = $props();
+  const {
+    oid,
+    subjectType,
+    sectionType,
+    anchorCommentId,
+  }: TopicConfig & {
+    /** 锚点评论 id，透传给 CommentView 用于定位 */
+    anchorCommentId?: number;
+  } = $props();
 
   /** 面板高度（px），null 表示自适应内容 */
   let panelHeight = $state<number | null>(null);
@@ -58,6 +66,6 @@
     style:height={panelHeight ? `${panelHeight}px` : 'auto'}
     style:max-height={panelHeight ? '90vh' : '70vh'}
   >
-    <CommentView {oid} {subjectType} {sectionType} />
+    <CommentView {oid} {subjectType} {sectionType} {anchorCommentId} />
   </div>
 </div>
