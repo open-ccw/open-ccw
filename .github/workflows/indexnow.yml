@@ -1,0 +1,32 @@
+name: IndexNow Ping
+
+# 每次推送到 master 后向 IndexNow 提交 sitemap 中的所有 URL。
+# Bing 对小站点爬取预算极低，主动推送是让 Bing 及时发现更新的主要手段。
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Submit URLs to IndexNow
+        run: |
+          KEY="d07b4800d20da3771df2bc7d7b584855"
+          HOST="ccw.kivotos.qzz.io"
+          # 从 sitemap 提取所有 URL，json 数组化
+          URLS=$(grep -o '<loc>[^<]*</loc>' static/sitemap.xml | sed 's/<\/\?loc>//g' | sed 's/^/"/;s/$/"/' | paste -sd, -)
+          STATUS=$(curl -sS -o /tmp/indexnow_resp.txt -w "%{http_code}" \
+            -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json; charset=utf-8" \
+            -d "{\"host\":\"$HOST\",\"key\":\"$KEY\",\"keyLocation\":\"https://$HOST/$KEY.txt\",\"urlList\":[$URLS]}")
+          echo "IndexNow response: $STATUS"
+          cat /tmp/indexnow_resp.txt || true
+          # 202 已接受 / 200 成功
+          if [ "$STATUS" != "200" ] && [ "$STATUS" != "202" ]; then
+            echo "::warning::IndexNow submission returned $STATUS"
+          fi

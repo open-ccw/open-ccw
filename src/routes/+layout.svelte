@@ -26,9 +26,9 @@
 <svelte:head>
   <link rel="icon" href={favicon} />
   <meta name="robots" content="index, follow" />
-  <meta name="og:type" content="website" />
-  <meta name="og:site_name" content="Open CCW" />
-  <meta name="og:locale" content="zh_CN" />
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Open CCW" />
+  <meta property="og:locale" content="zh_CN" />
 </svelte:head>
 <ToastHost />
 {@render children()}
