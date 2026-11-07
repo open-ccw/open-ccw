@@ -1,10 +1,15 @@
 <script lang="ts">
   import type { PageProps } from './$types';
+  import { page } from '$app/state';
   import Profile from '#lib/user/Profile.svelte';
   import PageHeader from '#lib/PageHeader.svelte';
   import { communityWeb } from '#lib/api.ts';
 
   let { params }: PageProps = $props();
+
+  // URL 中的 ?comment= 锚点评论 id，用于自动展开留言板并定位到对应评论
+  const commentParam = page.url.searchParams.get('comment');
+  const anchorCommentId = commentParam ? Number(commentParam) : undefined;
 
   let profile = $state<UserProfile | null>(null);
   let error = $state('');
@@ -96,4 +101,4 @@
   <link rel="canonical" href="https://ccw.kivotos.qzz.io/user/{params.id}" />
 </svelte:head>
 <PageHeader></PageHeader>
-<Profile {profile} {stats} {error} {loading} {lockDetail}></Profile>
+<Profile {profile} {stats} {error} {loading} {lockDetail} {anchorCommentId}></Profile>

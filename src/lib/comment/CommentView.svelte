@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { communityWeb } from '@ccw-api/api';
-  import { onMount } from 'svelte';
+  import { communityWeb } from '#lib/api';
+  import { onMount, tick } from 'svelte';
   import type { MinimalComment, ReplyTarget, TopicConfig } from './types';
   import CommentItem from './CommentItem.svelte';
   import { toast } from '#lib';
@@ -8,7 +8,15 @@
   import WriteComment from './WriteComment.svelte';
   import ReplyList from './ReplyList.svelte';
 
-  const { oid, subjectType, sectionType }: TopicConfig = $props();
+  const {
+    oid,
+    subjectType,
+    sectionType,
+    anchorCommentId,
+  }: TopicConfig & {
+    /** 锚点评论 id，传入后跳过普通分页，直接以该评论为锚点展示上下文并滚动定位 */
+    anchorCommentId?: number;
+  } = $props();
   let pageNum = $state(1);
   let totalPages = $state(Infinity);
   let loading = $state(false);
@@ -64,6 +72,69 @@
     loadingMore = false;
   }
 
+  /** 以锚点评论为中心拉取上下文窗口，并自动展开锚点楼层、滚动定位到锚点评论 */
+  async function loadContext(commentId: number) {
+    loading = true;
+    try {
+      const ctx = await communityWeb.getCommentContext(oid, subjectType, sectionType, commentId);
+      if (ctx.unavailableReason) {
+        error = `评论不可用：${ctx.unavailableReason}`;
+        return;
+      }
+      // 上下文模式不支持继续分页
+      totalPages = 0;
+      comments = ctx.floors;
+      replyExpandTokens = { [ctx.anchor.floorId]: 1 };
+      await tick();
+      const targetId = ctx.anchor.reply ? commentId : ctx.anchor.floorId;
+      const el = document.getElementById(`comment-id-${targetId}`);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        el.animate(
+          [
+            {
+              background: 'none',
+            },
+            {
+              background: 'lightgreen',
+            },
+            {
+              background: 'none',
+            },
+          ],
+          400,
+        );
+      }
+      // 锚点是回复时，回复列表异步拉取完成前元素尚不存在，延迟补一次定位
+      if (ctx.anchor.reply) {
+        setTimeout(() => {
+          const anchor = document.getElementById(`comment-id-${commentId}`);
+          if (!anchor) {
+            return;
+          }
+          anchor.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          anchor.animate(
+            [
+              {
+                background: 'none',
+              },
+              {
+                background: 'lightgreen',
+              },
+              {
+                background: 'none',
+              },
+            ],
+            400,
+          );
+        }, 800);
+      }
+    } catch (e) {
+      error = String(e);
+    }
+    loading = false;
+  }
+
   $effect(() => {
     if (footer && observer) {
       observer.observe(footer);
@@ -82,8 +153,12 @@
         threshold: 0.1,
       },
     );
-    // 主动加载第一页
-    refresh();
+    // 主动加载第一页；有锚点评论时改为加载上下文窗口
+    if (anchorCommentId != null) {
+      loadContext(anchorCommentId);
+    } else {
+      refresh();
+    }
   });
 </script>
 

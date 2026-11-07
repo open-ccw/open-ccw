@@ -3,14 +3,23 @@
   import icon from '#lib/assets/chevron-left.svg?raw';
   import { type TopicConfig } from './types';
 
-  let openComment = $state(false);
-  const { oid, subjectType, sectionType }: TopicConfig = $props();
+  let {
+    oid,
+    subjectType,
+    sectionType,
+    anchorCommentId,
+  }: TopicConfig & {
+    /** 锚点评论 id，存在时自动展开评论面板并定位到该评论 */
+    anchorCommentId?: number;
+  } = $props();
+
+  let openComment = $derived(anchorCommentId != null);
 </script>
 
 <div class="pointer-events-none fixed right-4 bottom-0 z-30 flex flex-col items-end">
   {#if openComment}
     <div class="pointer-events-auto w-[calc(100vw-2rem)] max-w-lg">
-      <CommentMain {oid} {subjectType} {sectionType}></CommentMain>
+      <CommentMain {oid} {subjectType} {sectionType} {anchorCommentId}></CommentMain>
     </div>
   {/if}
   <button

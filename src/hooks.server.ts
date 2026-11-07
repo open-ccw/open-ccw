@@ -1,4 +1,4 @@
-import type { Handle } from '@sveltejs/kit';
+import type { Handle } from '@sveltejs/kit/hooks';
 
 /**
  * sitemap 中列出的页面路径集合，需与 static/sitemap.xml 保持一致。
