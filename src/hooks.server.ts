@@ -39,7 +39,7 @@ const INDEXABLE_HOSTS: ReadonlySet<string> = new Set([
 ]);
 
 /** 开发站域名后缀，整段通配放行 */
-const DEV_HOST_SUFFIX = '.oc.schale.qzz.io';
+const DEV_HOST_SUFFIXES: readonly string[] = ['.oc.schale.qzz.io', '.dev.openccw.dpdns.org'];
 
 /** 非白名单域名（如 workers.dev 预览域名）统一归一到的正式域名 */
 const PRIMARY_HOST = 'ccw.kivotos.qzz.io';
@@ -53,7 +53,9 @@ function isIndexableHost(host: string): boolean {
   const hostname = host.split(':')[0];
   return (
     INDEXABLE_HOSTS.has(hostname) ||
-    (hostname.endsWith(DEV_HOST_SUFFIX) && hostname.length > DEV_HOST_SUFFIX.length)
+    DEV_HOST_SUFFIXES.some(
+      (suffix) => hostname.endsWith(suffix) && hostname.length > suffix.length,
+    )
   );
 }
 
