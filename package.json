@@ -15,7 +15,8 @@
     "verify": "npm run check && npm run format:check && npm run build",
     "gen": "wrangler types",
     "deploy": "wrangler deploy",
-    "cf-typegen": "wrangler types ./worker-configuration.d.ts"
+    "cf-typegen": "wrangler types ./worker-configuration.d.ts",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "devDependencies": {
     "@open-ccw/scratch-vm": "^9.9.18",
