@@ -53,9 +53,7 @@ function isIndexableHost(host: string): boolean {
   const hostname = host.split(':')[0];
   return (
     INDEXABLE_HOSTS.has(hostname) ||
-    DEV_HOST_SUFFIXES.some(
-      (suffix) => hostname.endsWith(suffix) && hostname.length > suffix.length,
-    )
+    DEV_HOST_SUFFIXES.some((suffix) => hostname.endsWith(suffix) && hostname.length > suffix.length)
   );
 }
 
