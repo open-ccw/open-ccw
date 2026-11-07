@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { page } from '$app/state';
   import Header from '#lib/PageHeader.svelte';
   import logo from '#lib/assets/favicon.svg';
   import coinSvg from '#lib/assets/coin.svg';
@@ -34,7 +35,7 @@
     name="keywords"
     content="Open CCW, CCW启动器, CCW第三方客户端, CCW开源, CCW签到, CCW OAuth登录"
   />
-  <link rel="canonical" href="https://ccw.kivotos.qzz.io/" />
+  <link rel="canonical" href="https://{page.url.host}/" />
   <meta name="og:title" content="Open CCW-第三方 CCW 启动器" />
   <meta
     name="og:description"

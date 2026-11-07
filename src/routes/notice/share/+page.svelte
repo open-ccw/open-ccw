@@ -1,4 +1,5 @@
 <script>
+  import { page } from '$app/state';
   import NotificationPage from '#lib/notify/NotificationPage.svelte';
 </script>
 
@@ -8,7 +9,7 @@
     name="description"
     content="在 Open CCW 消息中心查看 CCW 社区的好友分享通知，第一时间获知好友向你推荐的作品、文章与星球内容。登录后即可浏览好友分享的精彩创作，发现更多值得一读的 CCW 社区优质内容。"
   />
-  <link rel="canonical" href="https://ccw.kivotos.qzz.io/notice/share" />
+  <link rel="canonical" href="https://{page.url.host}/notice/share" />
 </svelte:head>
 
 <NotificationPage type="FRIEND_SHARE"></NotificationPage>

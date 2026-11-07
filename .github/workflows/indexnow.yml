@@ -22,9 +22,10 @@ jobs:
           KEY: e13f190b8bf84161b3b1acc7cc7a65cd
           HOST: ccw.kivotos.qzz.io
         run: |
-          # 从 sitemap 提取 URL 并生成 JSON 请求体，写入临时文件后用 --data-binary 发送，
+          # 从线上动态 sitemap（按请求域名生成）提取 URL 并生成 JSON 请求体，写入临时文件后用 --data-binary 发送，
           # 避免内联 JSON 的 shell 引号转义问题
-          URLS=$(grep -o '<loc>[^<]*</loc>' static/sitemap.xml | sed 's/<\/\?loc>//g' | jq -R . | jq -sc .)
+          curl -fsS "https://$HOST/sitemap.xml" -o /tmp/sitemap.xml
+          URLS=$(grep -o '<loc>[^<]*</loc>' /tmp/sitemap.xml | sed 's/<\/\?loc>//g' | jq -R . | jq -sc .)
           jq -n --arg host "$HOST" --arg key "$KEY" \
             --arg keyLocation "https://$HOST/$KEY.txt" \
             --argjson urlList "$URLS" \
