@@ -28,12 +28,51 @@ const SITEMAP_ROUTES: ReadonlySet<string> = new Set([
 const CACHE_MAX_AGE = 14400;
 
 /**
- * 为 sitemap 页面注入 Cache-Control 响应头，激活 Cloudflare Crawler Hints。
- * 仅对 GET 请求的 HTML 页面生效，静态资源与 API 由资源自身头部控制。
+ * 允许对外服务并被搜索引擎索引的域名白名单（精确匹配）。
+ * 主站与镜像站按 SEO 策略各自独立收录；开发站通配符 *.oc.schale.qzz.io 用于收录测试。
+ */
+const INDEXABLE_HOSTS: ReadonlySet<string> = new Set([
+  'ccw.kivotos.qzz.io',
+  'openccw.dpdns.org',
+  'localhost',
+  '127.0.0.1',
+]);
+
+/** 开发站域名后缀，整段通配放行 */
+const DEV_HOST_SUFFIX = '.oc.schale.qzz.io';
+
+/** 非白名单域名（如 workers.dev 预览域名）统一归一到的正式域名 */
+const PRIMARY_HOST = 'ccw.kivotos.qzz.io';
+
+/**
+ * 判断请求域名是否允许对外服务。
+ * workers.dev 等预览域名会产生与主站重复的 canonical 内容，导致 Bing 等搜索引擎
+ * 报「URL 无法索引」，必须 301 归一到主站。
+ */
+function isIndexableHost(host: string): boolean {
+  const hostname = host.split(':')[0];
+  return (
+    INDEXABLE_HOSTS.has(hostname) ||
+    (hostname.endsWith(DEV_HOST_SUFFIX) && hostname.length > DEV_HOST_SUFFIX.length)
+  );
+}
+
+/**
+ * 注入 Cache-Control 激活 Cloudflare Crawler Hints，并将非白名单域名
+ * （如 workers.dev 预览域名）301 重定向到主站同路径，避免重复内容稀释 SEO。
  * @param event SvelteKit 请求事件
  * @param resolve 后续处理链
  */
 export const handle: Handle = async ({ event, resolve }) => {
+  if (!isIndexableHost(event.url.host)) {
+    const target = new URL(event.request.url);
+    target.protocol = 'https:';
+    target.host = PRIMARY_HOST;
+    return new Response(null, {
+      status: 301,
+      headers: { location: target.toString() },
+    });
+  }
   if (event.request.method === 'GET' && SITEMAP_ROUTES.has(event.url.pathname)) {
     event.setHeaders({
       'cache-control': `public, max-age=${CACHE_MAX_AGE}, must-revalidate`,
