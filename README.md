@@ -1,6 +1,7 @@
 # Open CCW
 
 [官网链接直达 https://ccw.kivotos.qzz.io](https://ccw.kivotos.qzz.io)
+[官网2链接直达 https://openccw.dpdns.org](https://openccw.dpdns.org)
 
 一款开源的第三方 CCW 启动器，提供账号管理、OAuth 一键登录、每日签到等功能。基于 SvelteKit 构建，部署在 Cloudflare Workers 上。
 
