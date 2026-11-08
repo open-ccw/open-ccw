@@ -6,7 +6,6 @@
 
 一款开源的第三方 CCW 启动器，提供账号管理、OAuth 一键登录、每日签到等功能。基于 SvelteKit 构建，部署在 Cloudflare Workers 上。
 
-
 ## 功能
 
 - **多账号管理** — 支持注册多个 CCW 账号，本地加密存储 Token（PBKDF2 + AES-256-GCM）
