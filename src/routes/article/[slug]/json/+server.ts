@@ -22,7 +22,7 @@ export const GET: RequestHandler = async ({ params }) => {
     }
   }
   catch(e){
-    return error(404, '未获取到文章数据'+String(e);
+    return error(404, '未获取到文章数据'+String(e));
   }
   const cachedTest = await cache.match(
     new Request(articleCacheKey(params.slug), {
@@ -33,7 +33,7 @@ export const GET: RequestHandler = async ({ params }) => {
   );
   if (cachedTest) {
     console.log('使用缓存', params.slug);
-    const cachedRes = (await cache.match(articleCacheKey(params.slug)))!
+    const cachedRes = (await cache.match(articleCacheKey(params.slug)))!.clone();
     cachedRes.headers.set('Cache-Control', 'no-cache, max-age=36000')
     return cachedRes;
   }
