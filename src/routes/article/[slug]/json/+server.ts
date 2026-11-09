@@ -43,6 +43,7 @@ export const GET: RequestHandler = async ({ params }) => {
     headers: {
       'Content-Type': 'application/json; charset=utf-8',
       'X-Article-Cache': 'MISSED',
+      'Cache-Control': 'no-cache, max-age=36000',
     },
   });
 };
