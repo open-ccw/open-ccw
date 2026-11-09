@@ -11,7 +11,10 @@ export function indexnow(paths: string[]) {
           keyLocation: `https://${Host}/${API_KEY}.txt`,
           urlList: paths.map((path) => `https://${Host}/${path}`),
         }),
-        method: "POST"
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+        }
       }),
     ),
   );
