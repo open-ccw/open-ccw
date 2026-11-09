@@ -33,9 +33,14 @@ export const GET: RequestHandler = async ({ params }) => {
   );
   if (cachedTest) {
     console.log('使用缓存', params.slug);
-    const cachedRes = (await cache.match(articleCacheKey(params.slug)))!.clone();
-    cachedRes.headers.set('Cache-Control', 'no-cache, max-age=36000')
-    return cachedRes;
+    const cached = await cache.match(articleCacheKey(params.slug)).then(r=>r!.json());
+    return Response.json(cached, {
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-Article-Cache': 'HIT',
+        'Cache-Control': 'no-cache, max-age=36000',
+      },
+    });
   }
 
   const article = await resolveArticleAndRefreshCache(cache, params.slug, updatedAt);
