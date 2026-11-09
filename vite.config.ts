@@ -12,7 +12,10 @@ export default defineConfig({
         runes: ({ filename }) =>
           filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
       },
-      adapter: adapter(),
+      adapter: adapter({
+        config: './wrangler.jsonc',
+        platformProxy: {},
+      }),
       serviceWorker: {
         register: false,
       },
@@ -21,11 +24,6 @@ export default defineConfig({
   build: {
     minify: true,
     sourcemap: true,
-    rollupOptions: {
-      output: {
-        experimentalMinChunkSize: 20 * 1024, // 20KB
-      },
-    },
   },
   server: {
     cors: {
