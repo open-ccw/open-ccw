@@ -1,10 +1,7 @@
 const API_KEY = 'e13f190b8bf84161b3b1acc7cc7a65cd';
 const HOSTS = ['ccw.kivotos.qzz.io', 'openccw.dpdns.org'];
 
-export function indexnow(paths: string | string[]) {
-  if (!Array.isArray(paths)) {
-    paths = [paths];
-  }
+export function indexnow(paths: string[]) {
   return Promise.all(
     HOSTS.map((Host) =>
       fetch('https://api.indexnow.org/IndexNow', {
@@ -14,6 +11,7 @@ export function indexnow(paths: string | string[]) {
           keyLocation: `https://${Host}/${API_KEY}.txt`,
           urlList: paths.map((path) => `https://${Host}/${path}`),
         }),
+        method: "POST"
       }),
     ),
   );
