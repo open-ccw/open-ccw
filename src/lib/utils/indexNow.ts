@@ -13,7 +13,7 @@ export function indexnow(paths: string[]) {
         }),
         method: "POST",
         headers: {
-          'Content-Type': 'application/json; charset=utf-8',
+          'Content-Type': 'application/json', // 去掉了 charset，避免严格校验
         }
       }),
     ),
