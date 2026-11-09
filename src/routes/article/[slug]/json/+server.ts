@@ -14,9 +14,15 @@ function articleCacheKey(slug: string) {
 
 export const GET: RequestHandler = async ({ params }) => {
   const cache = await caches.open('Internal:Article');
-  const { updatedAt } = await communityWeb.getPostDetail(params.slug);
-  if (!updatedAt) {
-    return error(404, '未获取到文章数据');
+  let updatedAt = 0;
+  try {
+    updatedAt = await communityWeb.getPostDetail(params.slug).then(res=>res.updatedAt);
+    if (!updatedAt) {
+      return error(404, '未获取到文章数据');
+    }
+  }
+  catch(e){
+    return error(404, '未获取到文章数据'+String(e);
   }
   const cachedTest = await cache.match(
     new Request(articleCacheKey(params.slug), {
@@ -28,7 +34,7 @@ export const GET: RequestHandler = async ({ params }) => {
   if (cachedTest) {
     console.log('使用缓存', params.slug);
     const cachedRes = (await cache.match(articleCacheKey(params.slug)))!
-    cachedRes.headers.set('Cache-Control', 'private, max-age=36000')
+    cachedRes.headers.set('Cache-Control', 'no-cache, max-age=36000')
     return cachedRes;
   }
 
