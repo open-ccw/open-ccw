@@ -14,10 +14,6 @@ function articleCacheKey(slug: string) {
 
 export const GET: RequestHandler = async ({ params }) => {
   const cache = await caches.open('Internal:Article');
-  // const cached = await articleCache.match(`https://learn.ccw.site/article/${params.slug}`);
-  // if (cached) {
-  //   return Response.json({ html: await cached.text(), cached: true });
-  // }
   const { updatedAt } = await communityWeb.getPostDetail(params.slug);
   if (!updatedAt) {
     return error(404, '未获取到文章数据');
@@ -36,7 +32,10 @@ export const GET: RequestHandler = async ({ params }) => {
 
   const article = await resolveArticleAndRefreshCache(cache, params.slug, updatedAt);
   return Response.json(article, {
-    headers: { 'Content-Type': 'application/json; charset=utf-8' },
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'X-Article-Cache': 'MISSED',
+    },
   });
 };
 
@@ -47,6 +46,7 @@ async function resolveArticleAndRefreshCache(cache: Cache, slug: string, ts: num
     headers: {
       Etag: md5(`ts-${ts}`),
       'Cache-Control': 'public, max-age=36000',
+      'X-Article-Cache': 'HIT',
     },
   });
   await cache.put(articleCacheKey(slug), response);
