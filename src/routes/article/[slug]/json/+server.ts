@@ -18,16 +18,18 @@ export const GET: RequestHandler = async ({ params }) => {
   if (!updatedAt) {
     return error(404, '未获取到文章数据');
   }
-  const cached = await cache.match(
+  const cachedTest = await cache.match(
     new Request(articleCacheKey(params.slug), {
       headers: {
         'If-None-Match': md5(`ts-${updatedAt}`),
       },
     }),
   );
-  if (cached) {
+  if (cachedTest) {
     console.log('使用缓存', params.slug);
-    return (await cache.match(articleCacheKey(params.slug)))!;
+    const cachedRes = (await cache.match(articleCacheKey(params.slug)))!
+    cachedRes.headers.set('Cache-Control', 'private, max-age=36000')
+    return cachedRes;
   }
 
   const article = await resolveArticleAndRefreshCache(cache, params.slug, updatedAt);
