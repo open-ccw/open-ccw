@@ -16,7 +16,17 @@
     children: Snippet;
   } = $props();
 
-  const url = $derived(commentId ? `${href}?${new URLSearchParams({ comment: commentId })}` : href);
+  const url = $derived(parseUrl(href));
+
+  function parseUrl(url: string, commentId?: string) {
+    if (url.startsWith('https://www.ccw.site/post/')) {
+      url = url.replace('https://www.ccw.site/post/', '/article/');
+    }
+    if (commentId) {
+      return `${url}?${new URLSearchParams({ comment: commentId })}`;
+    }
+    return url;
+  }
 </script>
 
 <a href={url} {target} class="text-primary underline">

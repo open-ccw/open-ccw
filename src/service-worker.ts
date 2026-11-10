@@ -19,8 +19,8 @@ const CACHE = `cache-${version}`;
 
 const ASSETS = [
   ...immutable.map((asset) => resolve(asset.path)), // the app itself
-  ...assets.map((asset) => resolve(asset.path)), // the static directory
-  ...prerendered.map((asset) => resolve(asset.path)), // prerendered pages/endpoints
+  // ...assets.map((asset) => resolve(asset.path)), // the static directory
+  // ...prerendered.map((asset) => resolve(asset.path)), // prerendered pages/endpoints
 ];
 
 self.addEventListener('install', (event) => {

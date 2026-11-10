@@ -1,7 +1,7 @@
 const API_KEY = 'e13f190b8bf84161b3b1acc7cc7a65cd';
 const HOSTS = ['ccw.kivotos.qzz.io', 'openccw.dpdns.org'];
 
-export function indexnow(paths: string[]) {
+export function indexNow(paths: string[]) {
   return Promise.all(
     HOSTS.map((Host) =>
       fetch('https://api.indexnow.org/IndexNow', {
@@ -9,7 +9,6 @@ export function indexnow(paths: string[]) {
         headers: {
           'Content-Type': 'application/json; charset=utf-8',
         },
-        // Host 是受保护头，Workers fetch 中不可显式设置（会被忽略甚至报错），交给运行时自动生成
         body: JSON.stringify({
           host: Host,
           key: API_KEY,
@@ -17,6 +16,11 @@ export function indexnow(paths: string[]) {
           // 规整前导斜杠，避免路径出现双斜杠
           urlList: paths.map((path) => `https://${Host}/${path.replace(/^\/+/, '')}`),
         }),
+      }).then((res) => {
+        if (!res.ok) {
+          console.error(HOSTS, res.status);
+        }
+        return res;
       }),
     ),
   );

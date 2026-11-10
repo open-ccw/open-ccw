@@ -1,11 +1,12 @@
 import { error } from '@sveltejs/kit';
 import type { PageServerLoad } from './$types';
-import { fetchArticle } from '#lib/article/fetchArticle';
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load: PageServerLoad = async ({ url, fetch, params, setHeaders, request }) => {
   try {
-    const payload = await fetchArticle(params.slug);
-    setHeaders({ 'cache-control': 'public, max-age=300' });
+    const res = await fetch(url.pathname + '/json');
+    const payload = await res.json();
+    setHeaders({ 'cache-control': 'public, max-age=300', Etag: res.headers.get('Etag') || '' });
+    setHeaders({ 'Server-Timing': res.headers.get('Server-Timing') || '' });
     return { article: payload.article, tag: payload.tag ?? null };
   } catch (cause) {
     console.error(`文章加载失败：${params.slug}`, cause);
