@@ -14,7 +14,7 @@ function articleCacheKey(slug: string) {
 
 export const GET: RequestHandler = async (ctx) => {
   try{
-    return respond(ctx):
+    return respond(ctx);
   }
   catch(e){
     console.error(e);
