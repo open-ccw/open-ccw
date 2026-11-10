@@ -29,8 +29,10 @@
   }
 </script>
 
-<a href={url} {target} class="text-primary underline">
-  {@render children()}
+<a href={url} {target} class="text-primary underline flex gap-2">
+  <span>
+    {@render children()}
+  </span>
   {#if commentId}
     <svg
       viewBox="0 0 20 20"
@@ -42,5 +44,8 @@
         fill="currentColor"
       ></path></svg
     >
+  {/if}
+  {#if url.startsWith('http')}
+    ↗
   {/if}
 </a>
