@@ -26,6 +26,10 @@ export interface ArticleBlock {
 /** 富文本实体的数据，不同实体类型字段不同 */
 export interface ArticleEntityData {
   url?: string;
+  href?: string;
+  icon?: string;
+  description?: string;
+  linkType?: string;
   title?: string;
   imageType?: string;
   videoType?: string;

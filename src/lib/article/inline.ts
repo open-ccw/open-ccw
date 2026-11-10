@@ -1,4 +1,5 @@
 import type { ArticleEntity } from './types';
+import { safeHttpUrl } from './url.ts';
 
 /** 切分后的内联片段 */
 export interface InlineSegment {
@@ -8,6 +9,8 @@ export interface InlineSegment {
   strike: boolean;
   /** 该片段关联的富文本实体，例如提及、作品卡片 */
   entity?: ArticleEntity;
+  /** 关联链接实体时可直接渲染的地址 */
+  href?: string;
 }
 
 /** 单个富文本块的渲染模型 */
@@ -54,13 +57,16 @@ export function splitBlock(
       range.offset <= start && start < range.offset + range.length;
     const styles = new Set(styleRanges.filter(covers).map((range) => range.style));
     const entityRange = entityRanges.find(covers);
+    const entity = entityRange ? entityMap[String(entityRange.key)] : undefined;
+    const isLink = entity ? entity.type.toLowerCase() === 'link' : false;
 
     segments.push({
       text: block.text.slice(start, end),
       bold: styles.has('BOLD'),
       underline: styles.has('UNDERLINE'),
       strike: styles.has('STRIKETHROUGH'),
-      entity: entityRange ? entityMap[String(entityRange.key)] : undefined,
+      entity,
+      href: isLink ? (safeHttpUrl(entity?.data.url ?? entity?.data.href) ?? undefined) : undefined,
     });
   }
 

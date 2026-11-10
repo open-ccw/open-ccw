@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { ArticleEntity } from './types';
+  import { safeHttpUrl } from './url.ts';
 
   let { entity }: { entity: ArticleEntity } = $props();
 
@@ -19,6 +20,9 @@
 
   const embedUrl = $derived(safeEmbedUrl(entity.data.url));
   const authorUserId = $derived(entity.data.mention?.userId ?? entity.data.userId);
+  const cardUrl = $derived(safeHttpUrl(entity.data.url ?? entity.data.href));
+  const cardHost = $derived(cardUrl ? new URL(cardUrl).hostname : '');
+  const iconUrl = $derived(safeHttpUrl(entity.data.icon));
 </script>
 
 {#if entity.type === 'images' && entity.data.url}
@@ -66,6 +70,21 @@
   >
     <span class="text-text-primary font-medium">作品卡片</span>
     <span>在 Open CCW 中查看该作品</span>
+  </a>
+{:else if entity.type === 'link' && cardUrl}
+  <a
+    href={cardUrl}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="border-border bg-bg-secondary text-text-secondary hover:bg-bg-tertiary flex min-w-0 items-center gap-3 rounded-lg border px-4 py-3 text-sm transition-colors duration-100"
+  >
+    {#if iconUrl}
+      <img src={iconUrl} alt="" loading="lazy" class="size-4 shrink-0 rounded" />
+    {/if}
+    <span class="text-text-primary min-w-0 truncate font-medium">
+      {entity.data.title || cardHost}
+    </span>
+    <span class="ml-auto shrink-0 text-xs">{cardHost}</span>
   </a>
 {:else if entity.type === 'user' && authorUserId}
   <a

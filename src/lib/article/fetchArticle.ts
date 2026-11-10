@@ -1,19 +1,40 @@
 import type { Article, ArticlePayload } from './types';
+import { detectPayloadKind, findContainerByKey, parseFlightModels } from './rsc.ts';
+import { normalizeArticleContent } from './content.ts';
 
 /** CCW 创作者学院站点源 */
 const LEARN_ORIGIN = 'https://learn.ccw.site';
 
-/** Next.js RSC 数据推送片段 */
-const RSC_PUSH_RE = /self\.__next_f\.push\((.*?)\)<\/script>/g;
+/** 无浏览器 UA 时上游只返回空壳 HTML，拿不到 RSC 流 */
+const BROWSER_UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36';
 
-/** 上游原始负载：content 可能是 JSON 字符串，也可能是已解析对象 */
-interface RawArticle extends Omit<Article, 'content'> {
-  content: Article['content'] | string;
-}
+/** 上游文章对象：content 可能是 JSON 字符串，也可能是已解析对象 */
+type RawArticle = Omit<Article, 'content'> & { content: unknown };
 
-interface RawPayload {
-  article?: RawArticle;
-  tag?: string;
+/**
+ * 解析文章负载：从包含 article 字段的容器对象上同时取 slug 与 tag
+ * @param models 已解引用的模型值
+ * @returns 文章负载
+ * @throws 未找到文章数据时抛出
+ */
+function pickPayload(models: Array<{ id: string; value: unknown }>): ArticlePayload {
+  // 文章对象位于 Suspense 边界内部，其所在容器同时携带 slug 与 tag
+  const holder = findContainerByKey(
+    models,
+    'article',
+    (value) => typeof value.title === 'string' && typeof value.slug === 'string',
+  );
+  if (!holder) {
+    throw new Error('未在页面中找到文章数据');
+  }
+
+  const article = holder.article as unknown as RawArticle;
+  const slug = typeof holder.slug === 'string' ? holder.slug : article.slug;
+  return {
+    article: { ...article, slug, content: normalizeArticleContent(article.content) },
+    tag: typeof holder.tag === 'string' ? holder.tag : undefined,
+  };
 }
 
 /**
@@ -23,31 +44,14 @@ interface RawPayload {
  * @throws 页面中没有可识别的文章数据时抛出
  */
 export function parseArticlePayload(html: string): ArticlePayload {
-  const chunks = Array.from(html.matchAll(RSC_PUSH_RE), (match) => match[1])
-    .filter((chunk) => chunk[1] === '1')
-    .flatMap((chunk) => (JSON.parse(chunk) as [number, string])[1].split('\x0a'))
-    .filter(Boolean);
-
-  const last = chunks.at(-1);
-  if (!last) {
-    throw new Error('未在页面中找到文章数据');
+  const kind = detectPayloadKind(html);
+  if (kind === 'UNKNOWN') {
+    throw new Error('页面不是可识别的 Next.js 数据负载');
   }
-
-  const parsed = JSON.parse(last.substring(3) || '[]') as unknown[];
-  const payload = parsed[3] as RawPayload | undefined;
-  if (!payload?.article) {
-    throw new Error('文章数据结构不符合预期');
+  if (kind === 'PAGES_ROUTER') {
+    throw new Error('页面使用了 Pages Router 负载，暂不支持');
   }
-
-  const rawContent = payload.article.content;
-  const content = (
-    typeof rawContent === 'string' ? JSON.parse(rawContent) : rawContent
-  ) as Article['content'];
-  if (!content || !Array.isArray(content.blocks)) {
-    throw new Error('文章正文解析失败');
-  }
-
-  return { article: { ...payload.article, content }, tag: payload.tag };
+  return pickPayload(parseFlightModels(html));
 }
 
 /**
@@ -56,8 +60,14 @@ export function parseArticlePayload(html: string): ArticlePayload {
  * @returns 文章负载
  */
 export async function fetchArticle(slug: string): Promise<ArticlePayload> {
-  const url = new URL(`/article/${encodeURIComponent(slug)}`, LEARN_ORIGIN);
-  const response = await fetch(url);
+  const url = new URL(`/post/${encodeURIComponent(slug)}`, LEARN_ORIGIN);
+  const response = await fetch(url, {
+    headers: {
+      'user-agent': BROWSER_UA,
+      accept: 'text/html,application/xhtml+xml',
+      'accept-language': 'zh-CN,zh;q=0.9',
+    },
+  });
   if (!response.ok) {
     throw new Error(`上游返回 ${response.status}`);
   }
