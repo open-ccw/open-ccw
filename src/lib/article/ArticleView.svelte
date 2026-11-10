@@ -34,6 +34,15 @@
       >
         {segment.text.trim() || plainName(segment.entity.data.mention?.name)}
       </a>
+    {:else if segment.href}
+      <a
+        href={segment.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-primary transition-colors duration-100 hover:underline"
+      >
+        {segment.text}
+      </a>
     {:else if segment.bold || segment.underline || segment.strike}
       <span
         class={[
