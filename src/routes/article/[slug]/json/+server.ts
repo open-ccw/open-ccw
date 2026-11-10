@@ -34,6 +34,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
       status: 304,
       headers: {
         'Server-Timing': `metaAPI;dur=${ST_ts_meta_api - ST_ts_start}`,
+        Etag: latestEtag,
       },
     });
   }
