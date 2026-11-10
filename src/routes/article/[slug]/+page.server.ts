@@ -8,8 +8,8 @@ export const load: PageServerLoad = async ({ url, fetch, params, setHeaders, req
 
     setHeaders({
       'cache-control': 'public, max-age=300',
-      Etag: res.headers.get('Etag') || '',
-      'Server-Timing': res.headers.get('Server-Timing') || '',
+      etag: res.headers.get('Etag') || '',
+      'server-timing': res.headers.get('Server-Timing') || '',
     });
     
     return { article: payload.article, tag: payload.tag ?? null };
