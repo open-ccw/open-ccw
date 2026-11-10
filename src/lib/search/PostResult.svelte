@@ -9,7 +9,7 @@
 
 <div class="h-18 md:h-24">
   <a
-    href="https://ccw.site/post/{item.slug}"
+    href="/article/{item.slug}"
     class="bg-bg-secondary border-border flex h-full items-center gap-4 rounded-xl border p-2 shadow transition-all hover:border-indigo-400 hover:shadow-md"
   >
     {#if item.featureImage}
