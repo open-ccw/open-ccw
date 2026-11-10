@@ -28,7 +28,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
 
   const ST_ts_meta_api = Date.now();
 
-  const latestEtag = `"${md5(`ts-${updatedAt}`)}"`;
+  const latestEtag = `W/"${md5(`ts-${updatedAt}`)}"`;
   if (request.headers.get('If-None-Match') == latestEtag) {
     return new Response(null, {
       status: 304,
