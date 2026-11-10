@@ -33,6 +33,8 @@ export const GET: RequestHandler = async ({ params, request }) => {
     return new Response(null, {
       status: 304,
       headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'X-Article-Cache': 'HIT',
         'Server-Timing': `metaAPI;dur=${ST_ts_meta_api - ST_ts_start}`,
         Etag: latestEtag,
       },
