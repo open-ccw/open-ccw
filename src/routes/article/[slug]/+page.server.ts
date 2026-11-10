@@ -5,8 +5,13 @@ export const load: PageServerLoad = async ({ url, fetch, params, setHeaders, req
   try {
     const res = await fetch(url.pathname + '/json');
     const payload = await res.json();
-    setHeaders({ 'cache-control': 'public, max-age=300', Etag: res.headers.get('Etag') || '' });
-    setHeaders({ 'Server-Timing': res.headers.get('Server-Timing') || '' });
+
+    setHeaders({
+      'cache-control': 'public, max-age=300',
+      Etag: res.headers.get('Etag') || '',
+      'Server-Timing': res.headers.get('Server-Timing') || '',
+    });
+    
     return { article: payload.article, tag: payload.tag ?? null };
   } catch (cause) {
     console.error(`文章加载失败：${params.slug}`, cause);
