@@ -313,14 +313,14 @@
       {#if page.message && $user.loggedIn}
         回复了你在文章
         <NotificationSubjectLink
-          href="https://ccw.site/post/{page.content.ext.slug}"
+          href="https://www.ccw.site/post/{page.content.ext.slug}"
           commentId={page.triggeredById}>{page.content.subject_outline}</NotificationSubjectLink
         >
         中的留言
       {:else}
         在你的文章
         <NotificationSubjectLink
-          href="https://ccw.site/post/{page.content.ext.slug}"
+          href="https://www.ccw.site/post/{page.content.ext.slug}"
           commentId={page.triggeredById}>{page.content.subject_outline}</NotificationSubjectLink
         >
         下留言:
@@ -344,7 +344,7 @@
 
 {#snippet postVisibilityChange(page: POST_VISIBILITY_CHANGED)}
   <RenderHTML
-    text={page.comment.replace('/post/', 'https://ccw.site/post/')}
+    text={page.comment.replace('/post/', 'https://www.ccw.site/post/')}
     config={{
       ALLOW_UNKNOWN_PROTOCOLS: false,
       ALLOWED_ATTR: ['href', 'target'],
