@@ -12,7 +12,17 @@ function articleCacheKey(slug: string) {
   return `https://article-cache/json/${slug}`;
 }
 
-export const GET: RequestHandler = async ({ params, request }) => {
+export const GET: RequestHandler = async (ctx) => {
+  try{
+    return respond(ctx):
+  }
+  catch(e){
+    console.error(e);
+    return error(500, "内部解析错误");
+  }
+};
+
+const respond: RequestHandler = async ({ params, request }) => {
   const cache = await caches.open('Internal:Article');
   let updatedAt = 0;
 
@@ -51,7 +61,6 @@ export const GET: RequestHandler = async ({ params, request }) => {
   const ST_ts_cache_match = Date.now();
 
   if (cachedTest) {
-    console.log('使用缓存', params.slug);
     const cached = await cache.match(articleCacheKey(params.slug)).then((r) => r!.json());
     return Response.json(cached, {
       headers: {
@@ -75,7 +84,7 @@ export const GET: RequestHandler = async ({ params, request }) => {
       'Server-Timing': `metaAPI;dur=${ST_ts_meta_api - ST_ts_start}, cacheMatch;dur=${ST_ts_cache_match - ST_ts_meta_api}, articleResolve;dur=${ST_ts_resolve_article - ST_ts_cache_match}`,
     },
   });
-};
+}
 
 async function resolveArticleAndRefreshCache(cache: Cache, slug: string, ts: number) {
   console.log('缓存未命中', slug);
