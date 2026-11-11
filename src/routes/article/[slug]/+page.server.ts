@@ -11,7 +11,7 @@ export const load: PageServerLoad = async ({ url, fetch, params, setHeaders, req
       etag: res.headers.get('etag') || '???',
       'server-timing': res.headers.get('server-timing') || '',
     });
-    
+
     return { article: payload.article, tag: payload.tag ?? null };
   } catch (cause) {
     console.error(`文章加载失败：${params.slug}`, cause);

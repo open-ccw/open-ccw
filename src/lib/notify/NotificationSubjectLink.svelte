@@ -29,7 +29,7 @@
   }
 </script>
 
-<a href={url} {target} class="text-primary underline flex gap-2">
+<a href={url} {target} class="text-primary flex gap-2 underline">
   <span>
     {@render children()}
   </span>
