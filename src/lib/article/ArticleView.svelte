@@ -2,6 +2,7 @@
   import type { Article } from './types';
   import { splitBlock, type InlineSegment } from './inline';
   import ArticleEntity from './ArticleEntity.svelte';
+  import AvatarToProfile from '#lib/user/AvatarToProfile.svelte';
 
   let { article }: { article: Article } = $props();
 
@@ -64,18 +65,20 @@
     <h1 class="text-text-primary text-3xl leading-snug font-bold">{article.title}</h1>
 
     <div class="text-text-secondary flex flex-wrap items-center gap-3 text-sm">
-      <a
-        href={`/user/${article.authorOid ?? article.author.oid}`}
-        class="hover:text-text-primary flex items-center gap-2 transition-colors duration-100"
-      >
-        <img
-          src={article.author.avatar}
-          alt={article.author.name}
-          loading="lazy"
-          class="bg-bg-secondary size-8 rounded-full"
-        />
-        <span>{article.author.name}</span>
-      </a>
+      <div class="hover:text-text-primary flex items-center gap-2 transition-colors duration-100">
+        <div class="size-8">
+          <AvatarToProfile
+            oid={article.author.oid}
+            alt={article.author.name}
+            card={true}
+            url={article.author.avatar}
+          />
+        </div>
+
+        <a href={`/user/${article.authorOid ?? article.author.oid}`}>
+          {article.author.name}
+        </a>
+      </div>
       <span aria-hidden="true">·</span>
       <time datetime={new Date(article.publishedAt ?? article.createdAt).toISOString()}>
         {formatDate(article.publishedAt ?? article.createdAt)}

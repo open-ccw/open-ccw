@@ -12,12 +12,12 @@
     "sourceMap": true,
     "strict": true,
     "moduleResolution": "bundler",
-    "types": ["node", "$app/types"],
+    "types": ["node", "$app/types", "./worker-configuration.d.ts"],
     "paths": {
       "#lib": ["./src/lib/index.ts"],
       "#lib/*": ["./src/lib/*"]
     }
   },
   "include": ["./src/**/*"],
-  "exclude": ["./functions/**/*", "src/service-worker.ts", "worker-configuration.d.ts"]
+  "exclude": ["./functions/**/*", "src/service-worker.ts"]
 }

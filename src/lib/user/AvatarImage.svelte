@@ -6,7 +6,7 @@
   } = $props();
 </script>
 
-<div class="relative flex size-full items-center justify-center select-none">
+<div class="relative flex aspect-square size-full items-center justify-center select-none">
   {#if virtual}
     <img
       src={virtual}
