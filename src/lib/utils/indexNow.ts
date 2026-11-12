@@ -12,6 +12,7 @@ export function indexNow(path: string) {
       url.searchParams.set('key', API_KEY);
       const res = await fetch(url, {
         method: 'GET',
+        mode: 'no-cors',
       });
       if (!res.ok) {
         console.error(HOSTS, res.status);
