@@ -7,7 +7,7 @@
 // Ensures that the `$app/...` imports have proper type definitions
 /// <reference types="@sveltejs/kit" />
 
-import { assets, immutable, prerendered } from '$app/manifest';
+import { prerendered } from '$app/manifest';
 import { version } from '$app/env';
 import { resolve } from '$app/paths';
 
@@ -18,9 +18,7 @@ const self = globalThis.self as unknown as ServiceWorkerGlobalScope;
 const CACHE = `cache-${version}`;
 
 const ASSETS = [
-  ...immutable.map((asset) => resolve(asset.path)), // the app itself
-  // ...assets.map((asset) => resolve(asset.path)), // the static directory
-  // ...prerendered.map((asset) => resolve(asset.path)), // prerendered pages/endpoints
+  ...prerendered.map((asset) => resolve(asset.path)), // prerendered pages/endpoints
 ];
 
 self.addEventListener('install', (event) => {
@@ -47,6 +45,7 @@ self.addEventListener('activate', (event) => {
 self.addEventListener('fetch', (event) => {
   // ignore POST requests etc
   if (event.request.method !== 'GET') return;
+  if (event.request.url.startsWith('https://api.indexnow.org')) return;
 
   async function respond() {
     const url = new URL(event.request.url);

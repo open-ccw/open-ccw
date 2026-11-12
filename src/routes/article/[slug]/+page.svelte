@@ -3,6 +3,8 @@
   import type { PageProps } from './$types';
   import ArticleView from '#lib/article/ArticleView.svelte';
   import PageHeader from '#lib/PageHeader.svelte';
+  import { onMount } from 'svelte';
+  import { indexNow } from '#lib/utils/indexNow.ts';
 
   let { data }: PageProps = $props();
 
@@ -11,8 +13,8 @@
   const description = $derived(
     article.excerpt?.trim() ||
       article.content.blocks
-        .filter((block) => block.text.trim() && block.type !== 'atomic')
-        .map((block) => block.text.trim())
+        .filter((block: any) => block.text.trim() && block.type !== 'atomic')
+        .map((block: any) => block.text.trim())
         .join(' ')
         .slice(0, 120) ||
       `${article.title} - 来自 CCW 创作者学院的文章`,
@@ -42,6 +44,12 @@
       keywords: article.keywords ?? undefined,
     }).replace(/</g, '\\u003c'),
   );
+
+  onMount(async () => {
+    if (data.newArticle) {
+      await indexNow(page.url.pathname);
+    }
+  });
 </script>
 
 <svelte:head>
