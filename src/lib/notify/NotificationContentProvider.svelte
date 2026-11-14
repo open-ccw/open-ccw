@@ -109,7 +109,7 @@
   });
 </script>
 
-<div class="inline">
+<div class="inline *:inline">
   {@render component(page as any)}
 </div>
 
@@ -175,7 +175,7 @@
 
 {#snippet creationCommented(page: CREATION_COMMENTED)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       在你的作品
       <NotificationSubjectLink
@@ -194,7 +194,7 @@
 
 {#snippet creationCommentReplied(page: CREATION_COMMENT_REPLIED)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       回复了你在作品
       <NotificationSubjectLink
@@ -220,7 +220,7 @@
 
 {#snippet creationShare(page: CREATION_SHARE)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       向你分享了作品
       <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
@@ -256,35 +256,43 @@
 {/snippet}
 
 {#snippet extensionCommented(page: EXTENSION_COMMENTED)}
-  <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
-  在你的扩展
-  <NotificationSubjectLink
-    href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
-    commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
-  >
-  下留言
-  <div class="bg-bg-secondary border-border w-full rounded-lg border p-2 whitespace-break-spaces">
-    <RenderComment comment={page.content.comments}></RenderComment>
+  <div class="flex flex-col">
+    <div class="*:inline">
+      <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
+      在你的扩展
+      <NotificationSubjectLink
+        href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
+        commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
+      >
+      下留言
+    </div>
+    <div class="bg-bg-secondary border-border w-full rounded-lg border p-2 whitespace-break-spaces">
+      <RenderComment comment={page.content.comments}></RenderComment>
+    </div>
   </div>
 {/snippet}
 
 {#snippet extensionCommentReplied(page: EXTENSION_COMMENT_REPLIED)}
-  <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
-  回复了你在扩展
-  <NotificationSubjectLink
-    href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
-    commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
-  >
-  的评论
-  <div class="bg-bg-secondary border-border w-full rounded-t-lg border p-2">
-    <RenderComment comment={page.content.comments}></RenderComment>
-  </div>
-  {#if $user.loggedIn}
-    <div class="bg-bg-tertiary text-text-secondary border-border w-full rounded-b-lg border p-2">
-      <a href="/user/{$user.oid}" class={userLinkClass}>@{$user.name}</a>:
-      <RenderComment comment={page.message}></RenderComment>
+  <div class="flex flex-col">
+    <div class="*:inline">
+      <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
+      回复了你在扩展
+      <NotificationSubjectLink
+        href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
+        commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
+      >
+      的评论
     </div>
-  {/if}
+    <div class="bg-bg-secondary border-border w-full rounded-t-lg border p-2">
+      <RenderComment comment={page.content.comments}></RenderComment>
+    </div>
+    {#if $user.loggedIn}
+      <div class="bg-bg-tertiary text-text-secondary border-border w-full rounded-b-lg border p-2">
+        <a href="/user/{$user.oid}" class={userLinkClass}>@{$user.name}</a>:
+        <RenderComment comment={page.message}></RenderComment>
+      </div>
+    {/if}
+  </div>
 {/snippet}
 
 {#snippet postFavorite(page: POST_FAVORITE)}
@@ -308,7 +316,7 @@
 
 {#snippet postComment(page: POST_COMMENT)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       {#if page.message && $user.loggedIn}
         回复了你在文章
@@ -372,7 +380,7 @@
 
 {#snippet teamCommented(page: TEAM_COMMENTED)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       {#if page.message && $user.loggedIn}
         回复了你在战队
@@ -409,7 +417,7 @@
 
 {#snippet friendInvite(page: FRIEND_INVITE)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       向你发出了邀请
       <RenderHTML text={page.message}></RenderHTML>
@@ -419,7 +427,7 @@
 
 {#snippet profileLeaveWords(page: PROFILE_LEAVE_WORDS)}
   <div class="flex w-full flex-col">
-    <div class="inline">
+    <div class="*:inline">
       <a href="/user/{page.senderInfo.oid}" class={userLinkClass}>{page.senderInfo.name}</a>
       {#if page.message && $user.loggedIn}
         回复了你在
