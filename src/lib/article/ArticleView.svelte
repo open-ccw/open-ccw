@@ -52,8 +52,10 @@
           segment.strike && 'line-through',
         ]
           .filter(Boolean)
-          .join(' ')}>{segment.text}</span
+          .join(' ')}
       >
+        {segment.text}
+      </span>
     {:else}
       {segment.text}
     {/if}

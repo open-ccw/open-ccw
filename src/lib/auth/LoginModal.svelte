@@ -210,15 +210,17 @@
                   />
                 </div>
                 {#if account.displayName}
-                  <span class="text-text-primary w-full truncate text-center text-xs font-medium"
-                    >{account.displayName}</span
-                  >
+                  <span class="text-text-primary w-full truncate text-center text-xs font-medium">
+                    {account.displayName}
+                  </span>
                 {/if}
                 <span
                   class="text-text-secondary w-full truncate text-center text-xs {account.displayName
                     ? '-mt-1.5'
-                    : ''}">{displayAccountName(account.name)}</span
+                    : ''}"
                 >
+                  {displayAccountName(account.name)}
+                </span>
                 {#if menuAccount === account.name}
                   <button
                     type="button"
@@ -252,11 +254,11 @@
 
         {#if selectedAccount}
           <div>
-            <label for="password" class="text-text-primary mb-2 block text-sm"
-              >密钥<span class="text-text-secondary ml-1 text-xs"
-                >（已启用快捷登录的账号可留空）</span
-              ></label
-            >
+            <label for="password" class="text-text-primary mb-2 block text-sm">
+              密钥<span class="text-text-secondary ml-1 text-xs">
+                （已启用快捷登录的账号可留空）
+              </span>
+            </label>
             <input
               id="password"
               type="password"
@@ -298,8 +300,9 @@
         <a
           href="/register"
           class="text-info hover:text-primary cursor-pointer underline transition-colors"
-          >注册新账号</a
         >
+          注册新账号
+        </a>
       </div>
     </div>
   </div>

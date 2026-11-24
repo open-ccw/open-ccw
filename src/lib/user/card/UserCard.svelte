@@ -73,8 +73,9 @@
 
       {#if stats}
         <div class="text-text-secondary mt-2 flex gap-4 text-xs">
-          <span>关注 <span class="text-text-primary font-medium">{stats.followingCount}</span></span
-          >
+          <span>
+            关注 <span class="text-text-primary font-medium">{stats.followingCount}</span>
+          </span>
           <span>粉丝 <span class="text-text-primary font-medium">{stats.followerCount}</span></span>
         </div>
       {/if}

@@ -115,7 +115,9 @@
   {#if error}
     <span
       class="text-error border-error bg-bg-secondary absolute top-8 h-fit rounded-xl border p-2"
-      transition:scale>{error}</span
+      transition:scale
     >
+      {error}
+    </span>
   {/if}
 </div>
