@@ -188,8 +188,9 @@
           >
             <th
               class="bg-bg-secondary border-border-strong sticky left-0 z-10 flex size-12 items-center justify-center border-r py-3 text-center"
-              >选择</th
             >
+              选择
+            </th>
             <th class="w-fit px-4 py-3 text-center">ID</th>
             <th class="w-min-44 w-fit px-4 py-3 text-left">设备</th>
             <th class="w-min-28 w-fit px-4 py-3 text-left">浏览器</th>

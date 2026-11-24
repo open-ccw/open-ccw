@@ -39,8 +39,10 @@
             ],
             400,
           );
-        }}>#{replyToId}</button
+        }}
       >
+        #{replyToId}
+      </button>
       <span>回复 </span>
       <span class="text-primary">{receiverName}</span>
     {/if}

@@ -120,14 +120,14 @@
 {#snippet ____PLACEHOLDER(page: any)}
   <div class="flex flex-col gap-1">
     <div class="inline">
-      <a href="/user/{page.senderInfo?.oid}" class={userLinkClass}
-        >{page.senderInfo?.name ?? '用户'}</a
-      >
+      <a href="/user/{page.senderInfo?.oid}" class={userLinkClass}>
+        {page.senderInfo?.name ?? '用户'}
+      </a>
       <span class="text-text-placeholder">发来了一条新通知</span>
     </div>
-    <span class="text-text-placeholder text-xs"
-      >（该通知类型{page.contentCategory}暂未支持，点击展开查看原始数据）</span
-    >
+    <span class="text-text-placeholder text-xs">
+      （该通知类型{page.contentCategory}暂未支持，点击展开查看原始数据）
+    </span>
     <details class="text-text-placeholder text-xs">
       <summary class="hover:text-text-secondary cursor-pointer">查看原始数据</summary>
       <pre
@@ -262,8 +262,10 @@
       在你的扩展
       <NotificationSubjectLink
         href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
-        commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
+        commentId={page.triggeredById}
       >
+        {page.extensionInfo.name}
+      </NotificationSubjectLink>
       下留言
     </div>
     <div class="bg-bg-secondary border-border w-full rounded-lg border p-2 whitespace-break-spaces">
@@ -279,8 +281,10 @@
       回复了你在扩展
       <NotificationSubjectLink
         href="https://assets.ccw.site/extension/{page.extensionInfo.eid}"
-        commentId={page.triggeredById}>{page.extensionInfo.name}</NotificationSubjectLink
+        commentId={page.triggeredById}
       >
+        {page.extensionInfo.name}
+      </NotificationSubjectLink>
       的评论
     </div>
     <div class="bg-bg-secondary border-border w-full rounded-t-lg border p-2">
@@ -322,15 +326,19 @@
         回复了你在文章
         <NotificationSubjectLink
           href="https://www.ccw.site/post/{page.content.ext.slug}"
-          commentId={page.triggeredById}>{page.content.subject_outline}</NotificationSubjectLink
+          commentId={page.triggeredById}
         >
+          {page.content.subject_outline}
+        </NotificationSubjectLink>
         中的留言
       {:else}
         在你的文章
         <NotificationSubjectLink
           href="https://www.ccw.site/post/{page.content.ext.slug}"
-          commentId={page.triggeredById}>{page.content.subject_outline}</NotificationSubjectLink
+          commentId={page.triggeredById}
         >
+          {page.content.subject_outline}
+        </NotificationSubjectLink>
         下留言:
       {/if}
     </div>
@@ -387,16 +395,20 @@
         <NotificationSubjectLink
           href="https://www.ccw.site/gamejam/teamDetail?id={page.content.subject_oid}"
           commentId={page.triggeredById}
-          target="_blank">{page.content.subject_outline}</NotificationSubjectLink
+          target="_blank"
         >
+          {page.content.subject_outline}
+        </NotificationSubjectLink>
         中的留言
       {:else}
         在你的战队
         <NotificationSubjectLink
           href="https://www.ccw.site/gamejam/teamDetail?id={page.content.subject_oid}"
           commentId={page.triggeredById}
-          target="_blank">{page.content.subject_outline}</NotificationSubjectLink
-        >下留言:
+          target="_blank"
+        >
+          {page.content.subject_outline}
+        </NotificationSubjectLink>下留言:
       {/if}
     </div>
     <div
@@ -433,15 +445,19 @@
         回复了你在
         <NotificationSubjectLink
           href="/user/{page.content.subject_oid}"
-          commentId={page.triggeredById}>留言板</NotificationSubjectLink
+          commentId={page.triggeredById}
         >
+          留言板
+        </NotificationSubjectLink>
         中的留言
       {:else}
         在你的
         <NotificationSubjectLink
           href="/user/{$user.loggedIn && $user.oid}"
-          commentId={page.triggeredById}>留言板</NotificationSubjectLink
+          commentId={page.triggeredById}
         >
+          留言板
+        </NotificationSubjectLink>
         下留言:
       {/if}
     </div>

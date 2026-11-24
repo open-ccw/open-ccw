@@ -35,8 +35,10 @@
           previewSafeHTML = false;
           renderAsHTML = false;
         }
-      }}>{buttonTip}</button
+      }}
     >
+      {buttonTip}
+    </button>
   </div>
   {#if renderAsHTML}
     <p

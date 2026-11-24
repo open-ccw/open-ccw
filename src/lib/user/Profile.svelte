@@ -183,8 +183,9 @@
                     {#if lang.trim()}
                       <span
                         class="text-text-primary/80 rounded-full bg-indigo-500/20 px-2.5 py-1 text-xs"
-                        >{lang.trim()}</span
                       >
+                        {lang.trim()}
+                      </span>
                     {/if}
                   {/each}
                 </div>
@@ -198,8 +199,9 @@
                     {#if hobby.trim()}
                       <span
                         class="text-text-primary/80 rounded-full bg-purple-500/20 px-2.5 py-1 text-xs"
-                        >{hobby.trim()}</span
                       >
+                        {hobby.trim()}
+                      </span>
                     {/if}
                   {/each}
                 </div>

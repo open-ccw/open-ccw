@@ -145,8 +145,10 @@
           <button
             type="button"
             class="text-text-placeholder hover:text-error shrink-0 cursor-pointer transition-colors duration-100"
-            onclick={onCancelReply}>取消</button
+            onclick={onCancelReply}
           >
+            取消
+          </button>
         </div>
       {/if}
       <div class="input-group w-auto">
@@ -166,8 +168,10 @@
         <button
           class="button--submit {submitting ? 'cursor-not-allowed' : 'cursor-pointer'}"
           disabled={submitting}
-          onclick={submit}>{replyTarget ? '回复' : '评论'}</button
+          onclick={submit}
         >
+          {replyTarget ? '回复' : '评论'}
+        </button>
       </div>
     </form>
   </div>

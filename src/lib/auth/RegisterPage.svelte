@@ -153,9 +153,9 @@
 
           {#if hasToken()}
             <div class="mt-2">
-              <label for="password" class="text-text-primary mb-2 block text-sm"
-                >密码（加密Token）</label
-              >
+              <label for="password" class="text-text-primary mb-2 block text-sm">
+                密码（加密Token）
+              </label>
               <input
                 id="password"
                 type="password"
@@ -167,9 +167,9 @@
             </div>
 
             <div class="mt-2">
-              <label for="confirm-password" class="text-text-primary mb-2 block text-sm"
-                >确认密码</label
-              >
+              <label for="confirm-password" class="text-text-primary mb-2 block text-sm">
+                确认密码
+              </label>
               <input
                 id="confirm-password"
                 type="password"
