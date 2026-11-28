@@ -10,6 +10,7 @@ import {
 } from '#lib/auth/tokenStore';
 import { setToken } from '#lib/api.ts';
 import { refreshUser } from '#lib/user/userStore.ts';
+import { isDevTokenSession } from '#lib/oauth/devToken.ts';
 import { toast } from '#lib';
 
 /** 提前 30 秒视为过期 */
@@ -81,6 +82,10 @@ export async function freshTokenFor(name: string, tok: string): Promise<string> 
  * @returns 是否实际执行了刷新
  */
 export async function refreshTokenIfExpired(): Promise<boolean> {
+  // 开发临时 token 没有 refresh token，也不允许续期
+  if (isDevTokenSession()) {
+    return false;
+  }
   const name = getActiveAccount();
   if (!name) {
     return false;
@@ -114,7 +119,7 @@ let refreshTimerStarted = false;
  * 之后周期检查，页面从后台切回时也立即检查。仅在浏览器环境且只启动一次。
  */
 export function startTokenRefreshTimer(): void {
-  if (refreshTimerStarted) {
+  if (refreshTimerStarted || isDevTokenSession()) {
     return;
   }
   refreshTimerStarted = true;

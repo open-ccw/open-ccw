@@ -8,6 +8,7 @@
   import { dev } from '$app/env';
   import { browser } from '$app/env';
   import { refreshTokenIfExpired, startTokenRefreshTimer } from '#lib/oauth/refresh.ts';
+  import { applyDevTokenFromUrl } from '#lib/oauth/devToken.ts';
   import ToastHost from '#lib/toast/ToastHost.svelte';
   import SiteFooter from '#lib/SiteFooter.svelte';
 
@@ -17,7 +18,11 @@
     });
   }
 
-  onMount(() => {
+  onMount(async () => {
+    // 开发/preview 的临时 token 只用于调试，不参与 refresh 续期
+    if (await applyDevTokenFromUrl().catch(() => false)) {
+      return;
+    }
     refreshTokenIfExpired().catch(() => {});
     startTokenRefreshTimer();
   });
