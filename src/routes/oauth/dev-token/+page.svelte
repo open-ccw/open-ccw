@@ -74,7 +74,7 @@
 </svelte:head>
 
 <div class="flex min-h-screen w-screen items-center justify-center bg-gray-50 p-6">
-  <div class="w-lg max-w-full rounded-2xl bg-white p-10 text-center shadow-xl">
+  <div class="w-lg max-w-full rounded-lg bg-white p-10 text-center shadow-xl">
     {#if status === 'error'}
       <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-red-100">
         <span class="text-2xl font-bold text-red-500">!</span>

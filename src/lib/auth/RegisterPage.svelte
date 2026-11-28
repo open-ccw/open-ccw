@@ -105,7 +105,7 @@
     class="flex h-screen min-h-fit w-screen items-center justify-center"
     style:background="url({bg}) repeat center/cover"
   >
-    <div class="bg-bg/70 h-fit w-lg rounded-2xl p-8 shadow-xl backdrop-blur-[15px]">
+    <div class="bg-bg/70 h-fit w-lg rounded-lg p-8 shadow-xl backdrop-blur-[15px]">
       {#if success}
         <div class="py-6 text-center">
           <img src={successSvg} alt="success" class="mx-auto mb-4 h-16 w-16 shrink-0" />

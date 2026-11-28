@@ -77,7 +77,7 @@
       </div>
 
       <div
-        class="bg-bg-secondary/50 relative z-10 mx-auto -mt-16 w-[90%] rounded-3xl pt-5 shadow backdrop-blur-[20px]"
+        class="bg-bg-secondary/50 relative z-10 mx-auto -mt-16 w-[90%] rounded-lg pt-5 shadow backdrop-blur-[20px]"
       >
         <div class="flex-col px-6 pb-6">
           <!-- 头像 自我介绍 -->
@@ -143,7 +143,7 @@
 
       <!-- 个人信息详情 -->
       <div
-        class="bg-bg-secondary mx-auto mt-4 w-[90%] rounded-2xl border border-white/10 px-6 py-5 shadow"
+        class="bg-bg-secondary mx-auto mt-4 w-[90%] rounded-lg border border-white/10 px-6 py-5 shadow"
       >
         <h2 class="mb-4 text-lg font-semibold text-black dark:text-white">个人信息</h2>
         <div class="grid grid-cols-2 gap-4 text-sm md:grid-cols-3">
@@ -170,7 +170,7 @@
 
       <!-- 个人简介详情 -->
       <div
-        class="bg-bg-secondary mx-auto mt-4 w-[90%] rounded-2xl border border-white/10 px-6 py-5 shadow"
+        class="bg-bg-secondary mx-auto mt-4 w-[90%] rounded-lg border border-white/10 px-6 py-5 shadow"
       >
         <h2 class="mb-4 text-lg font-semibold text-black dark:text-white">个人介绍</h2>
         {#if profile.extraInfo}
