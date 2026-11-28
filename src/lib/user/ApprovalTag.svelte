@@ -1,5 +1,6 @@
 <script lang="ts">
   import DOMPurify from 'dompurify';
+  import { default_purify_config } from '#lib/utils/purifyConfig';
   import type { ApprovalTagType } from './approvalType';
 
   let {
@@ -8,13 +9,14 @@
     size = 'h-6',
   }: {
     tag: ApprovalTagType;
-    onClick: ((tag: ApprovalTagType) => any) | null;
+    onClick: ((tag: ApprovalTagType) => void) | null;
     size?: string;
   } = $props();
 </script>
 
 <div class="group relative mr-1 ml-1 flex w-fit flex-col items-center">
   <button
+    type="button"
     onclick={() => {
       if (onClick) {
         onClick(tag);
@@ -33,20 +35,20 @@
     {/if}
   </button>
   <div
-    class="flex w-fit scale-0 opacity-0 transition-opacity group-hover:scale-100 group-hover:opacity-100 {size ==
+    class="flex w-fit scale-0 opacity-0 transition-opacity group-focus-within:scale-100 group-focus-within:opacity-100 group-hover:scale-100 group-hover:opacity-100 {size ==
     'h-6'
       ? 'top-6'
       : 'top-7'} bg-bg-secondary absolute z-20 float-left gap-2 rounded-lg border border-white/10 p-2 shadow shadow-gray-500/50"
   >
     <!-- 雷霆大icon -->
     <div class="bg-bg-secondary size-16 shrink-0 rounded-lg border border-white/10">
-      <img src={tag.approvalTag.mediumImage} alt="medium" />
+      <img src={tag.approvalTag.mediumImage} alt="" aria-hidden="true" />
     </div>
     <!-- 雷霆介绍 -->
     <div class="flex w-48 flex-col gap-1">
       <p class="text-text-primary text-xs font-bold">{tag.approvalTagName}</p>
       <p class="text-text-primary text-xs">
-        {@html DOMPurify.sanitize(tag.approvalTag.description)}
+        {@html DOMPurify.sanitize(tag.approvalTag.description, default_purify_config)}
       </p>
       <p class="text-text-secondary text-xs">{tag.approvalTag.prerequisite}</p>
     </div>
