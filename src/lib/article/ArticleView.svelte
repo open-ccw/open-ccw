@@ -31,7 +31,7 @@
     {#if segment.entity?.type === 'mention'}
       <a
         href={`/user/${segment.entity.data.mention?.userId ?? ''}`}
-        class="text-primary transition-colors duration-100 hover:underline"
+        class="text-primary underline transition-colors duration-100"
       >
         {segment.text.trim() || plainName(segment.entity.data.mention?.name)}
       </a>
@@ -40,7 +40,7 @@
         href={segment.href}
         target="_blank"
         rel="noopener noreferrer"
-        class="text-primary transition-colors duration-100 hover:underline"
+        class="text-primary underline transition-colors duration-100"
       >
         {segment.text}
       </a>
@@ -144,7 +144,7 @@
       href={`https://learn.ccw.site/article/${article.slug}`}
       target="_blank"
       rel="noopener noreferrer"
-      class="text-primary transition-colors duration-100 hover:underline"
+      class="text-primary underline transition-colors duration-100"
     >
       查看原文
     </a>
