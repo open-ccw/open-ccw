@@ -10,14 +10,12 @@ export function indexNow(path: string) {
       const url = new URL('https://api.indexnow.org/indexnow');
       url.searchParams.set('url', `https://${Host}/${path}`);
       url.searchParams.set('key', API_KEY);
-      const res = await fetch(url, {
-        method: 'GET',
-        mode: 'no-cors',
-      });
-      if (!res.ok) {
-        console.error(HOSTS, res.status);
+      try {
+        // no-cors 下响应是 opaque，res.ok 恒为 false，不能据此判断成功
+        return await fetch(url, { method: 'GET', mode: 'no-cors' });
+      } catch {
+        return null;
       }
-      return res;
     }),
   );
 }
