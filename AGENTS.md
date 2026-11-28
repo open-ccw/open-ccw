@@ -60,6 +60,7 @@
 ## 异步与错误处理
 
 - 异步函数一律 `async/await`，禁止混合 `.then` 链与 `await`。
+- 例外：仅做响应体解析的 `await fetch(...).then((res) => res.json())` 允许使用，链上不得混入业务逻辑。
 - 网络请求失败必须有用户可见反馈（toast）或明确的状态回退，禁止静默吞错。
 - 自定义错误继承 `Error` 并携带 `code` 字段（参照 `OAuthError`）。
 
@@ -85,6 +86,7 @@
 ## 安全
 
 - 凭据（token、密码、密钥）禁止写入日志、注释、提交信息。
+- OAuth 的 PKCE verifier/state 与 DPoP 设备私钥存 `localStorage` 是刻意设计（需跨标签页/跨会话复用），不属于待修复缺陷，勿擅自改为 `sessionStorage`。
 - URL 拼接必须用 `URL` / `URLSearchParams`，禁止字符串拼接 query。
 - 服务端代理路由必须做路径白名单校验，且对上游 URL 用解析后的字段（`pathname` / `host`）做精确匹配，禁止 `includes` / `startsWith` 判断。
 - 渲染 HTML 必须经 DOMPurify，配置集中在 `purifyConfig.ts`（标签/属性双白名单 + 禁止清单），禁止绕过白名单直接 `innerHTML`。
