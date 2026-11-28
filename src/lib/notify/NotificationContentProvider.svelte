@@ -630,33 +630,7 @@
 {/snippet}
 
 {#snippet sessionCreated(page: SESSION_CREATED)}
-  {@const sessionId = page.triggeredById || page.id}
-  <div class="flex w-full flex-wrap items-center gap-x-2 gap-y-1">
-    <span class="text-text-primary">{page.comment || page.title}</span>
-    {#if sessionId}
-      <a
-        href="/settings/auth?session={sessionId}"
-        class="text-info hover:text-info/80 inline-flex shrink-0 items-center gap-0.5 underline underline-offset-2 transition-colors duration-100"
-        title="跳转到设备管理并定位到此登录会话"
-      >
-        <svg
-          class="size-3.5"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          aria-hidden="true"
-        >
-          <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
-          <line x1="8" y1="21" x2="16" y2="21"></line>
-          <line x1="12" y1="17" x2="12" y2="21"></line>
-        </svg>
-        管理该设备
-      </a>
-    {/if}
-  </div>
+  <span class="text-text-primary">{page.comment || page.title}</span>
 {/snippet}
 
 {#snippet communityActivity(page: COMMUNITY_ACTIVITY)}
