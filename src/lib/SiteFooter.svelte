@@ -14,7 +14,7 @@
       href={DIGITALPLAT_URL}
       target="_blank"
       rel="noopener noreferrer"
-      class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
+      class="text-text-secondary hover:text-text-primary underline transition-colors duration-100"
     >
       DigitalPlat FreeDomain
     </a>
@@ -23,7 +23,7 @@
       href={CLOUDFLARE_URL}
       target="_blank"
       rel="noopener noreferrer"
-      class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
+      class="text-text-secondary hover:text-text-primary underline transition-colors duration-100"
     >
       Cloudflare Workers
     </a>
@@ -33,7 +33,7 @@
       href={GITHUB_URL}
       target="_blank"
       rel="noopener noreferrer"
-      class="text-text-secondary hover:text-text-primary transition-colors duration-100 hover:underline"
+      class="text-text-secondary hover:text-text-primary underline transition-colors duration-100"
     >
       开源
     </a>

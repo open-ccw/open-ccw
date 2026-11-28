@@ -704,7 +704,7 @@
     </div>
     {#if detail}
       <div
-        class="bg-bg-secondary border-border text-text-secondary w-full rounded-lg border p-2 text-sm leading-relaxed whitespace-break-spaces"
+        class="bg-bg-secondary border-border text-text-secondary [&_a]:text-primary w-full rounded-lg border p-2 text-sm leading-relaxed whitespace-break-spaces [&_a]:underline"
       >
         {@html DOMPurify.sanitize(detail, systemNoticePurifyConfig)}
       </div>
@@ -720,7 +720,7 @@
     </div>
     {#if detail}
       <div
-        class="bg-bg-secondary border-border text-text-secondary w-full rounded-lg border p-2 text-sm leading-relaxed whitespace-break-spaces"
+        class="bg-bg-secondary border-border text-text-secondary [&_a]:text-primary w-full rounded-lg border p-2 text-sm leading-relaxed whitespace-break-spaces [&_a]:underline"
       >
         {@html DOMPurify.sanitize(detail, systemNoticePurifyConfig)}
       </div>

@@ -105,7 +105,7 @@
   <td class="relative z-0 w-44 px-4 py-3">
     {#if detailedLocation}
       <button
-        class="text-success hover:text-success cursor-pointer text-left text-xs whitespace-nowrap transition-colors hover:underline"
+        class="text-success hover:text-success cursor-pointer text-left text-xs whitespace-nowrap underline transition-colors"
         title="点击复制 IP：{session.ip}"
         onclick={copyIP}
       >
@@ -114,7 +114,7 @@
       </button>
     {:else}
       <button
-        class="text-text-secondary hover:text-text-primary cursor-pointer text-left text-xs whitespace-nowrap transition-colors hover:underline"
+        class="text-text-secondary hover:text-text-primary cursor-pointer text-left text-xs whitespace-nowrap underline transition-colors"
         title="点击复制 IP：{session.ip}"
         onclick={copyIP}
       >
