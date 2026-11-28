@@ -16,16 +16,32 @@
     children: Snippet;
   } = $props();
 
-  const url = $derived(parseUrl(href));
+  const LOCAL_ORIGIN = 'https://ccw.kivotos.qzz.io';
 
-  function parseUrl(url: string, commentId?: string) {
-    if (url.startsWith('https://www.ccw.site/post/')) {
-      url = url.replace('https://www.ccw.site/post/', '/article/');
+  const url = $derived(parseUrl(href, commentId));
+
+  function parseUrl(href: string, commentId?: string) {
+    let target = href;
+    if (target.startsWith('https://www.ccw.site/post/')) {
+      target = target.replace('https://www.ccw.site/post/', '/article/');
     }
-    if (commentId) {
-      return `${url}?${new URLSearchParams({ comment: commentId })}`;
+    if (!commentId) {
+      return target;
     }
-    return url;
+    let parsed: URL;
+    try {
+      parsed = new URL(target, LOCAL_ORIGIN);
+    } catch {
+      return target;
+    }
+    if (parsed.protocol !== 'http:' && parsed.protocol !== 'https:') {
+      return target;
+    }
+    parsed.searchParams.set('comment', commentId);
+    if (parsed.origin === LOCAL_ORIGIN) {
+      return `${parsed.pathname}${parsed.search}${parsed.hash}`;
+    }
+    return parsed.toString();
   }
 </script>
 

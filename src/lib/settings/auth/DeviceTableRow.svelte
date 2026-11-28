@@ -5,10 +5,12 @@
 
   let {
     session,
+    highlighted = false,
     onLogout,
     selected = $bindable(false),
   }: {
     session: Session;
+    highlighted?: boolean;
     onLogout: () => void;
     selected: boolean | undefined;
   } = $props();
@@ -63,7 +65,12 @@
   }
 </script>
 
-<tr class="hover:bg-bg-secondary group border-border-strong min-h-12 border-b transition-colors">
+<tr
+  id="session-{session.id}"
+  class="hover:bg-bg-secondary group border-border-strong min-h-12 border-b transition-colors {highlighted
+    ? 'bg-success/10'
+    : ''}"
+>
   <td
     class="bg-bg group-hover:bg-bg-secondary border-border-strong sticky left-0 z-10 flex size-12 items-center justify-center border-r"
   >

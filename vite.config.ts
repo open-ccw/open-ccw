@@ -29,5 +29,6 @@ export default defineConfig({
     cors: {
       origin: '*',
     },
+    host: 'openccw.lvh.me',
   },
 });

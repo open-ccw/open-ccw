@@ -1,5 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { page } from '$app/state';
+  import { tick } from 'svelte';
   import { communityWeb, sso } from '#lib/api.ts';
   import DeviceTableRow from './DeviceTableRow.svelte';
   import type { Session } from './types';
@@ -26,6 +28,38 @@
   const selectedSessions = $derived(sessions.filter((s) => selected[s.id] && !s.currentDevice));
   const selectedCount = $derived(selectedSessions.length);
   let hasOauthRefresh = $state(false);
+  // URL ?session= 指定的会话 id，加载完成后滚动定位并高亮
+  const targetSessionId = $derived(page.url.searchParams.get('session'));
+  let highlightedId = $state<string | null>(null);
+
+  async function locateSession() {
+    if (!targetSessionId) {
+      return;
+    }
+    // 自动勾选该会话（不依赖 DOM，先执行）
+    // session.id 是 number，URL 参数是 string，需转为字符串比较
+    const target = sessions.find((s) => String(s.id) === targetSessionId);
+    if (target && !target.currentDevice) {
+      selected[target.id] = true;
+      selected = { ...selected };
+    }
+    highlightedId = targetSessionId;
+    // 等待列表渲染完成后再滚动定位
+    await tick();
+    const row = document.getElementById(`session-${targetSessionId}`);
+    if (!row) {
+      return;
+    }
+    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    row.animate(
+      [
+        { background: 'transparent' },
+        { background: 'color-mix(in srgb, var(--color-success) 20%, transparent)' },
+        { background: 'transparent' },
+      ],
+      { duration: 300 },
+    );
+  }
 
   $effect(() => {
     if ($user.loggedIn) {
@@ -59,6 +93,7 @@
       error = String(e);
     } finally {
       loading = false;
+      await locateSession();
     }
   }
 
@@ -220,6 +255,7 @@
             {#each sessions as session (session.id)}
               <DeviceTableRow
                 {session}
+                highlighted={highlightedId != null && String(highlightedId) === String(session.id)}
                 onLogout={refreshSessions}
                 bind:selected={selected[session.id]}
               />

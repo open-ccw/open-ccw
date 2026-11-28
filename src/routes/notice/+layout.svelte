@@ -1,24 +1,50 @@
 <script lang="ts">
   import PageHeader from '#lib/PageHeader.svelte';
-  import type { LayoutProps } from './$types';
-  import { onMount } from 'svelte';
+  import { onMount, type Snippet } from 'svelte';
   import { noticeTypes } from './noticeTypes';
   import Error from '#lib/utils/Error.svelte';
   import { goto } from '$app/navigation';
   import { token } from '#lib/auth/tokenStore.ts';
-  import { notificationStats, refreshNotificationStats } from '#lib/notify/notifyStatsStore.ts';
+  import { toast } from '#lib';
+  import {
+    notificationSummary,
+    refreshNotificationSummary,
+    getGroupUnread,
+    markAllNotificationsRead,
+  } from '#lib/notify/notifyStatsStore.ts';
 
-  let { children }: LayoutProps = $props();
+  let { children }: { children: Snippet } = $props();
 
   let selectedId: number = $state(-1);
   let error = $state('');
-  let counts = $derived.by(() => {
-    if (!$notificationStats) {
+  let markingAll = $state(false);
+
+  async function handleMarkAllRead() {
+    if (markingAll) {
       return;
     }
-    return noticeTypes.map(({ statID }) => {
-      return statID.reduce((prev: number, cur) => prev + $notificationStats[cur], 0);
-    });
+    markingAll = true;
+    try {
+      const changed = await markAllNotificationsRead();
+      if (changed) {
+        toast.success('已全部标为已读');
+      } else {
+        toast.info('暂无未读消息');
+      }
+    } catch (e) {
+      toast.error(`全标已读失败：${String(e)}`);
+    } finally {
+      markingAll = false;
+    }
+  }
+  // 按标签页对应的 v3 分组汇总未读数
+  let counts = $derived.by(() => {
+    if (!$notificationSummary) {
+      return;
+    }
+    return noticeTypes.map(({ groups }) =>
+      groups.reduce((sum, group) => sum + getGroupUnread($notificationSummary, group), 0),
+    );
   });
 
   onMount(() => {
@@ -56,13 +82,13 @@
           : 'border-b border-b-transparent'}"
         onclick={() => {
           selectedId = id;
-          refreshNotificationStats();
+          refreshNotificationSummary();
           goto(`/notice/${type}`);
         }}
       >
         <img src={icon} alt={name} class="relative -top-2 size-8" />
         <span class="text-text-primary absolute bottom-2 shrink-0 text-sm">{name}</span>
-        {#if $notificationStats && counts && counts[id] > 0}
+        {#if $notificationSummary && counts && counts[id] > 0}
           <div class="bg-error absolute top-2 right-2 size-4 rounded-full text-xs text-white">
             {counts[id]}
           </div>
@@ -70,6 +96,31 @@
       </button>
     {/each}
   {/if}
+</div>
+
+<div class="mx-auto mt-3 flex w-full max-w-3xl justify-end px-4">
+  <button
+    type="button"
+    class="bg-bg-secondary text-text-secondary border-border hover:bg-bg-tertiary inline-flex items-center gap-1.5 rounded-lg border px-3 py-1.5 text-sm transition-colors duration-100 disabled:cursor-not-allowed disabled:opacity-50"
+    disabled={markingAll ||
+      !$notificationSummary?.markAll ||
+      ($notificationSummary?.totalUnread ?? 0) <= 0}
+    onclick={handleMarkAllRead}
+  >
+    <svg
+      class="size-4"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m5 12 4 4L19 6"></path>
+    </svg>
+    {markingAll ? '标记中...' : '全标已读'}
+  </button>
 </div>
 
 {#if $token}

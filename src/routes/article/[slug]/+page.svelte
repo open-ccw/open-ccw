@@ -2,6 +2,7 @@
   import { page } from '$app/state';
   import type { PageProps } from './$types';
   import ArticleView from '#lib/article/ArticleView.svelte';
+  import ArticleComments from '#lib/article/ArticleComments.svelte';
   import PageHeader from '#lib/PageHeader.svelte';
   import { onMount } from 'svelte';
   import { indexNow } from '#lib/utils/indexNow.ts';
@@ -9,6 +10,15 @@
   let { data }: PageProps = $props();
 
   const article = $derived(data.article);
+
+  const anchorCommentId = $derived.by(() => {
+    const raw = page.url.searchParams.get('comment');
+    if (!raw) {
+      return undefined;
+    }
+    const id = Number(raw);
+    return Number.isFinite(id) ? id : undefined;
+  });
 
   const description = $derived(
     article.excerpt?.trim() ||
@@ -72,3 +82,4 @@
 
 <PageHeader></PageHeader>
 <ArticleView {article} />
+<ArticleComments oid={article.oid} commentCount={article.commentCount} {anchorCommentId} />

@@ -2,7 +2,7 @@
   "extends": "$app/tsconfig",
   "compilerOptions": {
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "esModuleInterop": true,

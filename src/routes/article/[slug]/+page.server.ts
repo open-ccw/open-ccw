@@ -1,10 +1,20 @@
 import { error } from '@sveltejs/kit';
-import type { PageServerLoad } from './$types';
+import type { RequestEvent } from './$types';
+import type { ArticlePayload } from '#lib/article/types';
 
-export const load: PageServerLoad = async ({ url, fetch, params, setHeaders, request }) => {
+export const load = async ({
+  url,
+  fetch,
+  params,
+  setHeaders,
+}: Pick<RequestEvent, 'url' | 'fetch' | 'params' | 'setHeaders'>) => {
   try {
-    const res = await fetch(url.pathname + '/json');
-    const payload = (await res.json()) as any;
+    const target = new URL(url.toString());
+    target.pathname = `${target.pathname.replace(/\/$/, '')}/json`;
+    target.search = '';
+    target.hash = '';
+    const res = await fetch(target);
+    const payload = (await res.json()) as ArticlePayload;
 
     setHeaders({
       'cache-control': 'public, max-age=300',

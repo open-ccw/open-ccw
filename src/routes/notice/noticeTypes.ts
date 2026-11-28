@@ -2,38 +2,38 @@ import InteractionIcon from '#lib/assets/notice_icon/interaction.svg';
 import ReplyIcon from '#lib/assets/notice_icon/reply.svg';
 import ShareIcon from '#lib/assets/notice_icon/share.svg';
 import SystemIcon from '#lib/assets/notice_icon/system.svg';
-import type { communityWeb } from '#lib/api.ts';
+import type { NotificationV3Group } from '#lib/notify/types.ts';
 
-type K = keyof Awaited<ReturnType<typeof communityWeb.getNotificationStats>>;
-
+/** 通知标签页配置 */
 export const noticeTypes: {
   type: string;
   name: string;
   icon: string;
-  statID: K[];
+  // 该标签页对应的 v3 通知分组（可包含多个）
+  groups: NotificationV3Group[];
 }[] = [
   {
     type: 'interaction',
     icon: InteractionIcon,
     name: '内容互动',
-    statID: ['CREATION_INTERACTION'],
+    groups: ['CONTENT_INTERACTION'],
   },
   {
     type: 'reply',
     icon: ReplyIcon,
     name: '回复我的',
-    statID: ['COMMENT_TO_ME'],
+    groups: ['REPLY'],
   },
   {
     type: 'share',
     icon: ShareIcon,
     name: '好友分享',
-    statID: ['FRIEND_SHARE'],
+    groups: ['FRIEND_SHARE'],
   },
   {
     type: 'system',
     icon: SystemIcon,
     name: '系统消息',
-    statID: ['WEB_SYSTEM', 'FOLLOW_ME', 'ACTIVITY_ASSISTANT', 'JUDGEMENT', 'CREATION_STATUS'],
+    groups: ['SYSTEM', 'COMMUNITY'],
   },
 ] as const;

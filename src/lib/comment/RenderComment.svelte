@@ -6,11 +6,11 @@
     id,
     replyToId,
     receiverName,
-  }: { comment: string; id?: number; replyToId?: number; receiverName?: string } = $props();
+  }: { comment: string | null | undefined; id?: number; replyToId?: number; receiverName?: string } = $props();
 </script>
 
 <div class="w-full">
-  <PrettyText text={comment}></PrettyText>
+  <PrettyText text={comment ?? ''}></PrettyText>
 </div>
 {#if id}
   <div class="text-text-secondary text-xs" id="comment-id-{id || Date.now()}">
