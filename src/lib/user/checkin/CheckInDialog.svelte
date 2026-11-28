@@ -52,9 +52,7 @@
     transition:scale={{ duration: 100 }}
   >
     <!-- 顶部装饰条 -->
-    <div
-      class="bg-primary flex h-16 items-center justify-center gap-3"
-    >
+    <div class="bg-primary flex h-16 items-center justify-center gap-3">
       <img src={coinSvg} alt="coin" class="h-8 w-8" />
       <span class="text-xl font-bold text-white">每日签到</span>
       <div class="absolute right-4 h-6 w-6">

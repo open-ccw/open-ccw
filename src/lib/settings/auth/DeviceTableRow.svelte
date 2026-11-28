@@ -123,7 +123,7 @@
     {/if}
     {#if copied}
       <span
-        class="absolute -top-4 left-8 z-10 rounded bg-bg-tertiary px-2 py-0.5 text-xs whitespace-nowrap text-text-primary shadow"
+        class="bg-bg-tertiary text-text-primary absolute -top-4 left-8 z-10 rounded px-2 py-0.5 text-xs whitespace-nowrap shadow"
       >
         已复制
       </span>

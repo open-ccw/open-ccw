@@ -73,35 +73,35 @@
   <meta name="robots" content="noindex, nofollow" />
 </svelte:head>
 
-<div class="flex min-h-screen w-screen items-center justify-center bg-bg p-6">
-  <div class="w-lg max-w-full rounded-lg bg-bg-secondary p-10 text-center shadow-xl">
+<div class="bg-bg flex min-h-screen w-screen items-center justify-center p-6">
+  <div class="bg-bg-secondary w-lg max-w-full rounded-lg p-10 text-center shadow-xl">
     {#if status === 'error'}
-      <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-error/10">
-        <span class="text-2xl font-bold text-error">!</span>
+      <div class="bg-error/10 mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full">
+        <span class="text-error text-2xl font-bold">!</span>
       </div>
-      <h2 class="mb-3 text-2xl font-bold text-text-primary">跳转被拒绝</h2>
-      <p class="mb-6 text-sm break-all text-text-secondary">{message}</p>
+      <h2 class="text-text-primary mb-3 text-2xl font-bold">跳转被拒绝</h2>
+      <p class="text-text-secondary mb-6 text-sm break-all">{message}</p>
       <a
         href="/"
-        class="inline-block rounded-lg bg-bg-tertiary px-6 py-3 font-medium text-text-primary transition-colors hover:bg-border"
+        class="bg-bg-tertiary text-text-primary hover:bg-border inline-block rounded-lg px-6 py-3 font-medium transition-colors"
       >
         返回首页
       </a>
     {:else if status === 'checking'}
       <div
-        class="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-border border-t-primary"
+        class="border-border border-t-primary mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4"
       ></div>
-      <h2 class="mb-3 text-2xl font-bold text-text-primary">正在读取开发环境 Token</h2>
-      <p class="text-sm text-text-secondary">即将返回开发环境...</p>
+      <h2 class="text-text-primary mb-3 text-2xl font-bold">正在读取开发环境 Token</h2>
+      <p class="text-text-secondary text-sm">即将返回开发环境...</p>
     {:else}
-      <h2 class="mb-3 text-2xl font-bold text-text-primary">尚未登录主站</h2>
-      <p class="mb-6 text-sm leading-relaxed text-text-secondary">
+      <h2 class="text-text-primary mb-3 text-2xl font-bold">尚未登录主站</h2>
+      <p class="text-text-secondary mb-6 text-sm leading-relaxed">
         本页需要当前浏览器已登录主站，才能把 access token 交给开发环境。<br />
         登录完成后回到本页即可自动跳转。
       </p>
       <a
         href="/oauth"
-        class="inline-block rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
+        class="bg-primary hover:bg-primary-hover inline-block rounded-lg px-6 py-3 font-medium text-white transition-colors"
       >
         前往登录
       </a>

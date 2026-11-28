@@ -47,7 +47,7 @@
 
 <main class="flex w-full flex-col items-center gap-10 px-4 py-12">
   <section class="flex max-w-2xl flex-col items-center gap-4 text-center">
-    <img src={logo} alt="Open CCW" class="size-20 rounded-lg bg-bg-tertiary p-2" />
+    <img src={logo} alt="Open CCW" class="bg-bg-tertiary size-20 rounded-lg p-2" />
     <h1 class="text-text-primary font-inter text-3xl font-bold">Welcome to Open CCW</h1>
     <p class="text-text-secondary leading-relaxed">
       一款以安全为主要理念的第三方 CCW 启动器，支持 OAuth 一键授权登录、多账号管理、AES 本地加密存储
