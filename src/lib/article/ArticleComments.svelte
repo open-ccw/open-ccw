@@ -19,10 +19,5 @@
       <span class="text-text-placeholder text-sm font-normal">{commentCount}</span>
     {/if}
   </h2>
-  <CommentView
-    {oid}
-    subjectType="POST"
-    sectionType="COMMENT"
-    {anchorCommentId}
-  />
+  <CommentView {oid} subjectType="POST" sectionType="COMMENT" {anchorCommentId} />
 </section>
