@@ -32,7 +32,7 @@
     ></video>
   </button>
   <div
-    class="flex w-fit scale-0 opacity-0 transition-opacity group-hover:scale-100 group-hover:opacity-100 {size ==
+    class="flex w-fit scale-0 opacity-0 transition-opacity group-focus-within:scale-100 group-focus-within:opacity-100 group-hover:scale-100 group-hover:opacity-100 {size ==
     'h-6'
       ? 'top-8'
       : 'top-9'} bg-bg-secondary absolute z-10 float-left gap-2 rounded-lg border border-white/10 p-2 shadow shadow-black/30"
