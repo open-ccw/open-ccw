@@ -30,8 +30,8 @@ const respond: RequestHandler = async ({ params, request, platform }) => {
     if (!updatedAt) {
       return error(404, '未获取到文章数据');
     }
-  } catch (e) {
-    return error(404, '未获取到文章数据' + String(e));
+  } catch {
+    return error(404, '未获取到文章数据');
   }
 
   const ST_ts_meta_api = Date.now();
@@ -95,7 +95,6 @@ async function resolveArticleAndRefreshCache(
   latestEtag: string,
   ctx?: ExecutionContext,
 ) {
-  console.log('缓存未命中', slug);
   const article = await fetchArticle(slug);
   const response = Response.json(article, {
     headers: {
