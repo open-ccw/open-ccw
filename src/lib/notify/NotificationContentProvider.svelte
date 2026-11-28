@@ -639,7 +639,7 @@
   {@const detail = page.content?.comments || page.comment || ''}
   <div class="flex w-full flex-col gap-2">
     <div class="*:inline">
-      <span class="text-error font-semibold">{title}</span>
+      <span class="text-text-primary font-semibold">{title}</span>
       {#if subjectUrl}
         <NotificationSubjectLink href={subjectUrl}>{subject}</NotificationSubjectLink>
       {:else}
