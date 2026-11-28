@@ -631,16 +631,16 @@
 
 {#snippet sessionCreated(page: SESSION_CREATED)}
   {@const sessionId = page.triggeredById || page.id}
-  <div class="flex w-full flex-col gap-1.5">
+  <div class="flex w-full flex-wrap items-center gap-x-2 gap-y-1">
     <span class="text-text-primary">{page.comment || page.title}</span>
     {#if sessionId}
       <a
         href="/settings/auth?session={sessionId}"
-        class="bg-bg-secondary text-text-secondary border-border hover:bg-bg-tertiary inline-flex w-fit items-center gap-1 rounded border px-2 py-1 text-xs font-medium transition-colors duration-100"
+        class="text-info hover:text-info/80 inline-flex shrink-0 items-center gap-0.5 underline underline-offset-2 transition-colors duration-100"
         title="跳转到设备管理并定位到此登录会话"
       >
         <svg
-          class="size-3"
+          class="size-3.5"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
