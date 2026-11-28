@@ -98,6 +98,11 @@
 - 提交信息用 Conventional Commits（`feat:` / `fix:` / `refactor:` …），正文中文，说明"为什么"。
 - 不提交生成物（`.svelte-kit/`、`node_modules/`）与临时脚本。
 
+## 移动端 Trae Agent
+
+- 手机端 Trae 会自动推送改动。**每次完成修改后必须自行手动 `git commit`**，防止自动提交生成占位或无意义信息导致历史杂乱。
+- 提交前先 `git status` / `git diff` 确认改动范围，只暂存本次相关文件；提交信息仍遵循 Conventional Commits，正文中文说明"为什么"。
+
 ## 提交安全
 
 - 禁止入库的内容：`.env*` / `.dev.vars*`（密钥、token、账号密码）、临时与调试文件（`tmp*`、`*.log`、探测/测试脚本、抓包输出）、系统垃圾（`Thumbs.db`、`.DS_Store`）。临时文件放系统临时目录，不进仓库目录。
