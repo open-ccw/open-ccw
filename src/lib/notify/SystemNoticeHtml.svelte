@@ -24,33 +24,30 @@
   // 预处理：把 <a ... href="..."> 中的外部 ccw 链接改为站内路径，
   // 并对已转换的站内链接去掉 target="_blank"，使用当前标签页导航
   const prepared = $derived(
-    (text ?? '').replace(
-      /<a\b([^>]*)>/gi,
-      (tag: string, attrs: string) => {
-        const hrefMatch = /(href\s*=\s*)(["'])(.*?)\2/i.exec(attrs);
-        if (!hrefMatch) {
-          return tag;
-        }
-        const internal = toInternalUrl(hrefMatch[3]);
-        if (internal === hrefMatch[3]) {
-          return tag;
-        }
-        const newAttrs = attrs
-          .replace(
-            /(href\s*=\s*)(["'])(.*?)\2/i,
-            (_match, prefix: string, quote: string) => `${prefix}${quote}${internal}${quote}`,
-          )
-          .replace(/\s*target\s*=\s*(["'])[^"']*\1/gi, '');
-        return `<a${newAttrs}>`;
-      },
-    ),
+    (text ?? '').replace(/<a\b([^>]*)>/gi, (tag: string, attrs: string) => {
+      const hrefMatch = /(href\s*=\s*)(["'])(.*?)\2/i.exec(attrs);
+      if (!hrefMatch) {
+        return tag;
+      }
+      const internal = toInternalUrl(hrefMatch[3]);
+      if (internal === hrefMatch[3]) {
+        return tag;
+      }
+      const newAttrs = attrs
+        .replace(
+          /(href\s*=\s*)(["'])(.*?)\2/i,
+          (_match, prefix: string, quote: string) => `${prefix}${quote}${internal}${quote}`,
+        )
+        .replace(/\s*target\s*=\s*(["'])[^"']*\1/gi, '');
+      return `<a${newAttrs}>`;
+    }),
   );
 
   const safeHtml = $derived(DOMPurify.sanitize(prepared, systemNoticePurifyConfig));
 </script>
 
 <div
-  class="text-text-primary leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces [&_a]:text-primary [&_a]:underline"
+  class="text-text-primary [&_a]:text-primary leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces [&_a]:underline"
 >
   {@html safeHtml}
 </div>
