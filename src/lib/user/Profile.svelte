@@ -96,7 +96,7 @@
 
             <!-- 头像右侧基本信息 -->
             <div class="mt-0 ml-4 flex flex-col">
-              <h1 class="flex items-center gap-2 text-2xl font-bold text-text-primary">
+              <h1 class="text-text-primary flex items-center gap-2 text-2xl font-bold">
                 {profile.name}
                 <AuthRankDisplay rank={profile.identityAuthRank}></AuthRankDisplay>
                 <div class="text-text-secondary ml-4 text-sm">
@@ -145,7 +145,7 @@
       <div
         class="bg-bg-secondary mx-auto mt-4 w-[90%] rounded-lg border border-white/10 px-6 py-5 shadow"
       >
-        <h2 class="mb-4 text-lg font-semibold text-text-primary">个人信息</h2>
+        <h2 class="text-text-primary mb-4 text-lg font-semibold">个人信息</h2>
         <div class="grid grid-cols-2 gap-4 text-sm md:grid-cols-3">
           <div>
             <div class="text-text-secondary">性别</div>
@@ -172,7 +172,7 @@
       <div
         class="bg-bg-secondary mx-auto mt-4 w-[90%] rounded-lg border border-white/10 px-6 py-5 shadow"
       >
-        <h2 class="mb-4 text-lg font-semibold text-text-primary">个人介绍</h2>
+        <h2 class="text-text-primary mb-4 text-lg font-semibold">个人介绍</h2>
         {#if profile.extraInfo}
           <div class="space-y-4 text-sm">
             {#if profile.extraInfo.learnedProgrammingLanguages}

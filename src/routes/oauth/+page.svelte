@@ -88,38 +88,38 @@
   class="flex h-screen min-h-fit w-screen items-center justify-center"
   style:background="url({bg}) repeat center/cover"
 >
-  <div class="h-fit w-lg rounded-lg bg-bg-secondary p-10 text-center shadow-xl">
+  <div class="bg-bg-secondary h-fit w-lg rounded-lg p-10 text-center shadow-xl">
     {#if error}
       <div class="text-center">
         <div
-          class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-error/10"
+          class="bg-error/10 mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full"
         >
-          <span class="text-2xl font-bold text-error">!</span>
+          <span class="text-error text-2xl font-bold">!</span>
         </div>
-        <h2 class="mb-3 text-2xl font-bold text-text-primary">授权发起失败</h2>
-        <p class="mb-6 text-sm break-all text-text-secondary">{error}</p>
+        <h2 class="text-text-primary mb-3 text-2xl font-bold">授权发起失败</h2>
+        <p class="text-text-secondary mb-6 text-sm break-all">{error}</p>
         <a
           href="/"
-          class="inline-block rounded-lg bg-bg-tertiary px-6 py-3 font-medium text-text-primary transition-colors hover:bg-border"
+          class="bg-bg-tertiary text-text-primary hover:bg-border inline-block rounded-lg px-6 py-3 font-medium transition-colors"
         >
           返回首页
         </a>
       </div>
     {:else if preparing}
       <div
-        class="mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4 border-border border-t-primary"
+        class="border-border border-t-primary mx-auto mb-6 h-12 w-12 animate-spin rounded-full border-4"
       ></div>
-      <h2 class="mb-3 text-2xl font-bold text-text-primary">正在准备登录</h2>
-      <p class="text-sm text-text-secondary">正在初始化 OAuth 授权请求...</p>
+      <h2 class="text-text-primary mb-3 text-2xl font-bold">正在准备登录</h2>
+      <p class="text-text-secondary text-sm">正在初始化 OAuth 授权请求...</p>
     {:else}
-      <h2 class="mb-3 text-2xl font-bold text-text-primary">CCW 登录</h2>
+      <h2 class="text-text-primary mb-3 text-2xl font-bold">CCW 登录</h2>
       <ol
-        class="mb-6 list-inside list-decimal space-y-1 text-left text-sm leading-relaxed text-text-secondary"
+        class="text-text-secondary mb-6 list-inside list-decimal space-y-1 text-left text-sm leading-relaxed"
       >
         <li>点击下方按钮，在新标签页完成 CCW 授权登录</li>
         <li>
           授权后浏览器会跳转到一个
-          <code class="rounded bg-bg-tertiary px-1 text-xs">127.0.0.1</code>
+          <code class="bg-bg-tertiary rounded px-1 text-xs">127.0.0.1</code>
           开头、打不开的页面，这是正常现象
         </li>
         <li>复制该页面地址栏的完整网址，粘贴到下方输入框</li>
@@ -128,7 +128,7 @@
 
       <button
         type="button"
-        class="mb-6 cursor-pointer rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover"
+        class="bg-primary hover:bg-primary-hover mb-6 cursor-pointer rounded-lg px-6 py-3 font-medium text-white transition-colors"
         onclick={openAuthorize}
       >
         前往 CCW 登录
@@ -136,16 +136,16 @@
 
       <div class="flex flex-col gap-3 text-left">
         <textarea
-          class="w-full rounded-lg border border-border p-3 text-sm break-all text-text-primary focus:ring-2 focus:ring-primary-outline-focus focus:outline-none"
+          class="border-border text-text-primary focus:ring-primary-outline-focus w-full rounded-lg border p-3 text-sm break-all focus:ring-2 focus:outline-none"
           rows="3"
           placeholder="粘贴回调地址 (http://127.0.0.1:.../oauth/callback?code=...)"
           bind:value={pasted}></textarea>
         {#if pastedError}
-          <p class="text-sm break-all text-error">{pastedError}</p>
+          <p class="text-error text-sm break-all">{pastedError}</p>
         {/if}
         <button
           type="button"
-          class="cursor-pointer rounded-lg bg-primary px-6 py-3 font-medium text-white transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+          class="bg-primary hover:bg-primary-hover cursor-pointer rounded-lg px-6 py-3 font-medium text-white transition-colors disabled:cursor-not-allowed disabled:opacity-50"
           onclick={submitPasted}
           disabled={exchanging || !pasted.trim()}
         >
