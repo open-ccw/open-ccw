@@ -9,6 +9,7 @@
   import { browser } from '$app/env';
   import { refreshTokenIfExpired, startTokenRefreshTimer } from '#lib/oauth/refresh.ts';
   import { applyDevTokenFromUrl } from '#lib/oauth/devToken.ts';
+  import { resolveAuthStatus } from '#lib/user/userStore.ts';
   import ToastHost from '#lib/toast/ToastHost.svelte';
   import SiteFooter from '#lib/SiteFooter.svelte';
 
@@ -21,9 +22,13 @@
   onMount(async () => {
     // 开发/preview 的临时 token 只用于调试，不参与 refresh 续期
     if (await applyDevTokenFromUrl().catch(() => false)) {
+      resolveAuthStatus();
       return;
     }
-    refreshTokenIfExpired().catch(() => {});
+    // 会话恢复结束后再确定登录态；加载中的用户信息由 updateUser 自行决定
+    refreshTokenIfExpired()
+      .catch(() => {})
+      .finally(resolveAuthStatus);
     startTokenRefreshTimer();
   });
 </script>

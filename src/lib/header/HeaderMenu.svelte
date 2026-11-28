@@ -4,7 +4,7 @@
   import coinSvg from '#lib/assets/coin.svg';
   import noticeSvg from '#lib/assets/notice.svg';
   import cogSvg from '#lib/assets/cog.svg';
-  import { user } from '#lib/user/userStore.ts';
+  import { authStatus, user } from '#lib/user/userStore.ts';
   import SearchIcon from '#lib/search/searchIcon.svelte';
 
   let {
@@ -22,7 +22,7 @@
   } = $props();
 </script>
 
-{#if $user.loggedIn}
+{#if $authStatus === 'authenticated'}
   <!-- 用户信息 -->
   <div class="border-border border-b px-4 py-3">
     <div class="flex items-center gap-3">
@@ -105,6 +105,12 @@
       </svg>
       <span class="text-sm font-medium">退出登录</span>
     </button>
+  </div>
+{:else if $authStatus === 'unknown'}
+  {@render search()}
+
+  <div class="flex flex-col gap-2 px-4 py-3">
+    <div class="bg-bg-tertiary h-9 w-full animate-pulse rounded-lg"></div>
   </div>
 {:else}
   {@render search()}

@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { user } from '#lib/user/userStore.ts';
+  import { authStatus, user } from '#lib/user/userStore.ts';
   import Error from '#lib/utils/Error.svelte';
   import ChangeAvatar from './ChangeAvatar.svelte';
 </script>
 
-{#if $user.loggedIn}
+{#if $authStatus === 'authenticated'}
   <div class="mx-auto flex w-full max-w-xl flex-col gap-4 px-4 py-6">
     <h1 class="text-text-primary text-center text-lg font-bold">个人设置</h1>
 
@@ -103,6 +103,14 @@
         </button>
       </div>
     </div>
+  </div>
+{:else if $authStatus === 'unknown'}
+  <div class="mx-auto flex w-full max-w-xl flex-col gap-4 px-4 py-6">
+    <h1 class="text-text-primary text-center text-lg font-bold">个人设置</h1>
+    <div
+      class="bg-bg-secondary border-border h-40 w-full animate-pulse rounded-lg border"
+      aria-hidden="true"
+    ></div>
   </div>
 {:else}
   <Error error="请登录"></Error>
