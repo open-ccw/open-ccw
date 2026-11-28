@@ -1,36 +1,5 @@
 <script lang="ts">
-  import type {
-    NotificationView,
-    NotificationView as ASSET_MARKET_DONATE,
-    NotificationView as ASSET_MARKET_LIKED,
-    NotificationView as ASSET_MARKET_PURCHASED,
-    NotificationView as COMMENT_DELETED,
-    NotificationView as COMMUNITY_ACTIVITY,
-    NotificationView as CREATION_BANNED,
-    NotificationView as CREATION_CHECKED,
-    NotificationView as CREATION_COMMENTED,
-    NotificationView as CREATION_COMMENT_REPLIED,
-    NotificationView as CREATION_FAVORITE,
-    NotificationView as CREATION_LIKED,
-    NotificationView as CREATION_RECOMMENDED_AS_POTENTIAL,
-    NotificationView as CREATION_REMIXED,
-    NotificationView as CREATION_SHARE,
-    NotificationView as EXTENSION_COMMENTED,
-    NotificationView as EXTENSION_COMMENT_REPLIED,
-    NotificationView as EXTENSION_LIKED,
-    NotificationView as FOLLOWED,
-    NotificationView as FRIEND_INVITE,
-    NotificationView as POST_COMMENT,
-    NotificationView as POST_FAVORITE,
-    NotificationView as POST_LIKED,
-    NotificationView as POST_RATED_AS_EXCELLENT,
-    NotificationView as POST_VISIBILITY_CHANGED,
-    NotificationView as PROFILE_LEAVE_WORDS,
-    NotificationView as REPORT_LOG_REJECTED,
-    NotificationView as SESSION_CREATED,
-    NotificationView as TEAM_COMMENTED,
-    NotificationV3Item,
-  } from './types.ts';
+  import type { NotificationView, NotificationV3Item } from './types.ts';
   import DOMPurify from 'dompurify';
   import LikeIcon from './LikeIcon.svelte';
   import RenderHTML from '#lib/utils/RenderHTML.svelte';
@@ -241,7 +210,7 @@
   <span class="text-text-placeholder italic" title="作品已下架或不可见">作品不可见</span>
 {/snippet}
 
-{#snippet creationFavorite(page: CREATION_FAVORITE)}
+{#snippet creationFavorite(page: NotificationView)}
   你的作品
   <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
@@ -251,7 +220,7 @@
   加入了收藏
 {/snippet}
 
-{#snippet creationLiked(page: CREATION_LIKED)}
+{#snippet creationLiked(page: NotificationView)}
   {@render senderLink(page)}
   为你的作品
   <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
@@ -261,7 +230,7 @@
   <LikeIcon like_icon={page.content.like_icon ?? undefined}></LikeIcon>
 {/snippet}
 
-{#snippet creationRemixed(page: CREATION_REMIXED)}
+{#snippet creationRemixed(page: NotificationView)}
   你的作品
   <NotificationSubjectLink href="/detail/{page.content.remixed_creation_oid}">
     {page.content.remixed_creation_title}
@@ -274,7 +243,7 @@
   </NotificationSubjectLink>
 {/snippet}
 
-{#snippet creationCommented(page: CREATION_COMMENTED)}
+{#snippet creationCommented(page: NotificationView)}
   {@const subjectOid = page.subjectOid || page.content?.subject_oid}
   {@const subjectName =
     page.creationInfo?.title || page.content?.subject_outline || page.subjectOutline}
@@ -305,7 +274,7 @@
   </div>
 {/snippet}
 
-{#snippet creationCommentReplied(page: CREATION_COMMENT_REPLIED)}
+{#snippet creationCommentReplied(page: NotificationView)}
   <div class="flex w-full flex-col">
     <div class="*:inline">
       {@render senderLink(page)}
@@ -331,7 +300,7 @@
   </div>
 {/snippet}
 
-{#snippet creationShare(page: CREATION_SHARE)}
+{#snippet creationShare(page: NotificationView)}
   {@const subjectOid = page.content?.subject_oid}
   {@const subjectName = page.content?.subject_outline}
   <div class="flex w-full flex-col">
@@ -349,7 +318,7 @@
   </div>
 {/snippet}
 
-{#snippet creationRecommendedAsPotential(page: CREATION_RECOMMENDED_AS_POTENTIAL)}
+{#snippet creationRecommendedAsPotential(page: NotificationView)}
   你的作品
   <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
@@ -357,7 +326,7 @@
   已被评为[潜力新作]
 {/snippet}
 
-{#snippet creationChecked(page: CREATION_CHECKED)}
+{#snippet creationChecked(page: NotificationView)}
   你的作品
   <NotificationSubjectLink href="/detail/{page.content.subject_oid}">
     {page.content.subject_outline}
@@ -365,7 +334,7 @@
   通过了审核
 {/snippet}
 
-{#snippet extensionLiked(page: EXTENSION_LIKED)}
+{#snippet extensionLiked(page: NotificationView)}
   {@render senderLink(page)}
   为你的扩展
   <NotificationSubjectLink href="https://assets.ccw.site/extension/{page.extensionInfo.eid}">
@@ -374,7 +343,7 @@
   点了个赞
 {/snippet}
 
-{#snippet extensionCommented(page: EXTENSION_COMMENTED)}
+{#snippet extensionCommented(page: NotificationView)}
   <div class="flex flex-col">
     <div class="*:inline">
       {@render senderLink(page)}
@@ -393,7 +362,7 @@
   </div>
 {/snippet}
 
-{#snippet extensionCommentReplied(page: EXTENSION_COMMENT_REPLIED)}
+{#snippet extensionCommentReplied(page: NotificationView)}
   <div class="flex flex-col">
     <div class="*:inline">
       {@render senderLink(page)}
@@ -418,7 +387,7 @@
   </div>
 {/snippet}
 
-{#snippet postFavorite(page: POST_FAVORITE)}
+{#snippet postFavorite(page: NotificationView)}
   你的文章
   <NotificationSubjectLink href="https://www.ccw.site/post/{page.content.slug}">
     {page.content.subject_outline}
@@ -428,7 +397,7 @@
   加入了收藏
 {/snippet}
 
-{#snippet postLiked(page: POST_LIKED)}
+{#snippet postLiked(page: NotificationView)}
   {@render senderLink(page)}
   为你的文章
   <NotificationSubjectLink href="https://www.ccw.site/post/{page.content.slug}">
@@ -437,7 +406,7 @@
   点了个赞
 {/snippet}
 
-{#snippet postComment(page: POST_COMMENT)}
+{#snippet postComment(page: NotificationView)}
   {@const slug = page.content.slug}
   <div class="flex w-full flex-col">
     <div class="*:inline">
@@ -486,7 +455,7 @@
   </div>
 {/snippet}
 
-{#snippet postVisibilityChange(page: POST_VISIBILITY_CHANGED)}
+{#snippet postVisibilityChange(page: NotificationView)}
   <RenderHTML
     text={(page.comment ?? '').replace('/post/', 'https://www.ccw.site/post/')}
     config={{
@@ -496,7 +465,7 @@
   ></RenderHTML>
 {/snippet}
 
-{#snippet assetMarketLiked(page: ASSET_MARKET_LIKED)}
+{#snippet assetMarketLiked(page: NotificationView)}
   {@render senderLink(page)}
   为你的素材
   <NotificationSubjectLink href="https://assets.ccw.site/assets{page.assetMarketInfo.path}">
@@ -505,7 +474,7 @@
   点了个赞
 {/snippet}
 
-{#snippet assetMarketDonate(page: ASSET_MARKET_DONATE)}
+{#snippet assetMarketDonate(page: NotificationView)}
   {@render senderLink(page)}
   为你的素材
   <NotificationSubjectLink href="https://assets.ccw.site/assets{page.assetMarketInfo.path}">
@@ -514,7 +483,7 @@
   投了币
 {/snippet}
 
-{#snippet teamCommented(page: TEAM_COMMENTED)}
+{#snippet teamCommented(page: NotificationView)}
   <div class="flex w-full flex-col">
     <div class="*:inline">
       {@render senderLink(page)}
@@ -555,7 +524,7 @@
   </div>
 {/snippet}
 
-{#snippet friendInvite(page: FRIEND_INVITE)}
+{#snippet friendInvite(page: NotificationView)}
   <div class="flex w-full flex-col">
     <div class="*:inline">
       {@render senderLink(page)}
@@ -565,7 +534,7 @@
   </div>
 {/snippet}
 
-{#snippet profileLeaveWords(page: PROFILE_LEAVE_WORDS)}
+{#snippet profileLeaveWords(page: NotificationView)}
   {@const boardOid = page.subjectOid || page.content?.subject_oid}
   {@const comments = page.comment || page.content?.comments}
   {@const unavailable = page.title || !comments}
@@ -624,16 +593,16 @@
   </div>
 {/snippet}
 
-{#snippet followed(page: FOLLOWED)}
+{#snippet followed(page: NotificationView)}
   {@render senderLink(page)}
   关注了你
 {/snippet}
 
-{#snippet sessionCreated(page: SESSION_CREATED)}
+{#snippet sessionCreated(page: NotificationView)}
   <span class="text-text-primary">{page.comment || page.title}</span>
 {/snippet}
 
-{#snippet communityActivity(page: COMMUNITY_ACTIVITY)}
+{#snippet communityActivity(page: NotificationView)}
   <RenderHTML
     text={page.comment ?? ''}
     config={{
@@ -642,7 +611,7 @@
   ></RenderHTML>
 {/snippet}
 
-{#snippet assetMarketPurchased(page: ASSET_MARKET_PURCHASED)}
+{#snippet assetMarketPurchased(page: NotificationView)}
   {@render senderLink(page)}
   将你的素材
   <NotificationSubjectLink
@@ -654,15 +623,15 @@
   加入了背包
 {/snippet}
 
-{#snippet commentDeleted(page: COMMENT_DELETED)}
+{#snippet commentDeleted(page: NotificationView)}
   {@render ____PLACEHOLDER(page)}
 {/snippet}
 
-{#snippet postRatedAsExcellent(page: POST_RATED_AS_EXCELLENT)}
+{#snippet postRatedAsExcellent(page: NotificationView)}
   {@render ____PLACEHOLDER(page)}
 {/snippet}
 
-{#snippet creationBanned(page: CREATION_BANNED)}
+{#snippet creationBanned(page: NotificationView)}
   {@const title = page.title || '作品处理通知'}
   {@const subject = page.content?.subject_outline || page.subjectOutline || '你的作品'}
   {@const subjectUrl =
@@ -703,6 +672,6 @@
   </div>
 {/snippet}
 
-{#snippet reportLogRejected(page: REPORT_LOG_REJECTED)}
+{#snippet reportLogRejected(page: NotificationView)}
   {@render ____PLACEHOLDER(page)}
 {/snippet}
