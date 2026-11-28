@@ -2,7 +2,7 @@
   import { fly } from 'svelte/transition';
   import { backOut, cubicOut } from 'svelte/easing';
   import { flip } from 'svelte/animate';
-  import { toastItems, dismissToast } from '../toast';
+  import { toastItems, dismissToast, type ToastItem } from '../toast';
   import successIcon from '#lib/assets/toast/success.svg?raw';
   import errorIcon from '#lib/assets/toast/error.svg?raw';
   import warningIcon from '#lib/assets/toast/warning.svg?raw';
@@ -14,6 +14,16 @@
     warning: warningIcon,
     info: infoIcon,
   };
+
+  // 点击 toast 复制其文本；复制成功后关闭，失败时保留以便重试
+  async function copyToast(item: ToastItem) {
+    try {
+      await navigator.clipboard.writeText(item.msg);
+    } catch {
+      return;
+    }
+    dismissToast(item.id);
+  }
 </script>
 
 <div
@@ -27,8 +37,8 @@
     <button
       type="button"
       class="border-border bg-bg/80 text-text-primary pointer-events-auto box-border flex w-75 cursor-pointer items-center rounded-xl border px-4 py-3 text-left text-[15px] leading-relaxed font-medium shadow-[0_8px_24px_rgba(0,0,0,0.25),0_2px_6px_rgba(0,0,0,0.12)] backdrop-blur-[5px]"
-      aria-label={`${item.msg}，点击关闭`}
-      onclick={() => dismissToast(item.id)}
+      aria-label={`${item.msg}，点击复制到剪贴板`}
+      onclick={() => copyToast(item)}
       in:fly={{ x: 340, duration: 420, easing: backOut }}
       out:fly={{ x: 340, duration: 300, easing: cubicOut }}
       animate:flip={{ duration: 250 }}
