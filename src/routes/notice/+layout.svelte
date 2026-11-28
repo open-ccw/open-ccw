@@ -75,6 +75,8 @@
   {#if selectedId >= 0}
     {#each noticeTypes as { type, name, icon }, id}
       <button
+        type="button"
+        aria-current={noticeTypes[selectedId].type === type ? 'page' : undefined}
         class="relative flex size-18 cursor-pointer flex-col flex-wrap items-center justify-center transition-colors {noticeTypes[
           selectedId
         ].type === type
@@ -86,12 +88,16 @@
           goto(`/notice/${type}`);
         }}
       >
-        <img src={icon} alt={name} class="relative -top-2 size-8" />
+        <img src={icon} alt="" aria-hidden="true" class="relative -top-2 size-8" />
         <span class="text-text-primary absolute bottom-2 shrink-0 text-sm">{name}</span>
         {#if $notificationSummary && counts && counts[id] > 0}
-          <div class="bg-error absolute top-2 right-2 size-4 rounded-full text-xs text-white">
+          <div
+            class="bg-error absolute top-2 right-2 size-4 rounded-full text-xs text-white"
+            aria-hidden="true"
+          >
             {counts[id]}
           </div>
+          <span class="sr-only">{counts[id]} 条未读</span>
         {/if}
       </button>
     {/each}
