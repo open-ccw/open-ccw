@@ -46,7 +46,7 @@
         {#if sessionId}
           <a
             href="/settings/auth?session={sessionId}"
-            class="text-info hover:text-info/80 inline-flex items-center gap-0.5 text-xs underline underline-offset-2 transition-colors duration-100"
+            class="text-text-secondary hover:text-text-primary inline-flex items-center gap-0.5 text-xs underline underline-offset-2 transition-colors duration-100"
             title="跳转到设备管理并定位到此登录会话"
           >
             <svg
