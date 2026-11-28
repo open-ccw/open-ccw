@@ -54,6 +54,7 @@ export async function sealedRequest<T = Record<string, unknown>>(
   keys: ServerPubKeys,
   url: string,
   payload: Record<string, unknown>,
+  send?: (body: string) => Promise<string>,
 ): Promise<T> {
   const eph = (await crypto.subtle.generateKey({ name: 'X25519' }, true, [
     'deriveBits',
@@ -84,23 +85,33 @@ export async function sealedRequest<T = Record<string, unknown>>(
     ),
   );
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      k: b64url(ephPub),
-      n: b64url(nonce),
-      c: b64url(ct),
-    }),
+  const body = JSON.stringify({
+    k: b64url(ephPub),
+    n: b64url(nonce),
+    c: b64url(ct),
   });
-  const body = JSON.parse(await res.text()) as Record<string, unknown> & {
+
+  // 允许调用方自定义传输层（例如经主站代理转发），默认直接请求目标地址
+  const responseText = send
+    ? await send(body)
+    : await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body,
+      }).then((res) => res.text());
+
+  const envelope = JSON.parse(responseText) as Record<string, unknown> & {
     n?: string;
     c?: string;
     s?: string;
   };
 
-  if (typeof body.c !== 'string' || typeof body.n !== 'string' || typeof body.s !== 'string') {
-    throw new Error(String(body.code ?? '请求失败' + res.status));
+  if (
+    typeof envelope.c !== 'string' ||
+    typeof envelope.n !== 'string' ||
+    typeof envelope.s !== 'string'
+  ) {
+    throw new Error(String(envelope.code ?? '请求失败'));
   }
 
   const srvEd = await crypto.subtle.importKey(
@@ -113,8 +124,8 @@ export async function sealedRequest<T = Record<string, unknown>>(
   const ok = await crypto.subtle.verify(
     'Ed25519',
     srvEd,
-    unb64(body.s),
-    concat(unb64(body.n), unb64(body.c)),
+    unb64(envelope.s),
+    concat(unb64(envelope.n), unb64(envelope.c)),
   );
   if (!ok) throw new Error('签名校验失败');
 
@@ -123,9 +134,9 @@ export async function sealedRequest<T = Record<string, unknown>>(
     'decrypt',
   ]);
   const plain = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: unb64(body.n) },
+    { name: 'AES-GCM', iv: unb64(envelope.n) },
     rAes,
-    unb64(body.c),
+    unb64(envelope.c),
   );
   return JSON.parse(td.decode(plain)) as T;
 }

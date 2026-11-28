@@ -1,56 +1,47 @@
 import { error } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { loginAccount } from '#lib/auth/loginApi';
 
-/** 只有主站可以签发临时 token，预览域名不复制该能力 */
-const MAIN_HOST = 'ccw.kivotos.qzz.io';
+/** 登录服务端点，仅在该服务与预览域名之间存在跨域限制时才需要经此中转 */
+const LOGIN_ENDPOINT = 'https://openccw.seia0070.dpdns.org/login';
 
-/** 端点所需的运行时变量（Workers Secret） */
-interface DevTokenEnv {
-  DEV_TOKEN_KEY?: string;
-  DEV_ACCOUNT_UID?: string;
-  DEV_ACCOUNT_PASSWORD?: string;
-}
+/** 密封请求体大小上限，防止被当作通用转发入口滥用 */
+const MAX_BODY_BYTES = 8 * 1024;
 
-/** 定长比较，避免通过响应时间推测密钥 */
-function safeEqual(a: string, b: string): boolean {
-  if (a.length !== b.length) {
-    return false;
-  }
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-  return diff === 0;
-}
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+} as const;
+
+/** 预检请求：开发/preview 域名跨域调用本端点时放行 */
+export const OPTIONS: RequestHandler = () =>
+  new Response(null, { status: 204, headers: CORS_HEADERS });
 
 /**
- * 开发/preview 环境的临时 token 端点。
- * 用共享密钥换取一个仅含 access token 的登录态（不含 refresh token，不可续期）。
- * 未配置 DEV_TOKEN_KEY 或非主站访问时一律返回 404，避免暴露端点存在性。
+ * 开发/preview 环境的临时 token 中转。
+ * 请求体是客户端用登录服务公钥生成的密封密文，本端点原样转发、不解密也不落盘，
+ * 响应原样带回给客户端自行校验与解密；不涉及任何 refresh token。
  */
-export const GET: RequestHandler = async ({ url, platform, setHeaders }) => {
-  const env = (platform?.env ?? {}) as DevTokenEnv;
-  const expectedKey = env.DEV_TOKEN_KEY;
-  const uid = env.DEV_ACCOUNT_UID;
-  const password = env.DEV_ACCOUNT_PASSWORD;
-
-  if (url.host !== MAIN_HOST || !expectedKey || !uid || !password) {
-    return error(404, 'Not found');
+export const POST: RequestHandler = async ({ request, setHeaders }) => {
+  const body = await request.text();
+  if (!body || body.length > MAX_BODY_BYTES) {
+    return error(400, '请求体不合法');
   }
 
-  const key = url.searchParams.get('key') ?? '';
-  if (!safeEqual(key, expectedKey)) {
-    return error(403, '密钥无效');
-  }
-
-  let accessToken: string;
+  let upstream: Response;
   try {
-    accessToken = await loginAccount(uid, password);
+    upstream = await fetch(LOGIN_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    });
   } catch (e) {
-    return error(502, `临时 token 获取失败：${e instanceof Error ? e.message : String(e)}`);
+    return error(502, `登录服务不可用：${e instanceof Error ? e.message : String(e)}`);
   }
 
   setHeaders({ 'Cache-Control': 'no-store' });
-  return Response.json({ token: accessToken });
+  return new Response(await upstream.text(), {
+    status: upstream.status,
+    headers: { 'Content-Type': 'application/json', ...CORS_HEADERS },
+  });
 };
