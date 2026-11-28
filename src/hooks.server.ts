@@ -45,6 +45,20 @@ const DEV_HOST_SUFFIXES: readonly string[] = ['.oc.schale.qzz.io', '.dev.openccw
 const PRIMARY_HOST = 'ccw.kivotos.qzz.io';
 
 /**
+ * 全站基础安全响应头。
+ * CSP 只声明不被内联脚本影响的指令，避免打断 SvelteKit 的水合脚本；
+ * HSTS 在 HTTP 下会被浏览器忽略，本地开发无副作用。
+ */
+const SECURITY_HEADERS: Readonly<Record<string, string>> = {
+  'x-content-type-options': 'nosniff',
+  'x-frame-options': 'SAMEORIGIN',
+  'referrer-policy': 'strict-origin-when-cross-origin',
+  'permissions-policy': 'camera=(), microphone=(), geolocation=()',
+  'content-security-policy': "frame-ancestors 'self'; base-uri 'self'; object-src 'none'",
+  'strict-transport-security': 'max-age=31536000',
+};
+
+/**
  * 判断请求域名是否允许对外服务。
  * 非白名单域名会产生与主站重复的 canonical 内容，导致 Bing 等搜索引擎
  * 报「URL 无法索引」，必须 301 归一到主站。
@@ -70,13 +84,13 @@ export const handle: Handle = async ({ event, resolve }) => {
     target.host = PRIMARY_HOST;
     return new Response(null, {
       status: 301,
-      headers: { location: target.toString() },
+      headers: { ...SECURITY_HEADERS, location: target.toString() },
     });
   }
+  const headers: Record<string, string> = { ...SECURITY_HEADERS };
   if (event.request.method === 'GET' && SITEMAP_ROUTES.has(event.url.pathname)) {
-    event.setHeaders({
-      'cache-control': `public, max-age=${CACHE_MAX_AGE}, must-revalidate`,
-    });
+    headers['cache-control'] = `public, max-age=${CACHE_MAX_AGE}, must-revalidate`;
   }
+  event.setHeaders(headers);
   return resolve(event);
 };
