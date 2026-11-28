@@ -55,7 +55,7 @@
         </div>
       {:else}
         <div
-          class="scale-75 rounded-lg border border-yellow-700 pr-1 pl-1 text-sm text-nowrap text-yellow-700"
+          class="scale-75 rounded-lg border border-warning pr-1 pl-1 text-sm text-nowrap text-warning"
         >
           改编
         </div>

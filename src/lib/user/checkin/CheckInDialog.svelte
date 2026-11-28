@@ -53,7 +53,7 @@
   >
     <!-- 顶部装饰条 -->
     <div
-      class="from-primary to-primary-hover flex h-16 items-center justify-center gap-3 bg-linear-to-r"
+      class="bg-primary flex h-16 items-center justify-center gap-3"
     >
       <img src={coinSvg} alt="coin" class="h-8 w-8" />
       <span class="text-xl font-bold text-white">每日签到</span>
