@@ -35,11 +35,11 @@
       type="search"
       placeholder="搜索作品、用户、文章、星球..."
       bind:value
-      class="bg-bg-secondary border-border text-text-primary placeholder-text-placeholder focus:border-primary h-12 w-full rounded-full border pr-4 pl-12 shadow-sm transition-all outline-none"
+      class="bg-bg-secondary border-border text-text-primary placeholder-text-placeholder focus:border-primary h-12 w-full rounded-lg border pr-4 pl-12 shadow-sm transition-colors duration-100 outline-none"
     />
     <button
       type="submit"
-      class="bg-primary hover:bg-primary-hover absolute top-1/2 right-1.5 h-9 -translate-y-1/2 cursor-pointer rounded-full px-5 text-sm font-medium text-white transition-all active:scale-95"
+      class="bg-primary hover:bg-primary-hover absolute top-1/2 right-1.5 h-9 -translate-y-1/2 cursor-pointer rounded-lg px-5 text-sm font-medium text-white transition-colors duration-100 active:scale-95"
     >
       搜索
     </button>
