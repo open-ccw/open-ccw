@@ -23,15 +23,32 @@ export interface LocateRes {
   qt: 0;
 }
 
-export const POST: RequestHandler = async ({ request }) => {
-  const { ip } = (await request.json()) as { ip?: string };
-  if (!ip) {
-    return error(500, 'ip is required');
+/** 仅允许 IPv4 / IPv6 字面量，避免任意字符串被拼进上游查询参数 */
+function isIpLiteral(value: string): boolean {
+  if (/^(\d{1,3}\.){3}\d{1,3}$/.test(value)) {
+    return value.split('.').every((part) => Number(part) <= 255);
   }
+  return value.includes(':') && value.length <= 45 && /^[0-9a-fA-F:]+$/.test(value);
+}
+
+export const POST: RequestHandler = async ({ request }) => {
+  const body = (await request.json().catch(() => ({}))) as { ip?: string };
+  if (!body.ip || !isIpLiteral(body.ip)) {
+    return error(400, 'invalid ip');
+  }
+  const upstream = new URL('https://ip9.com.cn/get');
+  upstream.searchParams.set('ip', body.ip);
   const controller = new AbortController();
-  const signal = controller.signal;
-  setTimeout(() => controller.abort('timeout'), 3000);
-  return await fetch(`https://ip9.com.cn/get?ip=${ip}`, { signal })
-    .then(async (res) => text(await res.text()))
-    .catch((e) => error(e));
+  const timer = setTimeout(() => controller.abort(), 3000);
+  try {
+    const res = await fetch(upstream, { signal: controller.signal });
+    if (!res.ok) {
+      return error(502, '定位服务不可用');
+    }
+    return text(await res.text());
+  } catch {
+    return error(504, '定位服务超时');
+  } finally {
+    clearTimeout(timer);
+  }
 };
