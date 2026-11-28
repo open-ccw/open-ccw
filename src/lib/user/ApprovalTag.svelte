@@ -38,7 +38,7 @@
     class="flex w-fit scale-0 opacity-0 transition-opacity group-focus-within:scale-100 group-focus-within:opacity-100 group-hover:scale-100 group-hover:opacity-100 {size ==
     'h-6'
       ? 'top-6'
-      : 'top-7'} bg-bg-secondary absolute z-20 float-left gap-2 rounded-lg border border-white/10 p-2 shadow shadow-gray-500/50"
+      : 'top-7'} bg-bg-secondary absolute z-20 float-left gap-2 rounded-lg border border-white/10 p-2 shadow shadow-black/30"
   >
     <!-- 雷霆大icon -->
     <div class="bg-bg-secondary size-16 shrink-0 rounded-lg border border-white/10">

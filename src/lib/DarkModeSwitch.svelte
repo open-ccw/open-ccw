@@ -53,6 +53,6 @@
     onchange={toggleTheme}
   />
   <span
-    class="absolute inset-0 cursor-pointer rounded-full bg-[#73c0fc] transition-all duration-400 peer-checked:bg-[#183153] peer-focus-visible:shadow-[0_0_0_2px_rgba(24,49,83,0.4)] before:absolute before:bottom-0.5 before:left-0.5 before:z-2 before:size-5.5 before:rounded-[20px] before:bg-[#e8e8e8] before:shadow-[0_1px_2px_rgba(0,0,0,0.15)] before:transition-transform before:duration-400 before:content-[''] peer-checked:before:translate-x-5.5"
+    class="absolute inset-0 cursor-pointer rounded-full bg-[#73c0fc] transition-all duration-100 peer-checked:bg-[#183153] peer-focus-visible:shadow-[0_0_0_2px_rgba(24,49,83,0.4)] before:absolute before:bottom-0.5 before:left-0.5 before:z-2 before:size-5.5 before:rounded-[20px] before:bg-[#e8e8e8] before:shadow-[0_1px_2px_rgba(0,0,0,0.15)] before:transition-transform before:duration-100 before:content-[''] peer-checked:before:translate-x-5.5"
   ></span>
 </label>
