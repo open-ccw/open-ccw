@@ -43,7 +43,7 @@
   </div>
   {#if renderAsHTML}
     <div
-      class="bg-bg text-text-primary mt-1 rounded-lg p-4 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces [&_a]:text-primary [&_a]:underline"
+      class="bg-bg text-text-primary [&_a]:text-primary mt-1 rounded-lg p-4 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces [&_a]:underline"
     >
       {@html safeHTML}
     </div>
