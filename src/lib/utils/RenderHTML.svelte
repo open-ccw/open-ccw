@@ -1,9 +1,9 @@
 <script lang="ts">
   import DOMPurify, { type Config } from 'dompurify';
   import { marked } from 'marked';
-  import { default_putify_config } from '#lib/utils/purifyConfig';
+  import { default_purify_config } from '#lib/utils/purifyConfig';
 
-  const { text, config = default_putify_config }: { text: string; config?: Config } = $props();
+  const { text, config = default_purify_config }: { text: string; config?: Config } = $props();
 
   let renderAsHTML = $state(false);
   let previewSafeHTML = $state(false);

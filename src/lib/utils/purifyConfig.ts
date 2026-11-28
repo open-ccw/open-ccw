@@ -1,6 +1,6 @@
 import type { Config } from 'dompurify';
 
-export const default_putify_config: Config = {
+export const default_purify_config: Config = {
   // 1. 白名单：仅允许最基础的文本标签，按需添加
   ALLOWED_TAGS: [
     'p',
@@ -69,6 +69,6 @@ export const default_putify_config: Config = {
 
 /** 系统通知富文本净化配置：在基础白名单上放行 rel */
 export const systemNoticePurifyConfig: Config = {
-  ...default_putify_config,
-  ALLOWED_ATTR: [...(default_putify_config.ALLOWED_ATTR ?? []), 'rel'],
+  ...default_purify_config,
+  ALLOWED_ATTR: [...(default_purify_config.ALLOWED_ATTR ?? []), 'rel'],
 };
