@@ -17,6 +17,7 @@
       "invocation_logs": false,
     },
   },
+  "workers_dev": false,
   "previews": {},
   "upload_source_maps": true,
   "cache": {
