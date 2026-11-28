@@ -3,12 +3,7 @@
   import { getStoredToken } from '#lib/auth/tokenStore';
 
   /** 允许回跳的开发/preview 域名后缀，避免把 token 交给任意站点 */
-  const ALLOWED_SUFFIXES = [
-    '.oc.schale.qzz.io',
-    '.dev.openccw.dpdns.org',
-    '.workers.dev',
-    '.lvh.me',
-  ];
+  const ALLOWED_SUFFIXES = ['.oc.schale.qzz.io', '.dev.openccw.dpdns.org', '.lvh.me'];
   const ALLOWED_HOSTS = ['localhost', '127.0.0.1'];
 
   let status = $state<'checking' | 'waiting' | 'error'>('checking');

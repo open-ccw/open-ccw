@@ -6,7 +6,7 @@ import { toast } from '#lib';
 const MAIN_ORIGIN = 'https://ccw.kivotos.qzz.io';
 
 /** 预览环境域名后缀（Cloudflare 预览构建） */
-const PREVIEW_SUFFIXES = ['.oc.schale.qzz.io', '.dev.openccw.dpdns.org', '.workers.dev'];
+const PREVIEW_SUFFIXES = ['.oc.schale.qzz.io', '.dev.openccw.dpdns.org'];
 
 /** 当前会话是否来自开发临时 token：为 true 时禁用 refresh 续期 */
 let devTokenSession = false;

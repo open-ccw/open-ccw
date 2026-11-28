@@ -41,12 +41,12 @@ const INDEXABLE_HOSTS: ReadonlySet<string> = new Set([
 /** 开发站域名后缀，整段通配放行 */
 const DEV_HOST_SUFFIXES: readonly string[] = ['.oc.schale.qzz.io', '.dev.openccw.dpdns.org'];
 
-/** 非白名单域名（如 workers.dev 预览域名）统一归一到的正式域名 */
+/** 非白名单域名统一归一到的正式域名 */
 const PRIMARY_HOST = 'ccw.kivotos.qzz.io';
 
 /**
  * 判断请求域名是否允许对外服务。
- * workers.dev 等预览域名会产生与主站重复的 canonical 内容，导致 Bing 等搜索引擎
+ * 非白名单域名会产生与主站重复的 canonical 内容，导致 Bing 等搜索引擎
  * 报「URL 无法索引」，必须 301 归一到主站。
  */
 function isIndexableHost(host: string): boolean {
@@ -59,7 +59,7 @@ function isIndexableHost(host: string): boolean {
 
 /**
  * 注入 Cache-Control 激活 Cloudflare Crawler Hints，并将非白名单域名
- * （如 workers.dev 预览域名）301 重定向到主站同路径，避免重复内容稀释 SEO。
+ * 301 重定向到主站同路径，避免重复内容稀释 SEO。
  * @param event SvelteKit 请求事件
  * @param resolve 后续处理链
  */
