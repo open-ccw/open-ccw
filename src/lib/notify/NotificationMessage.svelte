@@ -66,10 +66,7 @@
             管理该设备
           </a>
         {/if}
-        <span
-          class="text-text-placeholder text-xs whitespace-nowrap"
-          title={time.toLocaleString()}
-        >
+        <span class="text-text-placeholder text-xs whitespace-nowrap" title={time.toLocaleString()}>
           {time.toLocaleString()}
         </span>
       </div>
