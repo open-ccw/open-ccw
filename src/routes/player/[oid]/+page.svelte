@@ -78,6 +78,12 @@
   }
 </script>
 
+<svelte:head>
+  <title>作品播放器 — Open CCW</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Open CCW 内置的作品播放器页面，用于加载并运行指定的 CCW 作品。" />
+</svelte:head>
+
 <div class="h-screen w-screen">
   <canvas bind:this={canvas} class="h-full w-full object-contain"></canvas>
 </div>
