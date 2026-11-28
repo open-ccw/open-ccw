@@ -20,7 +20,7 @@
       </div>
     </div>
   </div>
-  <div class="bg-bg-secondary border-border mt-4 space-y-3 rounded-2xl border px-6 py-5 shadow">
+  <div class="bg-bg-secondary border-border mt-4 space-y-3 rounded-lg border px-6 py-5 shadow">
     <div class="bg-bg-tertiary h-5 w-1/4 rounded"></div>
     <div class="bg-bg-tertiary h-4 w-full rounded"></div>
     <div class="bg-bg-tertiary h-4 w-2/3 rounded"></div>

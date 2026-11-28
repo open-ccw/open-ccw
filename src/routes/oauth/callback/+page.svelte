@@ -39,7 +39,7 @@
   class="flex h-screen min-h-fit w-screen items-center justify-center"
   style:background="url({bg}) repeat center/cover"
 >
-  <div class="w-lg rounded-2xl bg-white p-10 shadow-xl">
+  <div class="w-lg rounded-lg bg-white p-10 shadow-xl">
     {#if error}
       <div class="text-center">
         <div
