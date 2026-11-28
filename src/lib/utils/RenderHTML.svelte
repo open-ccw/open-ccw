@@ -24,6 +24,7 @@
 <div>
   <div class="flex w-full">
     <button
+      type="button"
       class="bg-bg-secondary text-error border-error hover:bg-error/10 dark:hover:bg-error/20 mr-0 ml-auto cursor-pointer rounded-md border p-1"
       onclick={() => {
         if (!renderAsHTML && !previewSafeHTML) {
@@ -41,12 +42,11 @@
     </button>
   </div>
   {#if renderAsHTML}
-    <p
-      class="bg-bg text-text-primary mt-1 rounded-lg p-4 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces"
-      id="marked"
+    <div
+      class="bg-bg text-text-primary mt-1 rounded-lg p-4 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces [&_a]:text-primary [&_a]:underline"
     >
       {@html safeHTML}
-    </p>
+    </div>
   {:else if previewSafeHTML}
     <p
       class="text-text-primary mt-1 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces"
@@ -61,15 +61,3 @@
     </p>
   {/if}
 </div>
-
-<style>
-  :global(.dark) #marked :global(a) {
-    text-decoration: underline;
-    color: lightblue;
-  }
-
-  #marked :global(a) {
-    text-decoration: underline;
-    color: blue;
-  }
-</style>
