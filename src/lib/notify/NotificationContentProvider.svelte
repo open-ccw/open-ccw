@@ -276,7 +276,8 @@
 
 {#snippet creationCommented(page: CREATION_COMMENTED)}
   {@const subjectOid = page.subjectOid || page.content?.subject_oid}
-  {@const subjectName = page.creationInfo?.title || page.content?.subject_outline || page.subjectOutline}
+  {@const subjectName =
+    page.creationInfo?.title || page.content?.subject_outline || page.subjectOutline}
   {@const detailUrl = page.url || (subjectOid ? `/detail/${subjectOid}` : '')}
   {@const commentText = page.comment || page.content?.comments}
   <div class="flex w-full flex-col">
@@ -296,7 +297,9 @@
       {#if commentText}
         <RenderComment comment={commentText}></RenderComment>
       {:else}
-        <span class="text-text-placeholder italic" title="评论内容已不可访问">评论内容已不可访问</span>
+        <span class="text-text-placeholder italic" title="评论内容已不可访问">
+          评论内容已不可访问
+        </span>
       {/if}
     </div>
   </div>
@@ -599,7 +602,10 @@
         : 'rounded-lg'} p-2"
     >
       {#if unavailable}
-        <span class="text-text-placeholder italic" title={unavailable === true ? '留言内容已不可访问' : unavailable}>
+        <span
+          class="text-text-placeholder italic"
+          title={unavailable === true ? '留言内容已不可访问' : unavailable}
+        >
           {unavailable === true ? '留言内容已不可访问' : unavailable}
         </span>
       {:else}
@@ -684,7 +690,8 @@
 {#snippet creationBanned(page: CREATION_BANNED)}
   {@const title = page.title || '作品处理通知'}
   {@const subject = page.content?.subject_outline || page.subjectOutline || '你的作品'}
-  {@const subjectUrl = page.target?.url || (page.content?.subject_oid ? `/detail/${page.content.subject_oid}` : '')}
+  {@const subjectUrl =
+    page.target?.url || (page.content?.subject_oid ? `/detail/${page.content.subject_oid}` : '')}
   {@const detail = page.content?.comments || page.comment || ''}
   <div class="flex w-full flex-col gap-2">
     <div class="*:inline">

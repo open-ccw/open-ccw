@@ -49,10 +49,7 @@ export function getGroupUnread(
  * @param group 分组，"ALL" 表示全部分组
  * @param readToken 服务端下发的已读令牌
  */
-export async function markNotificationRead(
-  group: NotificationV3Group | 'ALL',
-  readToken: string,
-) {
+export async function markNotificationRead(group: NotificationV3Group | 'ALL', readToken: string) {
   if (!readToken) {
     return;
   }

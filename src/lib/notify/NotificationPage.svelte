@@ -17,9 +17,7 @@
     WEB_SYSTEM: 'SYSTEM',
   };
 
-  let {
-    type = 'CREATION_INTERACTION',
-  }: { type: NotificationV3Group | LegacyGroup } = $props();
+  let { type = 'CREATION_INTERACTION' }: { type: NotificationV3Group | LegacyGroup } = $props();
 
   const group = $derived<NotificationV3Group>(
     type in GROUP_MAP ? GROUP_MAP[type as LegacyGroup] : (type as NotificationV3Group),
@@ -44,8 +42,12 @@
     loading = true;
     try {
       error = '';
-      const { items, hasMore: more, nextCursor, readToken } =
-        await communityWeb.getNotificationV3Page(group, 'ALL', cursor, 20);
+      const {
+        items,
+        hasMore: more,
+        nextCursor,
+        readToken,
+      } = await communityWeb.getNotificationV3Page(group, 'ALL', cursor, 20);
       pages = pages.concat(items);
       hasMore = more;
       cursor = nextCursor;

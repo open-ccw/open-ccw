@@ -6,7 +6,12 @@
     id,
     replyToId,
     receiverName,
-  }: { comment: string | null | undefined; id?: number; replyToId?: number; receiverName?: string } = $props();
+  }: {
+    comment: string | null | undefined;
+    id?: number;
+    replyToId?: number;
+    receiverName?: string;
+  } = $props();
 </script>
 
 <div class="w-full">
