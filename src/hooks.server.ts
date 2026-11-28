@@ -35,7 +35,7 @@ const INDEXABLE_HOSTS: ReadonlySet<string> = new Set([
   'ccw.kivotos.qzz.io',
   'openccw.dpdns.org',
   'localhost',
-  '127.0.0.1',
+  'openccw.lvh.me',
 ]);
 
 /** 开发站域名后缀，整段通配放行 */

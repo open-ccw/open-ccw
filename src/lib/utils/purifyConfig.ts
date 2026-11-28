@@ -66,3 +66,9 @@ export const default_putify_config: Config = {
   // 7. 严格模式：禁止返回任何可能包含脚本的内容
   RETURN_TRUSTED_TYPE: true,
 };
+
+/** 系统通知富文本净化配置：在基础白名单上放行 rel */
+export const systemNoticePurifyConfig: Config = {
+  ...default_putify_config,
+  ALLOWED_ATTR: [...(default_putify_config.ALLOWED_ATTR ?? []), 'rel'],
+};

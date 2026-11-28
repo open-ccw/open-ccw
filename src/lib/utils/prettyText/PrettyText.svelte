@@ -2,7 +2,7 @@
   import { render } from './render';
   import { tokenize } from './tokenizer';
 
-  let { text }: { text: string } = $props();
+  let { text }: { text: string | null | undefined } = $props();
   let components = $derived(render(tokenize(text)));
 </script>
 

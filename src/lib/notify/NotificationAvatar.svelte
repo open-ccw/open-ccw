@@ -1,9 +1,9 @@
 <script lang="ts">
   import AvatarToProfile from '#lib/user/AvatarToProfile.svelte';
-  import type { Notification } from '@ccw-api/api';
   import systemLogo from '#lib/assets/system_logo.svg';
+  import type { NotificationV3Item } from './types.ts';
 
-  const { page }: { page: Notification.NotificationPage } = $props();
+  const { page }: { page: NotificationV3Item } = $props();
   const isSystem = $derived(
     [
       'SESSION_CREATED',

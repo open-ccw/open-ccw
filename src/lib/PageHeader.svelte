@@ -8,18 +8,14 @@
   import { goto } from '$app/navigation';
   import { communityWeb } from '#lib/api.ts';
   import { fade, slide } from 'svelte/transition';
-  import { notificationStats } from './notify/notifyStatsStore';
+  import { notificationSummary } from './notify/notifyStatsStore';
   import DarkModeSwitch from './DarkModeSwitch.svelte';
 
   let checkedIn = $state(true);
   let showCheckIn = $state(false);
   let menuOpen = $state(false);
-  let notifyCount = $derived.by(() => {
-    if (!$notificationStats) {
-      return;
-    }
-    return Object.values($notificationStats).reduce((prev, cur) => prev + cur);
-  });
+  // v3 summary 直接提供总未读数
+  let notifyCount = $derived($notificationSummary?.totalUnread ?? 0);
 
   async function handleLogout() {
     await logout();

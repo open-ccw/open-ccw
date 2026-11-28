@@ -4,7 +4,11 @@ const complied = new RegExp(`${image.source}|${link.source}`, 'g');
 
 export type TokenType = ImageToken | URLToken | PlainToken;
 
-export function tokenize(text: string) {
+export function tokenize(text: string | null | undefined) {
+  // 防御：通知等场景可能传入 null/undefined，按空文本处理
+  if (typeof text !== 'string') {
+    return [];
+  }
   let arr: RegExpExecArray | null;
   let pos = 0;
   complied.lastIndex = pos;
