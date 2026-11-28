@@ -48,7 +48,7 @@
 
 <div class="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
   <div
-    class="bg-bg-secondary relative w-80 overflow-hidden rounded-2xl shadow-xl"
+    class="bg-bg-secondary relative w-80 overflow-hidden rounded-lg shadow-xl"
     transition:scale={{ duration: 100 }}
   >
     <!-- 顶部装饰条 -->

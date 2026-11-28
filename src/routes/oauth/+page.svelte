@@ -88,7 +88,7 @@
   class="flex h-screen min-h-fit w-screen items-center justify-center"
   style:background="url({bg}) repeat center/cover"
 >
-  <div class="h-fit w-lg rounded-2xl bg-white p-10 text-center shadow-xl">
+  <div class="h-fit w-lg rounded-lg bg-white p-10 text-center shadow-xl">
     {#if error}
       <div class="text-center">
         <div

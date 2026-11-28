@@ -16,7 +16,7 @@
 
 <div class="mx-auto flex max-w-full justify-center px-4 py-12 md:py-20">
   <div
-    class="bg-bg-secondary border-error w-full max-w-md rounded-2xl border px-6 py-8 text-center shadow-lg"
+    class="bg-bg-secondary border-error w-full max-w-md rounded-lg border px-6 py-8 text-center shadow-lg"
   >
     <div class="bg-error/10 mx-auto mb-4 flex size-16 items-center justify-center rounded-full">
       <svg

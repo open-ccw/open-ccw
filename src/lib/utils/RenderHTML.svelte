@@ -42,7 +42,7 @@
   </div>
   {#if renderAsHTML}
     <p
-      class="bg-bg text-text-primary mt-1 rounded-2xl p-4 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces"
+      class="bg-bg text-text-primary mt-1 rounded-lg p-4 leading-relaxed text-wrap wrap-anywhere whitespace-break-spaces"
       id="marked"
     >
       {@html safeHTML}
