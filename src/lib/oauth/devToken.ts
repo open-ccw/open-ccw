@@ -2,6 +2,9 @@ import { browser, dev } from '$app/env';
 import { updateToken, clearTokenAndUser } from '#lib/user/userStore.ts';
 import { toast } from '#lib';
 
+/** 主站地址：负责校验登录态并把 access token 交回开发环境 */
+const MAIN_ORIGIN = 'https://ccw.kivotos.qzz.io';
+
 /** 预览环境域名后缀（Cloudflare 预览构建） */
 const PREVIEW_SUFFIXES = ['.oc.schale.qzz.io', '.dev.openccw.dpdns.org', '.workers.dev'];
 
@@ -23,28 +26,13 @@ export function isDevPreviewHost(hostname: string): boolean {
   );
 }
 
-/**
- * 读取 URL 中的开发临时 token 并完成登录。
- * 仅支持 `?dev_token=<access token>` 直接注入：token 只写内存/会话存储，
- * 不获取 refresh token 也不会自动续期；仅在开发或 preview 环境生效，
- * 成功后立即从地址栏移除参数，避免 token 残留在历史记录中。
- *
- * @returns 是否成功应用了临时 token
- */
-export async function applyDevTokenFromUrl(): Promise<boolean> {
-  if (!browser || !(dev || isDevPreviewHost(location.hostname))) {
-    return false;
-  }
+/** 用临时 token 完成登录，并清理地址栏中携带的 token */
+async function applyToken(accessToken: string, clearParams: (url: URL) => void): Promise<boolean> {
   const url = new URL(location.href);
-  const accessToken = url.searchParams.get('dev_token');
-  if (!accessToken) {
-    return false;
-  }
-
   try {
     devTokenSession = true;
     await updateToken(accessToken);
-    url.searchParams.delete('dev_token');
+    clearParams(url);
     history.replaceState(history.state, '', url);
     toast.info('已使用开发临时 Token 登录，该会话不会自动续期');
     return true;
@@ -55,4 +43,55 @@ export async function applyDevTokenFromUrl(): Promise<boolean> {
     toast.error(`开发临时 Token 无效：${e instanceof Error ? e.message : String(e)}`);
     return false;
   }
+}
+
+/** 跳转主站开发授权页，由主站读取登录态后带 token 回跳本页 */
+function redirectToMain(callbackUrl: string): void {
+  const target = new URL('/oauth/dev-token', MAIN_ORIGIN);
+  target.searchParams.set('redirect_uri', callbackUrl);
+  location.replace(target.toString());
+}
+
+/**
+ * 开发环境登录入口，支持三种方式：
+ * 1. 主站回跳：地址 fragment 中带 `dev_token`（由主站授权页写入，不经过服务器日志）
+ * 2. `?dev_auth`：跳转主站授权页，登录后自动带 token 回到当前页面
+ * 3. `?dev_token=<access token>`：直接注入
+ *
+ * 仅在开发/preview 环境生效；token 只用于本次会话，不获取也不刷新 refresh token。
+ *
+ * @returns 是否成功应用了临时 token
+ */
+export async function applyDevTokenFromUrl(): Promise<boolean> {
+  if (!browser || !(dev || isDevPreviewHost(location.hostname))) {
+    return false;
+  }
+  const url = new URL(location.href);
+
+  const hashToken = new URLSearchParams(url.hash.replace(/^#/, '')).get('dev_token');
+  if (hashToken) {
+    return applyToken(hashToken, (u) => {
+      u.hash = '';
+    });
+  }
+
+  const directToken = url.searchParams.get('dev_token');
+  if (directToken) {
+    return applyToken(directToken, (u) => {
+      u.searchParams.delete('dev_token');
+    });
+  }
+
+  if (url.searchParams.has('dev_auth')) {
+    const callback = new URL(location.href);
+    callback.searchParams.delete('dev_auth');
+    callback.searchParams.delete('dev_token');
+    callback.hash = '';
+    // 先清掉 dev_auth，避免从主站返回后再次触发跳转
+    url.searchParams.delete('dev_auth');
+    history.replaceState(history.state, '', url);
+    redirectToMain(callback.toString());
+  }
+
+  return false;
 }

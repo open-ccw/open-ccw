@@ -159,6 +159,11 @@ token.subscribe((tok) => {
   }
 });
 
+/** 读取当前会话已保存的 access token（仅用于同源页面间传递） */
+export function getStoredToken(): string | null {
+  return browser ? sessionStorage.getItem(TOKEN_PREFIX) : null;
+}
+
 export function listAccounts(): Account[] {
   const raw = localStorage.getItem(ACCOUNTS_KEY);
   if (!raw) {
