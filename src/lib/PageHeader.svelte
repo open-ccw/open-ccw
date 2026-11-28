@@ -3,7 +3,7 @@
   import CheckInDialog from '#lib/user/checkin/CheckInDialog.svelte';
   import HamburgerButton from './header/HamburgerButton.svelte';
   import HeaderMenu from './header/HeaderMenu.svelte';
-  import { user } from '#lib/user/userStore.ts';
+  import { authStatus, user } from '#lib/user/userStore.ts';
   import { logout } from './auth/tokenStore';
   import { goto } from '$app/navigation';
   import { communityWeb } from '#lib/api.ts';
@@ -86,7 +86,7 @@
     <DarkModeSwitch></DarkModeSwitch>
     <HamburgerButton
       open={menuOpen}
-      redDot={!checkedIn || notifyCount > 0 || !$user.loggedIn}
+      redDot={!checkedIn || notifyCount > 0 || $authStatus === 'guest'}
       ontoggle={() => (menuOpen = !menuOpen)}
     ></HamburgerButton>
   </div>

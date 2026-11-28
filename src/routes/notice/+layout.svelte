@@ -4,7 +4,7 @@
   import { noticeTypes } from './noticeTypes';
   import Error from '#lib/utils/Error.svelte';
   import { goto } from '$app/navigation';
-  import { token } from '#lib/auth/tokenStore.ts';
+  import { authStatus } from '#lib/user/userStore.ts';
   import { toast } from '#lib';
   import {
     notificationSummary,
@@ -129,7 +129,12 @@
   </button>
 </div>
 
-{#if $token}
+{#if $authStatus === 'unknown'}
+  <div class="mx-auto w-full max-w-3xl px-4 py-6" aria-busy="true">
+    <div class="bg-bg-secondary mb-3 h-20 w-full animate-pulse rounded-lg"></div>
+    <div class="bg-bg-secondary h-20 w-full animate-pulse rounded-lg"></div>
+  </div>
+{:else if $authStatus === 'authenticated'}
   {@render children()}
 {:else}
   <Error error="请登录"></Error>

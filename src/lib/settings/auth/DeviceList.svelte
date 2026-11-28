@@ -7,7 +7,7 @@
   import type { Session } from './types';
   import Error from '#lib/utils/Error.svelte';
   import { toast } from '#lib';
-  import { user } from '#lib/user/userStore.ts';
+  import { authStatus, user } from '#lib/user/userStore.ts';
   import {
     clearAccountRefresh,
     getAccountRefresh,
@@ -148,7 +148,9 @@
 
 <h1 class="text-text-primary w-full text-center text-lg font-bold">登录设备管理</h1>
 
-{#if error}
+{#if $authStatus === 'guest'}
+  <Error error="请登录"></Error>
+{:else if error}
   <Error {error}></Error>
 {:else}
   <div class="mb-2 flex items-center justify-between px-1">
