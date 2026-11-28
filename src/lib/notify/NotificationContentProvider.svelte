@@ -660,7 +660,7 @@
   {@const detail = page.content?.comments || page.comment || ''}
   <div class="flex w-full flex-col gap-2">
     <div class="*:inline">
-      <span class="text-success font-semibold">{page.title || '作品审核通知'}</span>
+      <span class="text-text-primary font-semibold">{page.title || '作品审核通知'}</span>
     </div>
     {#if detail}
       <div
